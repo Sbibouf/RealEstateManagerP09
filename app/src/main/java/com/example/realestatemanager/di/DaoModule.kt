@@ -15,17 +15,19 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 
 @Module
 @InstallIn(SingletonComponent::class)
 class DaoModule {
-    @Volatile
-    private var INSTANCE: EstateDatabase? = null
     @Provides
     fun provideContactDao(
         @ApplicationContext context: Context
     ): EstateDao {
-        // Create and return an instance of EstateDao
+        /**
+         * Create and return an instance of EstateDao
+         */
         val db = Room.databaseBuilder(
             context,
             EstateDatabase::class.java,
@@ -36,9 +38,19 @@ class DaoModule {
         }
         return db.estateDao()
     }
+    @Provides
+    fun provideExecutor(): Executor{
+        return Executors.newSingleThreadExecutor()
+    }
 
+    /**
+     * Prepopulate the database with some estates
+     */
     private fun prepopulateDatabase(database: EstateDatabase) {
         val estateDao = database.estateDao()
-        estateDao.createEstate(Estate(1L, "test", "", "", 5, "", "https://images.pexels.com/photos/53610/large-home-residential-house-architecture-53610.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "", "", "", "", "", ""))
+        if(!estateDao.isDatabasePrepopulate()) {
+            estateDao.createEstate(Estate("test2", "", "", 5, "", "/storage/emulated/0/Download/estate1_front.jpg", "", "", "", "", "", ""))
+            estateDao.markDatabasePrepopulated()
+        }
     }
 }

@@ -19,7 +19,6 @@ import com.example.kotlintest.R
 import com.example.realestatemanager.model.Estate
 
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EstateDetailsScreen(estate: Estate) {
@@ -39,7 +38,7 @@ fun EstateDetailsScreen(estate: Estate) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(vertical = 48.dp)
+                    .padding(it)
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
                     EstateMediaRow(estate)
@@ -54,8 +53,8 @@ fun EstateDetailsScreen(estate: Estate) {
 @Composable
 fun EstateMediaRow(estate: Estate) {
     val estatesTest = listOf(
-        Estate(1L,"House","$100,000","300m2",5,"blabla","https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","New York","","","","",""),
-        Estate(2L,"Penthouse","$220,000","320m2",6,"","https://images.pexels.com/photos/53610/large-home-residential-house-architecture-53610.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Washington","","","","","")
+        Estate("House","$100,000","300m2",5,"blabla","https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","New York","","","","",""),
+        Estate("Penthouse","$220,000","320m2",6,"","https://images.pexels.com/photos/53610/large-home-residential-house-architecture-53610.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Washington","","","","","")
     )
     Column(modifier = Modifier.padding(8.dp)){
 
@@ -129,10 +128,6 @@ fun EstateDetailsRow(estate: Estate) {
         }
 
 
-
-
-
-
         // You can add a Map composable here for the location with a pin on the address
     }
 }
@@ -140,6 +135,6 @@ fun EstateDetailsRow(estate: Estate) {
 @Preview
 @Composable
 fun EstateTest(){
-    val estate = Estate(1L,"House","$100,000","300m2",5,"Ce petit texte décrit le bien immobilier","https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","New York","","","","","")
+    val estate = Estate("House","$100,000","300m2",5,"Ce petit texte décrit le bien immobilier","https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","New York","","","","","")
     EstateDetailsScreen(estate = estate)
 }

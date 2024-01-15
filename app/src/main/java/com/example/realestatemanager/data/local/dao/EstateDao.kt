@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.realestatemanager.model.Estate
+import kotlinx.coroutines.flow.Flow
 
 
 @Dao
@@ -32,7 +33,7 @@ interface EstateDao {
      * @return
      */
     @Query("SELECT * FROM Estate")
-    fun getAllEstate(): LiveData<List<Estate>>
+    fun getAllEstate(): Flow<List<Estate>>
 
 
     /**
@@ -57,6 +58,18 @@ interface EstateDao {
      */
     @Update
     fun update(estate: Estate)
+
+    /**
+     * Check if the database is prepopulate
+     */
+    @Query("SELECT COUNT(*) FROM estate WHERE isPrepopulated = 1")
+    fun isDatabasePrepopulate() : Boolean
+
+    /**
+     * Mark the database as prepopulate
+     */
+    @Query("UPDATE estate SET isPrepopulated = 1 WHERE isPrepopulated = 0")
+    fun markDatabasePrepopulated()
 
 
 

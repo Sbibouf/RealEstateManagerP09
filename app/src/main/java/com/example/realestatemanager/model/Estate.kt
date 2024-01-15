@@ -5,8 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "Estate")
 data class Estate(
-    @PrimaryKey
-    var id : Long,
+
     var type : String,
     var price : String,
     var size : String,
@@ -19,4 +18,8 @@ data class Estate(
     var entryDate : String,
     var soldDate : String?,
     var agent : String
-    )
+    ) {
+    @PrimaryKey(autoGenerate = true)
+    var id : Long = 0
+    var isPrepopulated : Boolean = false
+}

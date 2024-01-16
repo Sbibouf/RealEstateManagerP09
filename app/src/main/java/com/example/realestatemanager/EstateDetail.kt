@@ -1,4 +1,4 @@
-import android.annotation.SuppressLint
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -53,8 +53,8 @@ fun EstateDetailsScreen(estate: Estate) {
 @Composable
 fun EstateMediaRow(estate: Estate) {
     val estatesTest = listOf(
-        Estate("House","$100,000","300m2",5,"blabla","https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","New York","","","","",""),
-        Estate("Penthouse","$220,000","320m2",6,"","https://images.pexels.com/photos/53610/large-home-residential-house-architecture-53610.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Washington","","","","","")
+        Estate("House","$100,000","300m2",5,3,1,"blabla","https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","New York","","","","",""),
+        Estate("Penthouse","$220,000","320m2",6,3,2,"","https://images.pexels.com/photos/53610/large-home-residential-house-architecture-53610.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Washington","","","","","")
     )
     Column(modifier = Modifier.padding(8.dp)){
 
@@ -65,7 +65,7 @@ fun EstateMediaRow(estate: Estate) {
         ) {
             // Assuming estate.photos is a list of photo URLs
             LazyRow(modifier = Modifier
-                .height(56.dp)) {
+                .heightIn(56.dp)) {
                 items(estatesTest) { photoUrl ->
                     AsyncImage(
                         model = estate.picture, // Placeholder image
@@ -116,11 +116,11 @@ fun EstateDetailsRow(estate: Estate) {
         }
         Row {
             Icon(painter = painterResource(R.drawable.baseline_bed_24), contentDescription = null)
-            Text(text = "Nombre de chambres: ${estate.numberOfRooms}")
+            Text(text = "Nombre de chambres: ${estate.numberOfBedrooms}")
         }
         Row {
             Icon(painter = painterResource(R.drawable.baseline_bathtub_24), contentDescription = null)
-            Text(text = "Nombre de salles de bains: ${estate.numberOfRooms}")
+            Text(text = "Nombre de salles de bains: ${estate.numberOfBathrooms}")
         }
         Row {
             Icon(imageVector = Icons.Default.LocationOn, contentDescription = null)
@@ -135,6 +135,6 @@ fun EstateDetailsRow(estate: Estate) {
 @Preview
 @Composable
 fun EstateTest(){
-    val estate = Estate("House","$100,000","300m2",5,"Ce petit texte décrit le bien immobilier","https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","New York","","","","","")
+    val estate = Estate("House","$100,000","300m2",5,3,1,"Ce petit texte décrit le bien immobilier","https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","New York","","","","","")
     EstateDetailsScreen(estate = estate)
 }

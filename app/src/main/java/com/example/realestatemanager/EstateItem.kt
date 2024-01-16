@@ -1,6 +1,5 @@
-package com.example.kotlinTest
+package com.example.realestatemanager
 
-import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
@@ -9,14 +8,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,32 +29,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.example.realestatemanager.model.Estate
+import com.example.realestatemanager.ui.theme.KotlinTestTheme
 import java.io.File
 
-var estateList = listOf<Estate>()
-
-fun GetEstateList(estatesList : List<Estate>){
-    estateList = estatesList
-
-}
 
 @Composable
-fun EstateItem(estate: Estate, onDeleteClick: () -> Unit, onAddClick: () -> Unit) {
+fun EstateItem(estate: Estate, onClick: (Estate) -> Unit) {
 
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { /* Handle click here */ }
+            .clickable { onClick(estate) }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -74,6 +66,7 @@ fun EstateItem(estate: Estate, onDeleteClick: () -> Unit, onAddClick: () -> Unit
             Image(
                 painter = rememberAsyncImagePainter(model = imgBitmap),
                 contentDescription = null,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(100.dp)
             )
@@ -101,25 +94,8 @@ fun EstateItem(estate: Estate, onDeleteClick: () -> Unit, onAddClick: () -> Unit
                 )
 
             }
-
-            // Spacing
-            Spacer(modifier = Modifier.width(16.dp))
-
-            // Delete button
-            Icon(
-                imageVector = Icons.Default.Delete,
-                contentDescription = "Delete",
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable(onClick = onDeleteClick)
-            )
-            //Test Dao
-            Button(onClick = onAddClick, modifier = Modifier.size(24.dp)) {
-                Text("test")
-
-            }
-
         }
+        Divider()
 
 
     }
@@ -129,7 +105,11 @@ fun EstateItem(estate: Estate, onDeleteClick: () -> Unit, onAddClick: () -> Unit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EstateList(estate : List<Estate>) {
+fun EstateList(estate: List<Estate>, onClick: (Estate) -> Unit) {
+    val estatesTest = listOf(
+        Estate("House","$100,000","300m2",5,3,1,"","https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","New York","","","","",""),
+        Estate("Penthouse","$220,000","320m2",6,3,2,"","https://images.pexels.com/photos/53610/large-home-residential-house-architecture-53610.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Washington","","","","","")
+    )
 
     Scaffold(
         topBar = {
@@ -168,7 +148,7 @@ fun EstateList(estate : List<Estate>) {
                 .fillMaxSize()
         ) {
             items(estate) { estate ->
-                EstateItem(estate, onDeleteClick = { }, onAddClick = { })
+                EstateItem(estate, onClick = onClick)
             }
         }
     }
@@ -177,6 +157,17 @@ fun EstateList(estate : List<Estate>) {
 @Preview
 @Composable
 fun EstateListPreview() {
-    //EstateList()
+    val estatesTest = listOf(
+        Estate("House","$100,000","300m2",5,3,1,"","https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","New York","","","","",""),
+        Estate("Penthouse","$220,000","320m2",6,3,2,"","https://images.pexels.com/photos/53610/large-home-residential-house-architecture-53610.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Washington","","","","","")
+    )
+
+    KotlinTestTheme {
+
+        EstateList(estatesTest) {}
+    }
+
+
+
 }
 

@@ -1,4 +1,4 @@
-package com.example.kotlinTest.ui.theme
+package com.example.realestatemanager.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -25,6 +25,8 @@ val uiState : StateFlow<List<Estate>> = estateRepository.getAllEstates().stateIn
                   price : String,
                   size : String,
                   numberOfRooms : Int,
+                      numberOfBedrooms : Int,
+                      numberOfBathrooms : Int,
                   description : String,
                   picture : String,
                   address : String,
@@ -35,7 +37,7 @@ val uiState : StateFlow<List<Estate>> = estateRepository.getAllEstates().stateIn
                   agent : String){
 
     executor.execute{
-        estateRepository.insertEstate(Estate(type,price,size,numberOfRooms, description, picture, address, placesOfInterest, state, entryDate, soldDate, agent))
+        estateRepository.insertEstate(Estate(type,price,size,numberOfRooms, numberOfBedrooms, numberOfBathrooms, description, picture, address, placesOfInterest, state, entryDate, soldDate, agent))
     }
 }
     //fun getAllEstate() : StateFlow<List<Estate>>{

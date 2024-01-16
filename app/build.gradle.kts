@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.kotlintest"
+    namespace = "com.example.realestatemanager"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.kotlintest"
+        applicationId = "com.example.realestatemanager"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

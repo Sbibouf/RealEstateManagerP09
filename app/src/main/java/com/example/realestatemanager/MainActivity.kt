@@ -12,7 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import com.example.realestatemanager.data.local.repository.EstateRepository
 import com.example.realestatemanager.model.Estate
-import com.example.realestatemanager.ui.theme.KotlinTestTheme
+import com.example.realestatemanager.ui.theme.EstateTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
         setContent {
 
             val estate = estateViewModel.uiState.collectAsState().value
-            KotlinTestTheme {
+            EstateTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     EstateList(estate) { clickedEstate ->

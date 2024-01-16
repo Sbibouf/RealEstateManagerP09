@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
@@ -38,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.realestatemanager.model.Estate
-import com.example.realestatemanager.ui.theme.KotlinTestTheme
+import com.example.realestatemanager.ui.theme.EstateTheme
 import java.io.File
 
 
@@ -69,6 +70,7 @@ fun EstateItem(estate: Estate, onClick: (Estate) -> Unit) {
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(100.dp)
+                    .clip(RoundedCornerShape(16.dp))
             )
 
             Column(
@@ -76,22 +78,28 @@ fun EstateItem(estate: Estate, onClick: (Estate) -> Unit) {
                     .padding(horizontal = 8.dp)
             ) {
                 //Type
-                Text(
-                    text = estate.type,
-                    fontWeight = FontWeight.Bold
-                )
+                estate.type?.let {
+                    Text(
+                        text = it,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
 
                 //Address
-                Text(
-                    text = estate.address
-                )
+                estate.address?.let {
+                    Text(
+                        text = it
+                    )
+                }
 
                 //Price
-                Text(
-                    text = estate.price,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.tertiary
-                )
+                estate.price?.let {
+                    Text(
+                        text = it,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
+                }
 
             }
         }
@@ -162,7 +170,7 @@ fun EstateListPreview() {
         Estate("Penthouse","$220,000","320m2",6,3,2,"","https://images.pexels.com/photos/53610/large-home-residential-house-architecture-53610.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Washington","","","","","")
     )
 
-    KotlinTestTheme {
+    EstateTheme {
 
         EstateList(estatesTest) {}
     }

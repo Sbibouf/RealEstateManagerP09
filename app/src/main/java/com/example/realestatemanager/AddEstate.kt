@@ -1,10 +1,15 @@
 package com.example.realestatemanager
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
@@ -27,7 +32,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.kotlintest.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,25 +84,33 @@ fun AddEstate(){
 fun CreateEstate(){
 
         Column() {
-            TextField(
-                value = "",
-                onValueChange ={},
-                placeholder = {
-                    Text(stringResource(R.string.Nom_du_bien_immobilier))},
-                leadingIcon = {
-                    Icon(imageVector = Icons.Default.Home, contentDescription = null )
-                },
-                modifier = Modifier.fillMaxWidth())
+
+            Row {
+
+                TextField(
+                    value = "",
+                    onValueChange ={},
+                    placeholder = {
+                        Text(stringResource(R.string.Nom_du_bien_immobilier))},
+                    leadingIcon = {
+                        Icon(imageVector = Icons.Default.Home, contentDescription = null )
+                    },
+                    modifier = Modifier.weight(1f).padding(1.dp))
+                TextField(value = "Superficie en M²", onValueChange ={}, modifier = Modifier.weight(1f).padding(1.dp) )
+
+            }
             TextField(value = "address", onValueChange ={} )
-            TextField(value = "Superficie", onValueChange ={} )
+
             TextField(value = "description", onValueChange ={} )
             TextField(value = "Price", onValueChange ={} )
             TextField(value = "Photos", onValueChange ={} )
             TextField(value = "Number of rooms", onValueChange ={} )
             TextField(value = "Number of bathrooms", onValueChange ={} )
             TextField(value = "Number of bedrooms", onValueChange ={} )
+
+
             TextField(value = "Location", onValueChange ={} )
-            TextField(value = "Date d'entré", onValueChange ={} )
+            TextField(value = "Date d'entrée", onValueChange ={} )
             TextField(value = "Agent en charge", onValueChange ={} )
             TextField(value = "Date de vente", onValueChange ={} )
         }

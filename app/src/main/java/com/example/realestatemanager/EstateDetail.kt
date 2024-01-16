@@ -1,8 +1,9 @@
-
+package com.example.realestatemanager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
@@ -10,12 +11,12 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.kotlintest.R
 import com.example.realestatemanager.model.Estate
 
 
@@ -25,7 +26,7 @@ fun EstateDetailsScreen(estate: Estate) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = estate.type) },
+                title = { estate.type?.let { Text(text = it) } },
                 navigationIcon = {
                     IconButton(onClick = { /* Handle navigation icon click */ }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
@@ -65,13 +66,14 @@ fun EstateMediaRow(estate: Estate) {
         ) {
             // Assuming estate.photos is a list of photo URLs
             LazyRow(modifier = Modifier
-                .heightIn(56.dp)) {
+                ) {
                 items(estatesTest) { photoUrl ->
                     AsyncImage(
                         model = estate.picture, // Placeholder image
                         contentDescription = null,
                         modifier = Modifier
-                            .size(100.dp)
+                            .size(80.dp)
+                            .clip(RoundedCornerShape(16.dp))
                             .padding(1.dp)
                             .background(MaterialTheme.colorScheme.primary)
                     )
@@ -88,13 +90,15 @@ fun EstateDescriptionRow(estate: Estate) {
     Column(){
 
         Text(text = "Description", modifier = Modifier.padding(horizontal = 8.dp))
-        Text(
-            text = estate.description,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp),
-            fontWeight = FontWeight.Bold
-        )
+        estate.description?.let {
+            Text(
+                text = it,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 
 }

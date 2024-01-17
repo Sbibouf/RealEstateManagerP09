@@ -3,21 +3,26 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.realestatemanager.model.Estate
+import com.example.realestatemanager.model.EstatePhoto
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,10 +58,7 @@ fun EstateDetailsScreen(estate: Estate) {
 
 @Composable
 fun EstateMediaRow(estate: Estate) {
-    val estatesTest = listOf(
-        Estate("House","$100,000","300m2",5,3,1,"blabla","https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","New York","","","","",""),
-        Estate("Penthouse","$220,000","320m2",6,3,2,"","https://images.pexels.com/photos/53610/large-home-residential-house-architecture-53610.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Washington","","","","","")
-    )
+    val estatesTest : List<EstatePhoto> = estate.picture ?: emptyList()
     Column(modifier = Modifier.padding(8.dp)){
 
         Text(text = "Media")
@@ -67,16 +69,33 @@ fun EstateMediaRow(estate: Estate) {
             // Assuming estate.photos is a list of photo URLs
             LazyRow(modifier = Modifier
                 ) {
-                items(estatesTest) { photoUrl ->
-                    AsyncImage(
-                        model = estate.picture, // Placeholder image
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(80.dp)
-                            .clip(RoundedCornerShape(16.dp))
-                            .padding(1.dp)
-                            .background(MaterialTheme.colorScheme.primary)
-                    )
+                items(estatesTest) { photoUrI ->
+                    Box(modifier = Modifier
+                        .padding(8.dp)
+                        .width(80.dp)) {
+                        AsyncImage(
+                            model = photoUrI.uri, // Placeholder image
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(80.dp)
+                                .padding(1.dp)
+                        )
+                        photoUrI.name?.let {
+                            Text(text = it,
+                                color = Color.White,
+                                fontSize = 12.sp,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(Color.Black.copy(alpha = 0.5f))
+                                    .padding(4.dp)
+                                    .align(Alignment.BottomCenter))
+                        }
+                    }
+
                 }
             }
         }
@@ -139,6 +158,7 @@ fun EstateDetailsRow(estate: Estate) {
 @Preview
 @Composable
 fun EstateTest(){
-    val estate = Estate("House","$100,000","300m2",5,3,1,"Ce petit texte décrit le bien immobilier","https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","New York","","","","","")
+    val estate = Estate("House","$100,000","300m2",5,3,1,"Ce petit texte décrit le bien immobilier",
+        listOf(EstatePhoto("uri","nom")),"New York","","","","","","")
     EstateDetailsScreen(estate = estate)
 }

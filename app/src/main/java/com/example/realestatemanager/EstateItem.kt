@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.realestatemanager.model.Estate
+import com.example.realestatemanager.model.EstatePhoto
 import com.example.realestatemanager.ui.theme.EstateTheme
 import java.io.File
 
@@ -57,11 +58,12 @@ fun EstateItem(estate: Estate, onClick: (Estate) -> Unit) {
                 .fillMaxWidth()
 
         ) {
-            val imgFile = File(estate.picture)
+            val imgFile = estate.picture?.get(0)?.uri?.let { File(it) }
             var imgBitmap : Bitmap? = null
-            Log.d("ImagePath", imgFile.absolutePath)
-            if(imgFile.exists()){
-                imgBitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
+            if (imgFile != null) {
+                if(imgFile.exists()){
+                    imgBitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
+                }
             }
             // Avatar
             Image(
@@ -86,7 +88,7 @@ fun EstateItem(estate: Estate, onClick: (Estate) -> Unit) {
                 }
 
                 //Address
-                estate.address?.let {
+                estate.city?.let {
                     Text(
                         text = it
                     )
@@ -114,10 +116,6 @@ fun EstateItem(estate: Estate, onClick: (Estate) -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EstateList(estate: List<Estate>, onClick: (Estate) -> Unit) {
-    val estatesTest = listOf(
-        Estate("House","$100,000","300m2",5,3,1,"","https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","New York","","","","",""),
-        Estate("Penthouse","$220,000","320m2",6,3,2,"","https://images.pexels.com/photos/53610/large-home-residential-house-architecture-53610.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Washington","","","","","")
-    )
 
     Scaffold(
         topBar = {
@@ -166,8 +164,8 @@ fun EstateList(estate: List<Estate>, onClick: (Estate) -> Unit) {
 @Composable
 fun EstateListPreview() {
     val estatesTest = listOf(
-        Estate("House","$100,000","300m2",5,3,1,"","https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","New York","","","","",""),
-        Estate("Penthouse","$220,000","320m2",6,3,2,"","https://images.pexels.com/photos/53610/large-home-residential-house-architecture-53610.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Washington","","","","","")
+        Estate("House","$100,000","300m2",5,3,1,"", listOf(EstatePhoto("uri","nom")),"New York","","","","","",""),
+        Estate("Penthouse","$220,000","320m2",6,3,2,"",listOf(EstatePhoto("uri","nom")),"Washington","","","","","","")
     )
 
     EstateTheme {

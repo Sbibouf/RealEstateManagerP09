@@ -29,7 +29,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.realestatemanager.SecondActivity"
+            android:name="com.example.realestatemanager.EstateDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.RealEstateManager">
+
+        </activity>
+        <activity
+            android:name="com.example.realestatemanager.AddEstateActivity"
             android:exported="false"
             android:theme="@style/Theme.RealEstateManager">
 

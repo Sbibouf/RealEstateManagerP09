@@ -2,6 +2,7 @@ package com.example.realestatemanager
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.service.autofill.OnClickAction
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -45,12 +46,12 @@ import java.io.File
 
 
 @Composable
-fun EstateItem(estate: Estate, onClick: (Estate) -> Unit) {
+fun EstateItem(estate: Estate, onEstateClick: (Estate) -> Unit) {
 
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick(estate) }
+            .clickable { onEstateClick(estate) }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -115,7 +116,7 @@ fun EstateItem(estate: Estate, onClick: (Estate) -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EstateList(estate: List<Estate>, onClick: (Estate) -> Unit) {
+fun EstateList(estate: List<Estate>, onEstateClick: (Estate) -> Unit, onAddClick: ()->Unit) {
 
     Scaffold(
         topBar = {
@@ -135,7 +136,7 @@ fun EstateList(estate: List<Estate>, onClick: (Estate) -> Unit) {
                 },
                 actions = {
 
-                    IconButton(onClick = { /* Handle search icon click */ }) {
+                    IconButton(onClick = { onAddClick() }) {
                         Icon(imageVector = Icons.Default.Add, contentDescription = null)
                     }
                     IconButton(onClick = { /* Handle settings icon click */ }) {
@@ -154,7 +155,7 @@ fun EstateList(estate: List<Estate>, onClick: (Estate) -> Unit) {
                 .fillMaxSize()
         ) {
             items(estate) { estate ->
-                EstateItem(estate, onClick = onClick)
+                EstateItem(estate, onEstateClick = onEstateClick)
             }
         }
     }
@@ -170,7 +171,7 @@ fun EstateListPreview() {
 
     EstateTheme {
 
-        EstateList(estatesTest) {}
+        //EstateList(estatesTest) {}
     }
 
 

@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.content.IntentCompat
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.ui.theme.EstateTheme
-import com.example.realestatemanager.ui.EstateList.EstateDetailsScreen
+import com.example.realestatemanager.ui.estateList.EstateDetailsScreen
 
 
 class EstateDetailActivity : ComponentActivity() {

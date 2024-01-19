@@ -1,4 +1,4 @@
-package com.example.realestatemanager.ui.EstateList
+package com.example.realestatemanager.ui.estateList
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow

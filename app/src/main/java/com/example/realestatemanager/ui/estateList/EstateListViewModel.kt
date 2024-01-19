@@ -1,10 +1,9 @@
-package com.example.realestatemanager.ui.EstateList
+package com.example.realestatemanager.ui.estateList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.realestatemanager.data.local.repository.EstateRepository
 import com.example.realestatemanager.model.Estate
-import com.example.realestatemanager.model.EstatePhoto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

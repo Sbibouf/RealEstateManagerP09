@@ -20,11 +20,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.ui.theme.EstateTheme
-import com.example.realestatemanager.ui.EstateList.EstateListAndDetail
-import com.example.realestatemanager.ui.EstateList.EstateUiPortrait
+import com.example.realestatemanager.ui.estateList.EstateUiLandscape
+import com.example.realestatemanager.ui.estateList.EstateUiPortrait
 import dagger.hilt.android.AndroidEntryPoint
 import android.os.Build
-import com.example.realestatemanager.ui.EstateList.EstateListViewModel
+import com.example.realestatemanager.ui.estateList.EstateListViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -90,11 +90,11 @@ class MainActivity : ComponentActivity() {
                         }
                         WindowWidthSizeClass.Expanded -> {
                             selectedEstate?.let {
-                                EstateListAndDetail(estate = it, estateList = estateList, onEstateClick = { estate ->
+                                EstateUiLandscape(estate = it, estateList = estateList, onEstateClick = { estate ->
                                     selectedEstate = estate
-                                } ) {
+                                } )
 
-                                }
+
                             }
                         }
                     }

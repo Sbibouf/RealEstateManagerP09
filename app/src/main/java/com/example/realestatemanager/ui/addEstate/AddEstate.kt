@@ -1,4 +1,4 @@
-package com.example.realestatemanager.ui.AddEstate
+package com.example.realestatemanager.ui.addEstate
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

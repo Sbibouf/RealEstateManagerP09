@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.content.IntentCompat
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.ui.theme.EstateTheme
+import com.example.realestatemanager.ui.EstateList.EstateDetailsScreen
 
 
 class EstateDetailActivity : ComponentActivity() {
@@ -23,7 +24,7 @@ class EstateDetailActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     if(estate!= null){
-                        EstateDetailsScreen(estate)
+                        EstateDetailsScreen(estate, modifier = Modifier)
                     }
 
 

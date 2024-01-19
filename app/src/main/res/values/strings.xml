@@ -12,4 +12,5 @@
     <string name="Number_of_bedrooms">Nombre de chambres</string>
     <string name="Number_of_bathrooms">Nombre de salle d\'eau</string>
     <string name="Agent">Agent en charge</string>
+    <string name="Valider">Ajouter le bien</string>
 </resources>

@@ -1,17 +1,15 @@
-package com.example.realestatemanager
+package com.example.realestatemanager.ui.AddEstate
 
-import android.widget.ScrollView
-import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 
 import androidx.compose.material.icons.Icons
@@ -19,9 +17,9 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -41,14 +39,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.realestatemanager.R
+import com.example.realestatemanager.model.Estate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddEstate(){
+fun AddEstate(onButtonClick: (Estate) -> Unit, onPhotoClick : ()->Unit){
     Scaffold(
         topBar = {
             TopAppBar( colors = TopAppBarDefaults.topAppBarColors(
@@ -87,14 +87,14 @@ fun AddEstate(){
                     .padding(it)
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
-                CreateEstate()
+                CreateEstate(onButtonClick = onButtonClick, onPhotoClick = onPhotoClick)
 
             }
         })
     }
 
 @Composable
-fun CreateEstate(){
+fun CreateEstate(onButtonClick : (Estate)->Unit, onPhotoClick : ()->Unit){
     var nomDuBien by remember { mutableStateOf("") }
     var superficie by remember { mutableStateOf("") }
     var adresse by remember { mutableStateOf("") }
@@ -108,14 +108,17 @@ fun CreateEstate(){
     var dateDeVente by remember { mutableStateOf("") }
     var agent by remember { mutableStateOf("") }
 
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+        Column(modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center) {
 
             Row(modifier = Modifier.padding(8.dp)) {
 
                 TextField(
                     value = nomDuBien,
                     onValueChange ={ newTextValue ->
-                        // Mettez à jour la valeur du texte
                         nomDuBien = newTextValue
                     },
                     placeholder = {
@@ -125,7 +128,6 @@ fun CreateEstate(){
                         .padding(1.dp))
                 TextField(value = superficie,
                     onValueChange ={ newTextValue ->
-                        // Mettez à jour la valeur du texte
                         superficie = newTextValue
                     },
                     placeholder = {
@@ -138,7 +140,6 @@ fun CreateEstate(){
 
             TextField(value = adresse,
                 onValueChange ={ newTextValue ->
-                    // Mettez à jour la valeur du texte
                     adresse = newTextValue
                 },
                 placeholder = {
@@ -148,7 +149,6 @@ fun CreateEstate(){
                     .fillMaxWidth() )
             TextField(value = description,
                 onValueChange ={ newTextValue ->
-                    // Mettez à jour la valeur du texte
                     description = newTextValue
                 },
                 placeholder = {
@@ -158,7 +158,6 @@ fun CreateEstate(){
                     .fillMaxWidth() )
             TextField(value = prix,
                 onValueChange ={ newTextValue ->
-                    // Mettez à jour la valeur du texte
                     prix = newTextValue
                 },
                 placeholder = {
@@ -171,7 +170,6 @@ fun CreateEstate(){
 
                 TextField(value = photos,
                     onValueChange ={ newTextValue ->
-                        // Mettez à jour la valeur du texte
                         photos = newTextValue
                     },
                     placeholder = {
@@ -180,7 +178,7 @@ fun CreateEstate(){
                 IconButton(onClick = { /*TODO*/ }, modifier = Modifier.align(Alignment.CenterVertically)) {
                     Icon(imageVector = Icons.Default.AddCircle, contentDescription = null)
                 }
-                IconButton(onClick = { /*TODO*/ }, modifier = Modifier.align(Alignment.CenterVertically)) {
+                IconButton(onClick = { onPhotoClick() }, modifier = Modifier.align(Alignment.CenterVertically)) {
                     Icon(painter = painterResource(R.drawable.baseline_photo_camera_24), contentDescription = null)
                 }
             }
@@ -188,10 +186,9 @@ fun CreateEstate(){
             Row(modifier = Modifier.padding(8.dp)) {
 
                 TextField(value = nombreDePieces,
-                    onValueChange ={ newTextValue ->
-                        // Mettez à jour la valeur du texte
-                        nombreDePieces = newTextValue
+                    onValueChange ={ nombreDePieces = it
                     },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     placeholder = {
                         Text(stringResource(R.string.Number_of_rooms))},
                     modifier = Modifier
@@ -199,20 +196,18 @@ fun CreateEstate(){
                         .padding(1.dp)
                         )
                 TextField(value = nombreDeSalleDeau,
-                    onValueChange ={ newTextValue ->
-                        // Mettez à jour la valeur du texte
-                        nombreDeSalleDeau = newTextValue
+                    onValueChange ={ nombreDeSalleDeau = it
                     },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     placeholder = {
                         Text(stringResource(R.string.Number_of_bathrooms))},
                     modifier = Modifier
                         .weight(1f)
                         .padding(1.dp) )
                 TextField(value = nombreDeChambres,
-                    onValueChange ={ newTextValue ->
-                        // Mettez à jour la valeur du texte
-                        nombreDeChambres = newTextValue
+                    onValueChange ={ nombreDeChambres = it
                     },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     placeholder = {
                         Text(stringResource(R.string.Number_of_bedrooms))},
                     modifier = Modifier
@@ -224,7 +219,6 @@ fun CreateEstate(){
 
                 TextField(value = dateDentré,
                     onValueChange ={ newTextValue ->
-                        // Mettez à jour la valeur du texte
                         dateDentré = newTextValue
                     },
                     placeholder = {
@@ -237,7 +231,6 @@ fun CreateEstate(){
                 }
                 TextField(value = dateDeVente,
                     onValueChange ={ newTextValue ->
-                        // Mettez à jour la valeur du texte
                         dateDeVente = newTextValue
                     },
                     placeholder = {
@@ -252,7 +245,6 @@ fun CreateEstate(){
 
             TextField(value = agent,
                 onValueChange ={ newTextValue ->
-                    // Mettez à jour la valeur du texte
                     agent = newTextValue
                 },
                 placeholder = {
@@ -261,11 +253,19 @@ fun CreateEstate(){
                     .padding(8.dp)
                     .fillMaxWidth() )
 
+            Button(onClick = {
+                val data = Estate(type = nomDuBien, price = prix, size = superficie, numberOfRooms = nombreDePieces, numberOfBedrooms = nombreDeChambres, numberOfBathrooms = nombreDeSalleDeau, description = description, picture = null, address = adresse, city = adresse, placesOfInterest = null, state = null, entryDate = null, soldDate = null, agent = agent )
+                onButtonClick(data)
+            }) {
+                Text(stringResource(R.string.Valider))
+
+            }
+
         }
 }
 
 @Preview
 @Composable
 fun Preview(){
-    AddEstate()
+    AddEstate(onButtonClick = {} ,onPhotoClick = {})
 }

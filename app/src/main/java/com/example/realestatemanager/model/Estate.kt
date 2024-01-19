@@ -13,9 +13,9 @@ data class Estate(
     var type : String?,
     var price : String?,
     var size : String?,
-    var numberOfRooms : Int,
-    var numberOfBedrooms : Int,
-    var numberOfBathrooms : Int,
+    var numberOfRooms : String?,
+    var numberOfBedrooms : String?,
+    var numberOfBathrooms : String?,
     var description : String?,
     var picture : List<EstatePhoto>?,
     var address : String?,
@@ -34,9 +34,9 @@ data class Estate(
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
-        parcel.readInt(),
-        parcel.readInt(),
-        parcel.readInt(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
         parcel.readString(),
         parcel.createTypedArrayList(EstatePhoto),
         parcel.readString(),
@@ -55,9 +55,9 @@ data class Estate(
         parcel.writeString(type)
         parcel.writeString(price)
         parcel.writeString(size)
-        parcel.writeInt(numberOfRooms)
-        parcel.writeInt(numberOfBedrooms)
-        parcel.writeInt(numberOfBathrooms)
+        parcel.writeString(numberOfRooms)
+        parcel.writeString(numberOfBedrooms)
+        parcel.writeString(numberOfBathrooms)
         parcel.writeString(description)
         parcel.writeTypedList(picture)
         parcel.writeString(address)

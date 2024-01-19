@@ -1,9 +1,7 @@
-package com.example.realestatemanager
+package com.example.realestatemanager.ui.EstateList
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.service.autofill.OnClickAction
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,7 +13,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -116,7 +113,7 @@ fun EstateItem(estate: Estate, onEstateClick: (Estate) -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EstateList(estate: List<Estate>, onEstateClick: (Estate) -> Unit, onAddClick: ()->Unit) {
+fun EstateList(estateList: List<Estate>, onEstateClick: (Estate) -> Unit, onAddClick: ()->Unit, modifier: Modifier) {
 
     Scaffold(
         topBar = {
@@ -154,7 +151,7 @@ fun EstateList(estate: List<Estate>, onEstateClick: (Estate) -> Unit, onAddClick
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            items(estate) { estate ->
+            items(estateList) { estate ->
                 EstateItem(estate, onEstateClick = onEstateClick)
             }
         }
@@ -165,13 +162,13 @@ fun EstateList(estate: List<Estate>, onEstateClick: (Estate) -> Unit, onAddClick
 @Composable
 fun EstateListPreview() {
     val estatesTest = listOf(
-        Estate("House","$100,000","300m2",5,3,1,"", listOf(EstatePhoto("uri","nom")),"New York","","","","","",""),
-        Estate("Penthouse","$220,000","320m2",6,3,2,"",listOf(EstatePhoto("uri","nom")),"Washington","","","","","","")
+        Estate("House","$100,000","300m2","5","3","1","", listOf(EstatePhoto("uri","nom")),"New York","","","","","",""),
+        Estate("Penthouse","$220,000","320m2","6","3","2","",listOf(EstatePhoto("uri","nom")),"Washington","","","","","","")
     )
 
     EstateTheme {
 
-        //EstateList(estatesTest) {}
+       // EstateList(estatesTest, onEstateClick = {}, onAddClick = {}) {}
     }
 
 

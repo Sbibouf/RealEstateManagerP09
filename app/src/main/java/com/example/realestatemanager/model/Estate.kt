@@ -17,7 +17,6 @@ data class Estate(
     var numberOfBedrooms : String?,
     var numberOfBathrooms : String?,
     var description : String?,
-    var picture : List<EstatePhoto>?,
     var address : String?,
     var city : String?,
     var placesOfInterest : String?,
@@ -28,7 +27,6 @@ data class Estate(
     ) : Parcelable {
     @PrimaryKey(autoGenerate = true)
     var id : Long = 0
-    var isPrepopulated : Boolean = false
 
     constructor(parcel: Parcel) : this(
         parcel.readString(),
@@ -38,7 +36,6 @@ data class Estate(
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
-        parcel.createTypedArrayList(EstatePhoto),
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
@@ -48,7 +45,6 @@ data class Estate(
         parcel.readString()
     ) {
         id = parcel.readLong()
-        isPrepopulated = parcel.readByte() != 0.toByte()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -59,7 +55,6 @@ data class Estate(
         parcel.writeString(numberOfBedrooms)
         parcel.writeString(numberOfBathrooms)
         parcel.writeString(description)
-        parcel.writeTypedList(picture)
         parcel.writeString(address)
         parcel.writeString(city)
         parcel.writeString(placesOfInterest)
@@ -68,7 +63,6 @@ data class Estate(
         parcel.writeString(soldDate)
         parcel.writeString(agent)
         parcel.writeLong(id)
-        parcel.writeByte(if (isPrepopulated) 1 else 0)
     }
 
     override fun describeContents(): Int {

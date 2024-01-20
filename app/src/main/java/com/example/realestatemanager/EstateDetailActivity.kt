@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.content.IntentCompat
 import com.example.realestatemanager.model.Estate
+import com.example.realestatemanager.model.EstateWithPhotos
 import com.example.realestatemanager.ui.theme.EstateTheme
 import com.example.realestatemanager.ui.estateList.EstateDetailsScreen
 
@@ -18,7 +19,7 @@ class EstateDetailActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val estate : Estate? = IntentCompat.getParcelableExtra(intent, "estate", Estate::class.java)
+        val estate : EstateWithPhotos? = IntentCompat.getParcelableExtra(intent, "estate", EstateWithPhotos::class.java)
         setContent {
             EstateTheme {
                 // A surface container using the 'background' color from the theme

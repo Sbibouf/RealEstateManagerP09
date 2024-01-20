@@ -1,19 +1,15 @@
 package com.example.realestatemanager.data.local.database
 
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverter
-import androidx.room.TypeConverters
-import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.realestatemanager.data.local.dao.EstateDao
+import com.example.realestatemanager.data.local.dao.LibraryDao
 import com.example.realestatemanager.model.Estate
-import com.example.realestatemanager.model.EstateTypeConverters
-import java.util.concurrent.Executors
+import com.example.realestatemanager.model.EstatePhoto
 
-@TypeConverters(EstateTypeConverters::class)
-@androidx.room.Database(entities = [Estate::class], version = 1, exportSchema = false)
+
+@androidx.room.Database(entities = [Estate::class, EstatePhoto::class], version = 1, exportSchema = false)
 abstract class EstateDatabase : RoomDatabase() {
 
-    abstract fun estateDao() : EstateDao
+    abstract fun libraryDao() : LibraryDao
 
    // abstract val estateDao : EstateDao
 

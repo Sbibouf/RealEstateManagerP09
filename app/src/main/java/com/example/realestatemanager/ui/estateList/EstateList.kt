@@ -38,17 +38,18 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
+import com.example.realestatemanager.model.EstateWithPhotos
 import com.example.realestatemanager.ui.theme.EstateTheme
 import java.io.File
 
 
 @Composable
-fun EstateItem(estate: Estate, onEstateClick: (Estate) -> Unit) {
+fun EstateItem(estateWithPhotos: EstateWithPhotos, onEstateClick: (EstateWithPhotos) -> Unit) {
 
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onEstateClick(estate) }
+            .clickable { onEstateClick(estateWithPhotos) }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -56,7 +57,7 @@ fun EstateItem(estate: Estate, onEstateClick: (Estate) -> Unit) {
                 .fillMaxWidth()
 
         ) {
-            val imgFile = estate.picture?.get(0)?.uri?.let { File(it) }
+            val imgFile = estateWithPhotos.photos?.get(0)?.uri?.let { File(it) }
             var imgBitmap : Bitmap? = null
             if (imgFile != null) {
                 if(imgFile.exists()){
@@ -78,7 +79,7 @@ fun EstateItem(estate: Estate, onEstateClick: (Estate) -> Unit) {
                     .padding(horizontal = 8.dp)
             ) {
                 //Type
-                estate.type?.let {
+                estateWithPhotos.estate?.type?.let {
                     Text(
                         text = it,
                         fontWeight = FontWeight.Bold
@@ -86,14 +87,14 @@ fun EstateItem(estate: Estate, onEstateClick: (Estate) -> Unit) {
                 }
 
                 //Address
-                estate.city?.let {
+                estateWithPhotos.estate?.city?.let {
                     Text(
                         text = it
                     )
                 }
 
                 //Price
-                estate.price?.let {
+                estateWithPhotos.estate?.price?.let {
                     Text(
                         text = it,
                         fontWeight = FontWeight.Bold,
@@ -113,7 +114,7 @@ fun EstateItem(estate: Estate, onEstateClick: (Estate) -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EstateList(estateList: List<Estate>, onEstateClick: (Estate) -> Unit, onAddClick: ()->Unit, modifier: Modifier) {
+fun EstateList(estateList: List<EstateWithPhotos>, onEstateClick: (EstateWithPhotos) -> Unit, onAddClick: ()->Unit, modifier: Modifier) {
 
     Scaffold(
         topBar = {
@@ -161,15 +162,15 @@ fun EstateList(estateList: List<Estate>, onEstateClick: (Estate) -> Unit, onAddC
 @Preview
 @Composable
 fun EstateListPreview() {
-    val estatesTest = listOf(
-        Estate("House","$100,000","300m2","5","3","1","", listOf(EstatePhoto("uri","nom")),"New York","","","","","",""),
-        Estate("Penthouse","$220,000","320m2","6","3","2","",listOf(EstatePhoto("uri","nom")),"Washington","","","","","","")
-    )
+    //val estatesTest = listOf(
+//        Estate("House","$100,000","300m2","5","3","1","", listOf(EstatePhoto("uri","nom")),"New York","","","","","",""),
+//        Estate("Penthouse","$220,000","320m2","6","3","2","",listOf(EstatePhoto("uri","nom")),"Washington","","","","","","")
+//    )
 
-    EstateTheme {
-
-       // EstateList(estatesTest, onEstateClick = {}, onAddClick = {}) {}
-    }
+//    EstateTheme {
+//
+//       EstateList(estatesTest, onEstateClick = {}, onAddClick = {}, modifier = Modifier)
+//    }
 
 
 

@@ -5,19 +5,42 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.example.realestatemanager.model.Estate
+import com.example.realestatemanager.model.EstatePhoto
+import com.example.realestatemanager.model.EstateWithPhotos
 import kotlinx.coroutines.flow.Flow
 
 
 @Dao
-interface EstateDao {
+interface LibraryDao {
 
     /**
      * Insert new estate
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(estate : Estate)
+
+    /**
+     * Insert a new estatePhoto
+     */
+    @Insert
+    fun insertPhoto(photo : EstatePhoto)
+
+    /**
+     * Add photo to estate and return all EstateWithPhoto
+     */
+    @Transaction
+    @Query("SELECT * FROM estate")
+    fun getAllEstateWithPhoto() : Flow<List<EstateWithPhotos>>
+
+    /**
+     * Add photo to estate and return EstateWithPhoto
+     */
+    @Transaction
+    @Query("SELECT * FROM estate WHERE id = :id")
+    fun getEstateWithPhotoById(id : Long): Flow<EstateWithPhotos>
 
 
     /**
@@ -47,29 +70,10 @@ interface EstateDao {
 
 
     /**
-     * Insert a new estate into database
-     * @param estate
-     */
-    @Insert
-    fun createEstate(estate: Estate)
-
-    /**
      * Update Estate with new data
      */
     @Update
     fun update(estate: Estate)
-
-    /**
-     * Check if the database is prepopulate
-     */
-    @Query("SELECT COUNT(*) FROM estate WHERE isPrepopulated = 1")
-    fun isDatabasePrepopulate() : Boolean
-
-    /**
-     * Mark the database as prepopulate
-     */
-    @Query("UPDATE estate SET isPrepopulated = 1 WHERE isPrepopulated = 0")
-    fun markDatabasePrepopulated()
 
 
 

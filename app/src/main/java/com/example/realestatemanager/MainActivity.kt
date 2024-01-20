@@ -24,6 +24,9 @@ import com.example.realestatemanager.ui.estateList.EstateUiLandscape
 import com.example.realestatemanager.ui.estateList.EstateUiPortrait
 import dagger.hilt.android.AndroidEntryPoint
 import android.os.Build
+import android.util.Log
+import com.example.realestatemanager.model.EstateWithPhotos
+import com.example.realestatemanager.ui.estateList.EstateList
 import com.example.realestatemanager.ui.estateList.EstateListViewModel
 
 @AndroidEntryPoint
@@ -72,12 +75,14 @@ class MainActivity : ComponentActivity() {
             val estateList = estateViewModel.uiState.collectAsState().value
             var selectedEstate by remember { mutableStateOf<Estate?>(null) }
 
+
+
             EstateTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     when (windowSizeClass.widthSizeClass) {
                         WindowWidthSizeClass.Compact -> {
-                            EstateUiPortrait(
+                            EstateList(
                                 estateList = estateList,
                                 onEstateClick =  {clickedEstate ->
                                     handleEstateItemClick(clickedEstate)
@@ -89,13 +94,8 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         WindowWidthSizeClass.Expanded -> {
-                            selectedEstate?.let {
-                                EstateUiLandscape(estate = it, estateList = estateList, onEstateClick = { estate ->
-                                    selectedEstate = estate
-                                } )
-
-
-                            }
+                            Log.d("EstateListAndDetail", "Recomposing...")
+                            //EstateUiLandscape(estate = estateList[0], estateList = estateList, onEstateClick = {})
                         }
                     }
 
@@ -104,7 +104,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun handleEstateItemClick(clickedEstate: Estate) {
+    private fun handleEstateItemClick(clickedEstate: EstateWithPhotos) {
         val intent = Intent(this, EstateDetailActivity::class.java)
         intent.putExtra("estate", clickedEstate)
         startActivity(intent)

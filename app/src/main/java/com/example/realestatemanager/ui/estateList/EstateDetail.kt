@@ -24,15 +24,16 @@ import coil.compose.AsyncImage
 import com.example.realestatemanager.R
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
+import com.example.realestatemanager.model.EstateWithPhotos
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EstateDetailsScreen(estate: Estate, modifier: Modifier) {
+fun EstateDetailsScreen(estateWithPhotos: EstateWithPhotos, modifier: Modifier) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { estate.type?.let { Text(text = it) } },
+                title = { estateWithPhotos.estate?.type?.let { Text(text = it) } },
                 navigationIcon = {
                     IconButton(onClick = { /* Handle navigation icon click */ }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
@@ -48,9 +49,9 @@ fun EstateDetailsScreen(estate: Estate, modifier: Modifier) {
                     .padding(it)
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
-                    EstateMediaRow(estate)
-                    EstateDescriptionRow(estate)
-                    EstateDetailsRow(estate)
+                    EstateMediaRow(estateWithPhotos)
+                    EstateDescriptionRow(estateWithPhotos)
+                    EstateDetailsRow(estateWithPhotos)
 
             }
         }
@@ -58,8 +59,8 @@ fun EstateDetailsScreen(estate: Estate, modifier: Modifier) {
 }
 
 @Composable
-fun EstateMediaRow(estate: Estate) {
-    val estatesTest : List<EstatePhoto> = estate.picture ?: emptyList()
+fun EstateMediaRow(estateWithPhotos: EstateWithPhotos) {
+    val estatesTest : List<EstatePhoto> = estateWithPhotos.photos ?: emptyList()
     Column(modifier = Modifier.padding(8.dp)){
 
         Text(text = "Media")
@@ -105,12 +106,12 @@ fun EstateMediaRow(estate: Estate) {
 }
 
 @Composable
-fun EstateDescriptionRow(estate: Estate) {
+fun EstateDescriptionRow(estateWithPhotos: EstateWithPhotos) {
 
     Column(){
 
         Text(text = "Description", modifier = Modifier.padding(horizontal = 8.dp))
-        estate.description?.let {
+        estateWithPhotos.estate?.description?.let {
             Text(
                 text = it,
                 modifier = Modifier
@@ -124,7 +125,7 @@ fun EstateDescriptionRow(estate: Estate) {
 }
 
 @Composable
-fun EstateDetailsRow(estate: Estate) {
+fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -132,23 +133,23 @@ fun EstateDetailsRow(estate: Estate) {
     ) {
         Row {
             Icon(painter = painterResource(R.drawable.baseline_aspect_ratio_24), contentDescription = null)
-            Text(text = "Surface: ${estate.size}")
+            Text(text = "Surface: ${estateWithPhotos.estate?.size}")
         }
         Row {
             Icon(imageVector = Icons.Default.Home, contentDescription = null)
-            Text(text = "Nombre de pièces: ${estate.numberOfRooms}")
+            Text(text = "Nombre de pièces: ${estateWithPhotos.estate?.numberOfRooms}")
         }
         Row {
             Icon(painter = painterResource(R.drawable.baseline_bed_24), contentDescription = null)
-            Text(text = "Nombre de chambres: ${estate.numberOfBedrooms}")
+            Text(text = "Nombre de chambres: ${estateWithPhotos.estate?.numberOfBedrooms}")
         }
         Row {
             Icon(painter = painterResource(R.drawable.baseline_bathtub_24), contentDescription = null)
-            Text(text = "Nombre de salles de bains: ${estate.numberOfBathrooms}")
+            Text(text = "Nombre de salles de bains: ${estateWithPhotos.estate?.numberOfBathrooms}")
         }
         Row {
             Icon(imageVector = Icons.Default.LocationOn, contentDescription = null)
-            Text(text = "Localisation: ${estate.address}")
+            Text(text = "Localisation: ${estateWithPhotos.estate?.address}")
         }
 
 
@@ -159,7 +160,7 @@ fun EstateDetailsRow(estate: Estate) {
 @Preview
 @Composable
 fun EstateTest(){
-    val estate = Estate("House","$100,000","300m2","5","3","1","Ce petit texte décrit le bien immobilier",
-        listOf(EstatePhoto("uri","nom")),"New York","","","","","","")
-    EstateDetailsScreen(estate = estate, modifier = Modifier)
+//    val estate = Estate("House","$100,000","300m2","5","3","1","Ce petit texte décrit le bien immobilier",
+//        listOf(EstatePhoto("uri","nom")),"New York","","","","","","")
+//    EstateDetailsScreen(estate = estate, modifier = Modifier)
 }

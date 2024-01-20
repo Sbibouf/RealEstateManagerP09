@@ -254,7 +254,7 @@ fun CreateEstate(onButtonClick : (Estate)->Unit, onPhotoClick : ()->Unit){
                     .fillMaxWidth() )
 
             Button(onClick = {
-                val data = Estate(type = nomDuBien, price = prix, size = superficie, numberOfRooms = nombreDePieces, numberOfBedrooms = nombreDeChambres, numberOfBathrooms = nombreDeSalleDeau, description = description, picture = null, address = adresse, city = adresse, placesOfInterest = null, state = null, entryDate = null, soldDate = null, agent = agent )
+                val data = Estate(type = nomDuBien, price = prix, size = superficie, numberOfRooms = nombreDePieces, numberOfBedrooms = nombreDeChambres, numberOfBathrooms = nombreDeSalleDeau, description = description, address = adresse, city = adresse, placesOfInterest = null, state = null, entryDate = null, soldDate = null, agent = agent )
                 onButtonClick(data)
             }) {
                 Text(stringResource(R.string.Valider))

@@ -33,7 +33,7 @@ class AddEstateActivity : ComponentActivity() {
             EstateTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     AddEstate(onButtonClick = {data ->
-                                              addEstateViewModel.insertEstate(data.type,data.price,data.size,data.numberOfRooms,data.numberOfBedrooms,data.numberOfBathrooms,data.description,data.picture,data.address,data.city,data.placesOfInterest,data.state,data.entryDate,data.soldDate,data.agent)
+                                              addEstateViewModel.insertEstate(data.type,data.price,data.size,data.numberOfRooms,data.numberOfBedrooms,data.numberOfBathrooms,data.description,data.address,data.city,data.placesOfInterest,data.state,data.entryDate,data.soldDate,data.agent)
                         finish()
                     } , onPhotoClick = {handleOnPhotoClick()})
 

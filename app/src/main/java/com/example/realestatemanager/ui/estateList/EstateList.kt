@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
+
 import com.example.realestatemanager.model.EstateWithPhotos
 import com.example.realestatemanager.ui.theme.EstateTheme
 import java.io.File
@@ -162,15 +163,18 @@ fun EstateList(estateList: List<EstateWithPhotos>, onEstateClick: (EstateWithPho
 @Preview
 @Composable
 fun EstateListPreview() {
-    //val estatesTest = listOf(
-//        Estate("House","$100,000","300m2","5","3","1","", listOf(EstatePhoto("uri","nom")),"New York","","","","","",""),
-//        Estate("Penthouse","$220,000","320m2","6","3","2","",listOf(EstatePhoto("uri","nom")),"Washington","","","","","","")
-//    )
+    val estatesTest = listOf(
+        EstateWithPhotos(Estate("House","$100,000","300m2","5","3","1","","New York","","","","","",""),
+            listOf( EstatePhoto(1L,"/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
+                EstatePhoto(1L,"/storage/emulated/0/Download/estate1_living.jpg","Salon"))),
+        EstateWithPhotos(Estate("PentHouse","$100,000,000","300m2","5","3","1","","New York","","","","","",""),
+            listOf( EstatePhoto(1L,"/storage/emulated/0/Download/estate2_front.jpg", "Façade"),
+                EstatePhoto(1L,"/storage/emulated/0/Download/estate2_living.jpg","Salon"))))
 
-//    EstateTheme {
-//
-//       EstateList(estatesTest, onEstateClick = {}, onAddClick = {}, modifier = Modifier)
-//    }
+    EstateTheme {
+
+       EstateList(estatesTest, onEstateClick = {}, onAddClick = {}, modifier = Modifier)
+    }
 
 
 

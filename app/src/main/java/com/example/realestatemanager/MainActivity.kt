@@ -82,10 +82,11 @@ class MainActivity : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     when (windowSizeClass.widthSizeClass) {
                         WindowWidthSizeClass.Compact -> {
-                            EstateList(
-                                estateList = estateList,
+                            Log.d("EstateList", "Recomposing...")
+                            EstateUiPortrait(
+                                estateWithPhotosList = estateList,
                                 onEstateClick =  {clickedEstate ->
-                                    handleEstateItemClick(clickedEstate)
+                                    //handleEstateItemClick(clickedEstate)
                                 },
                                 onAddClick = {
                                     handleAddClick()
@@ -95,7 +96,7 @@ class MainActivity : ComponentActivity() {
                         }
                         WindowWidthSizeClass.Expanded -> {
                             Log.d("EstateListAndDetail", "Recomposing...")
-                            //EstateUiLandscape(estate = estateList[0], estateList = estateList, onEstateClick = {})
+                            EstateUiLandscape(estateWithPhotosList = estateList,estateWithPhotos = estateList[0],  onEstateClick = {})
                         }
                     }
 

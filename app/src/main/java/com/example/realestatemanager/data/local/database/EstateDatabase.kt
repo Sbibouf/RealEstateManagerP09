@@ -11,8 +11,5 @@ abstract class EstateDatabase : RoomDatabase() {
 
     abstract fun libraryDao() : LibraryDao
 
-   // abstract val estateDao : EstateDao
-
-
 
 }

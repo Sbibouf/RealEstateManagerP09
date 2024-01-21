@@ -8,7 +8,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.content.IntentCompat
-import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstateWithPhotos
 import com.example.realestatemanager.ui.theme.EstateTheme
 import com.example.realestatemanager.ui.estateList.EstateDetailsScreen

@@ -6,7 +6,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import java.net.URI
+
 
 @Entity(tableName = "EstatePhoto", foreignKeys = [ForeignKey(entity = Estate::class, parentColumns = ["id"], childColumns = ["estateId"])], indices = [Index("estateId")])
 data class EstatePhoto(

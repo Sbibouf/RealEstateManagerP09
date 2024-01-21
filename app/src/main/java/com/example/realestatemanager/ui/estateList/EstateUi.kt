@@ -33,62 +33,65 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
-@Composable
-fun EstateUiPortrait(estateList: List<Estate>, onEstateClick: (Estate) -> Unit, onAddClick: ()->Unit, modifier: Modifier){
+import com.example.realestatemanager.model.EstateWithPhotos
 
-   // EstateList(estateList = estateList, onEstateClick = onEstateClick, onAddClick = onAddClick, modifier = modifier )
+@Composable
+fun EstateUiPortrait(estateWithPhotosList: List<EstateWithPhotos>, onEstateClick: (EstateWithPhotos) -> Unit, onAddClick: ()->Unit, modifier: Modifier){
+
+    EstateList(estateList = estateWithPhotosList, onEstateClick = onEstateClick, onAddClick = onAddClick, modifier = modifier )
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EstateUiLandscape(estate : Estate, estateList : List<Estate>, onEstateClick: (Estate) -> Unit){
+fun EstateUiLandscape( estateWithPhotosList : List<EstateWithPhotos>,estateWithPhotos : EstateWithPhotos, onEstateClick: (EstateWithPhotos) -> Unit){
     Log.d("EstateListAndDetail", "Recomposing...")
-//    Scaffold(
-//        topBar = {
-//            TopAppBar( colors = TopAppBarDefaults.topAppBarColors(
-//                containerColor = Color.Gray,
-//                titleContentColor = Color.White,
-//                navigationIconContentColor = Color.White,
-//                actionIconContentColor = Color.White
-//            ),
-//                title = {
-//                    Text(text = "Real Estate Manager", style = TextStyle.Default.copy(fontSize = 16.sp))
-//                },
-//                navigationIcon = {
-//                    IconButton(onClick = { /* Handle navigation icon click */ }) {
-//                        Icon(imageVector = Icons.Default.Menu, contentDescription = null)
-//                    }
-//                },
-//                actions = {
-//
-//                    IconButton(onClick = { }) {
-//                        Icon(imageVector = Icons.Default.Add, contentDescription = null)
-//                    }
-//                    IconButton(onClick = { /* Handle settings icon click */ }) {
-//                        Icon(imageVector = Icons.Default.Create, contentDescription = null)
-//                    }
-//                    IconButton(onClick = { /* Handle settings icon click */ }) {
-//                        Icon(imageVector = Icons.Default.Search, contentDescription = null)
-//                    }
-//
-//                }
-//            )
-//        }, content = {Row(modifier = Modifier
-//            .fillMaxSize()
-//            .horizontalScroll(rememberScrollState()).padding(it)) {
-//            LazyColumn(modifier = Modifier.weight(1f)) {
-//                items(estateList) { estate ->
-//                    EstateItem(estate, onEstateClick = onEstateClick)
-//                }
-//            }
-//            Column(modifier = Modifier.weight(2f)) {
-//                Spacer(modifier = Modifier.height(8.dp))
-//                EstateMediaRow(estate)
-//                EstateDescriptionRow(estate)
-//                EstateDetailsRow(estate)
-//
-//            }
-//
-//        }})
+    Scaffold(
+        topBar = {
+            TopAppBar( colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.Gray,
+                titleContentColor = Color.White,
+                navigationIconContentColor = Color.White,
+                actionIconContentColor = Color.White
+            ),
+                title = {
+                    Text(text = "Real Estate Manager", style = TextStyle.Default.copy(fontSize = 16.sp))
+                },
+                navigationIcon = {
+                    IconButton(onClick = { /* Handle navigation icon click */ }) {
+                        Icon(imageVector = Icons.Default.Menu, contentDescription = null)
+                    }
+                },
+                actions = {
+
+                    IconButton(onClick = { }) {
+                        Icon(imageVector = Icons.Default.Add, contentDescription = null)
+                    }
+                    IconButton(onClick = { /* Handle settings icon click */ }) {
+                        Icon(imageVector = Icons.Default.Create, contentDescription = null)
+                    }
+                    IconButton(onClick = { /* Handle settings icon click */ }) {
+                        Icon(imageVector = Icons.Default.Search, contentDescription = null)
+                    }
+
+                }
+            )
+        }, content = {
+            Row(modifier = Modifier
+            .fillMaxSize()
+            .horizontalScroll(rememberScrollState()).padding(it)) {
+            LazyColumn(modifier = Modifier.weight(1f)) {
+                items(estateWithPhotosList) { estate ->
+                    EstateItem(estate, onEstateClick = onEstateClick)
+                }
+            }
+            Column(modifier = Modifier.weight(2f)) {
+                Spacer(modifier = Modifier.height(8.dp))
+                EstateMediaRow(estateWithPhotos)
+                EstateDescriptionRow(estateWithPhotos)
+                EstateDetailsRow(estateWithPhotos)
+
+            }
+
+        }})
 }
 
 @Preview(showSystemUi = true,
@@ -97,11 +100,17 @@ fun EstateUiLandscape(estate : Estate, estateList : List<Estate>, onEstateClick:
 @Composable
 fun Test(){
 
-//    val estatesTest = listOf(
-//        Estate("House","$100,000","300m2","5","3","1","", listOf(EstatePhoto("uri","nom")),"New York","","","","","",""),
-//        Estate("Penthouse","$220,000","320m2","6","3","2","",listOf(EstatePhoto("uri","nom")),"Washington","","","","","","")
-//    )
-//    val estate = Estate("House","$100,000","300m2","5","3","1","Ce petit texte décrit le bien immobilier",
-//        listOf(EstatePhoto("uri","nom")),"New York","","","","","","")
-//    EstateUiLandscape(estate = estate , estateList = estatesTest, onEstateClick ={} )
+    val estatesTest = listOf(
+        EstateWithPhotos(Estate("House","$100,000","300m2","5","3","1","","New York","","","","","",""),
+            listOf( EstatePhoto(1L,"/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
+                EstatePhoto(1L,"/storage/emulated/0/Download/estate1_living.jpg","Salon"))),
+        EstateWithPhotos(Estate("PentHouse","$100,000,000","300m2","5","3","1","","New York","","","","","",""),
+            listOf( EstatePhoto(1L,"/storage/emulated/0/Download/estate2_front.jpg", "Façade"),
+                EstatePhoto(1L,"/storage/emulated/0/Download/estate2_living.jpg","Salon"))))
+
+    val estateWithPhotoTest = EstateWithPhotos(Estate("House","$100,000","300m2","5","3","1","","New York","","","","","",""),
+        listOf( EstatePhoto(1L,"/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
+            EstatePhoto(1L,"/storage/emulated/0/Download/estate1_living.jpg","Salon")))
+
+    EstateUiLandscape(estateWithPhotos = estateWithPhotoTest , estateWithPhotosList = estatesTest, onEstateClick ={} )
 }

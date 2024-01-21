@@ -160,7 +160,9 @@ fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
 @Preview
 @Composable
 fun EstateTest(){
-//    val estate = Estate("House","$100,000","300m2","5","3","1","Ce petit texte décrit le bien immobilier",
-//        listOf(EstatePhoto("uri","nom")),"New York","","","","","","")
-//    EstateDetailsScreen(estate = estate, modifier = Modifier)
+    val estateWithPhotoTest = EstateWithPhotos(
+        Estate("House","$100,000","300m2","5","3","1","","New York","","","","","",""),
+        listOf( EstatePhoto(1L,"/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
+            EstatePhoto(1L,"/storage/emulated/0/Download/estate1_living.jpg","Salon")))
+    EstateDetailsScreen(estateWithPhotos = estateWithPhotoTest, modifier = Modifier)
 }

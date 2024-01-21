@@ -1,6 +1,13 @@
 package com.example.realestatemanager.ui.addEstate
 
+import android.annotation.SuppressLint
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +15,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -17,12 +29,16 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -30,21 +46,32 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.realestatemanager.R
+import com.example.realestatemanager.data.local.service.ComposeFileProvider
+
+
 import com.example.realestatemanager.model.Estate
+import com.example.realestatemanager.model.EstatePhoto
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -93,6 +120,7 @@ fun AddEstate(onButtonClick: (Estate) -> Unit, onPhotoClick : ()->Unit){
         })
     }
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun CreateEstate(onButtonClick : (Estate)->Unit, onPhotoClick : ()->Unit){
     var nomDuBien by remember { mutableStateOf("") }
@@ -104,19 +132,50 @@ fun CreateEstate(onButtonClick : (Estate)->Unit, onPhotoClick : ()->Unit){
     var nombreDePieces by remember { mutableStateOf("") }
     var nombreDeSalleDeau by remember { mutableStateOf("") }
     var nombreDeChambres by remember { mutableStateOf("") }
-    var dateDentré by remember { mutableStateOf("") }
+    var dateDentre by remember { mutableStateOf("") }
     var dateDeVente by remember { mutableStateOf("") }
     var agent by remember { mutableStateOf("") }
 
-        Column(modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .fillMaxSize(),
+    val context = LocalContext.current
+
+    var hasImage by remember {
+        mutableStateOf(false)
+    }
+    var imageUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+    val imagesListUri = remember { mutableStateListOf<Uri?>() }
+
+    val imagePicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri ->
+            hasImage = uri != null
+            imageUri = uri
+            imagesListUri.add(uri)
+
+        }
+    )
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture(),
+        onResult = { success ->
+            hasImage = success
+        }
+    )
+    var showDialog by remember { mutableStateOf(false) }
+    var imageName by remember { mutableStateOf("") }
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    val imagesNameList = remember { mutableStateListOf<String?>() }
+
+    Column(modifier = Modifier
+        .verticalScroll(rememberScrollState())
+        .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
 
-            Row(modifier = Modifier.padding(8.dp)) {
+        Row(modifier = Modifier.padding(8.dp)) {
 
-                TextField(
+            TextField(
                     value = nomDuBien,
                     onValueChange ={ newTextValue ->
                         nomDuBien = newTextValue
@@ -126,7 +185,7 @@ fun CreateEstate(onButtonClick : (Estate)->Unit, onPhotoClick : ()->Unit){
                     modifier = Modifier
                         .weight(1f)
                         .padding(1.dp))
-                TextField(value = superficie,
+            TextField(value = superficie,
                     onValueChange ={ newTextValue ->
                         superficie = newTextValue
                     },
@@ -175,13 +234,134 @@ fun CreateEstate(onButtonClick : (Estate)->Unit, onPhotoClick : ()->Unit){
                     placeholder = {
                         Text(stringResource(R.string.Photo))},
                     modifier = Modifier.padding(8.dp) )
-                IconButton(onClick = { /*TODO*/ }, modifier = Modifier.align(Alignment.CenterVertically)) {
+                IconButton(onClick = { imagePicker.launch("image/*") }, modifier = Modifier.align(Alignment.CenterVertically)) {
                     Icon(imageVector = Icons.Default.AddCircle, contentDescription = null)
                 }
-                IconButton(onClick = { onPhotoClick() }, modifier = Modifier.align(Alignment.CenterVertically)) {
+                IconButton(onClick = { val uri = ComposeFileProvider.getImageUri(context)
+                    imageUri = uri
+                    imagesListUri.add(uri)
+                    cameraLauncher.launch(uri) }, modifier = Modifier.align(Alignment.CenterVertically)) {
                     Icon(painter = painterResource(R.drawable.baseline_photo_camera_24), contentDescription = null)
                 }
             }
+            if (hasImage && imageUri != null) {
+                if (showDialog) {
+                    AlertDialog(
+                        onDismissRequest = {
+                            showDialog = false
+                            // Réinitialisez l'image sélectionnée et le nom
+                            selectedImageUri = null
+                            imageName = ""
+                        },
+                        title = {
+                            Text("Donner un nom à l'image")
+                        },
+                        text = {
+                            Column {
+                                AsyncImage(
+                                    model = selectedImageUri,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(150.dp),
+                                    contentDescription = "Selected image",
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                OutlinedTextField(
+                                    value = imageName,
+                                    onValueChange = { newName ->
+                                        imageName = newName
+                                    },
+                                    label = { Text("Nom de l'image") }
+                                )
+                            }
+                        },
+                        confirmButton = {
+                            Button(
+                                onClick = {
+                                    // Fermez le dialogue
+                                    imagesNameList.add(imageName)
+
+                                    showDialog = false
+                                    // Réinitialisez l'image sélectionnée et le nom
+                                    selectedImageUri = null
+                                    imageName = ""
+
+                                }
+                            ) {
+                                Text("Enregistrer")
+                            }
+                        },
+                        dismissButton = {
+                            Button(
+                                onClick = {
+
+                                    showDialog = false
+                                    // Réinitialisez l'image sélectionnée et le nom
+                                    selectedImageUri = null
+                                }
+                            ) {
+                                Text("Annuler")
+                            }
+                        }
+                    )
+                }
+
+                LazyRow(modifier = Modifier.fillMaxWidth()) {
+                    itemsIndexed(imagesListUri) { index, uri ->
+                        Box(
+                            modifier = Modifier
+                                .width(150.dp)
+                                .height(150.dp)
+                                .clickable {
+                                    // Mettre à jour l'image sélectionnée lorsque l'utilisateur clique
+                                    selectedImageUri = uri
+                                    // Afficher le dialogue pour donner un nom à l'image
+                                    showDialog = true
+                                },
+                        ) {
+                            AsyncImage(
+                                model = uri,
+                                modifier = Modifier
+                                    .width(150.dp)
+                                    .height(150.dp),
+                                contentDescription = "Selected image",
+                            )
+                            if(imagesNameList.size>index){
+
+
+                                imagesNameList[index]?.let {
+                                    Text(text = it,
+                                        color = Color.White,
+                                        fontSize = 12.sp,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        textAlign = TextAlign.Center,
+                                        modifier = Modifier
+                                            .width(100.dp)
+                                            .background(Color.Black.copy(alpha = 0.5f))
+                                            .padding(4.dp)
+                                            .align(Alignment.BottomCenter))
+                                }
+
+
+                            }
+                            IconButton(onClick = { imagesListUri.remove(uri)
+                                imagesNameList.removeAt(index)
+                            }) {
+                                Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+
+                            }
+
+
+                        }
+                    }
+                }
+
+            }
+
+
+
+        RadioButton(selected = true, onClick = { /*TODO*/ })
 
             Row(modifier = Modifier.padding(8.dp)) {
 
@@ -217,9 +397,9 @@ fun CreateEstate(onButtonClick : (Estate)->Unit, onPhotoClick : ()->Unit){
 
             Row(modifier = Modifier.padding(8.dp)) {
 
-                TextField(value = dateDentré,
+                TextField(value = dateDentre,
                     onValueChange ={ newTextValue ->
-                        dateDentré = newTextValue
+                        dateDentre = newTextValue
                     },
                     placeholder = {
                         Text(stringResource(R.string.Date_entrée))},

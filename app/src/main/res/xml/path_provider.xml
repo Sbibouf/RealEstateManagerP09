@@ -8,7 +8,7 @@
         path="images/" />
     <external-files-path name="cache" path="/"/>
     <external-path
-        name="external_files"
+        name="my_images"
         path="Pictures/" />
 
 </paths>

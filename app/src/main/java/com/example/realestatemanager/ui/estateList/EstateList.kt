@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
@@ -66,14 +67,23 @@ fun EstateItem(estateWithPhotos: EstateWithPhotos, onEstateClick: (EstateWithPho
                 }
             }
             // Avatar
-            Image(
-                painter = rememberAsyncImagePainter(model = imgBitmap),
+
+            AsyncImage(
+                model = estateWithPhotos.photos?.get(0)?.uri, // Placeholder image
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(100.dp)
-                    .clip(RoundedCornerShape(16.dp))
+                    .padding(1.dp)
             )
+//            Image(
+//                painter = rememberAsyncImagePainter(model = imgBitmap),
+//                contentDescription = null,
+//                contentScale = ContentScale.Crop,
+//                modifier = Modifier
+//                    .size(100.dp)
+//                    .clip(RoundedCornerShape(16.dp))
+//            )
 
             Column(
                 modifier = Modifier

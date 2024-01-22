@@ -1,6 +1,8 @@
 package com.example.realestatemanager.ui.addEstate
 
 import android.annotation.SuppressLint
+import android.location.Address
+import android.location.Geocoder
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -166,6 +168,7 @@ fun CreateEstate(onButtonClick : (Estate)->Unit, onPhotoClick : ()->Unit){
     var imageName by remember { mutableStateOf("") }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     val imagesNameList = remember { mutableStateListOf<String?>() }
+    val test by remember { mutableStateOf<EstatePhoto?>(null) }
 
     Column(modifier = Modifier
         .verticalScroll(rememberScrollState())
@@ -244,6 +247,7 @@ fun CreateEstate(onButtonClick : (Estate)->Unit, onPhotoClick : ()->Unit){
                     Icon(painter = painterResource(R.drawable.baseline_photo_camera_24), contentDescription = null)
                 }
             }
+
             if (hasImage && imageUri != null) {
                 if (showDialog) {
                     AlertDialog(
@@ -347,7 +351,9 @@ fun CreateEstate(onButtonClick : (Estate)->Unit, onPhotoClick : ()->Unit){
                             }
                             IconButton(onClick = { imagesListUri.remove(uri)
                                 imagesNameList.removeAt(index)
-                            }) {
+                            },modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                                .padding(4.dp)) {
                                 Icon(imageVector = Icons.Default.Delete, contentDescription = null)
 
                             }

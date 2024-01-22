@@ -1,7 +1,6 @@
 package com.example.realestatemanager.di
 
 import android.content.Context
-
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -42,7 +41,7 @@ class DaoModule {
                     val libraryDao = database.libraryDao()
                     val executor = database.transactionExecutor
                     executor.execute {
-                        libraryDao.insert(Estate("House", "$25.000.000", "225M²", "5","2","1", "","", "Manhattan", "", "", "", "",""))
+                        libraryDao.insert(Estate("House", "$25.000.000", "225M²", "5","2","1", "","City Hall, New York", "Manhattan", "", "", "", "",""))
                         libraryDao.insert(Estate("Penthouse", "$20.000.000", "225M²", "5","2","1", "","", "Brooklyn", "", "", "", "",""))
                         libraryDao.insert(Estate("House", "$15.000.000", "225M²", "5","2","1", "","", "Southampton", "", "", "", "",""))
                         libraryDao.insert(Estate("House", "$17.000.000", "225M²", "5","2","1", "","", "Upper East Side", "", "", "", "",""))
@@ -50,20 +49,20 @@ class DaoModule {
                         libraryDao.insert(Estate("House", "$22.000.000", "225M²", "5","2","1", "","", "Brooklyn", "", "", "", "",""))
                         libraryDao.insert(Estate("House", "$35.000.000", "250M²", "5","2","1", "","", "Montauk", "", "", "", "",""))
 
-                        libraryDao.insertPhoto(EstatePhoto(1L,"/storage/emulated/0/Download/estate1_front.jpg", "Façade"))
-                        libraryDao.insertPhoto(EstatePhoto(1L,"/storage/emulated/0/Download/estate1_living.jpg","Salon"))
-                        libraryDao.insertPhoto(EstatePhoto(2L,"/storage/emulated/0/Download/estate2_front.jpg","Façade"))
-                        libraryDao.insertPhoto(EstatePhoto(2L,"/storage/emulated/0/Download/estate2_living.jpg","Salon"))
-                        libraryDao.insertPhoto(EstatePhoto(3L,"/storage/emulated/0/Download/estate3_front.jpg", "Façade"))
-                        libraryDao.insertPhoto(EstatePhoto(3L,"/storage/emulated/0/Download/estate3_living.jpg","Salon"))
-                        libraryDao.insertPhoto(EstatePhoto(4L,"/storage/emulated/0/Download/estate4_front.jpg", "Façade"))
-                        libraryDao.insertPhoto(EstatePhoto(4L,"/storage/emulated/0/Download/estate4_kitchen.jpg","Cuisine"))
-                        libraryDao.insertPhoto(EstatePhoto(5L,"/storage/emulated/0/Download/estate5_front.jpg", "Façade"))
-                        libraryDao.insertPhoto(EstatePhoto(5L,"/storage/emulated/0/Download/estate5_kitchen.jpg","Cuisine"))
-                        libraryDao.insertPhoto(EstatePhoto(6L,"/storage/emulated/0/Download/estate6_front.jpg", "Façade"))
-                        libraryDao.insertPhoto(EstatePhoto(6L,"/storage/emulated/0/Download/estate6_living.jpg","Salon"))
-                        libraryDao.insertPhoto(EstatePhoto(7L,"/storage/emulated/0/Download/estate7_front.jpg", "Façade"))
-                        libraryDao.insertPhoto(EstatePhoto(7L,"/storage/emulated/0/Download/estate2_living.jpg","Salon"))
+                        libraryDao.insertPhoto(EstatePhoto(1L,"https://images.pexels.com/photos/259593/pexels-photo-259593.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "Façade"))
+                        libraryDao.insertPhoto(EstatePhoto(1L,"https://images.pexels.com/photos/3701434/pexels-photo-3701434.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Salon"))
+                        libraryDao.insertPhoto(EstatePhoto(2L,"https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Façade"))
+                        libraryDao.insertPhoto(EstatePhoto(2L,"https://images.pexels.com/photos/1571459/pexels-photo-1571459.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Salon"))
+                        libraryDao.insertPhoto(EstatePhoto(3L,"https://images.pexels.com/photos/53610/large-home-residential-house-architecture-53610.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "Façade"))
+                        libraryDao.insertPhoto(EstatePhoto(3L,"https://images.pexels.com/photos/2251247/pexels-photo-2251247.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Salon"))
+                        libraryDao.insertPhoto(EstatePhoto(4L,"https://images.pexels.com/photos/259588/pexels-photo-259588.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "Façade"))
+                        libraryDao.insertPhoto(EstatePhoto(4L,"https://images.pexels.com/photos/2724749/pexels-photo-2724749.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Cuisine"))
+                        libraryDao.insertPhoto(EstatePhoto(5L,"https://images.pexels.com/photos/208736/pexels-photo-208736.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "Façade"))
+                        libraryDao.insertPhoto(EstatePhoto(5L,"https://images.pexels.com/photos/1080721/pexels-photo-1080721.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Cuisine"))
+                        libraryDao.insertPhoto(EstatePhoto(6L,"https://images.pexels.com/photos/323775/pexels-photo-323775.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "Façade"))
+                        libraryDao.insertPhoto(EstatePhoto(6L,"https://images.pexels.com/photos/1457841/pexels-photo-1457841.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Salon"))
+                        libraryDao.insertPhoto(EstatePhoto(7L,"https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "Façade"))
+                        libraryDao.insertPhoto(EstatePhoto(7L,"https://images.pexels.com/photos/1648776/pexels-photo-1648776.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Salon"))
                     }
 
                 }

@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,11 +26,12 @@ import com.example.realestatemanager.R
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
 import com.example.realestatemanager.model.EstateWithPhotos
+import com.google.android.gms.maps.model.LatLng
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EstateDetailsScreen(estateWithPhotos: EstateWithPhotos, modifier: Modifier) {
+fun EstateDetailsScreen(estateWithPhotos: EstateWithPhotos, lat : LatLng?, modifier: Modifier) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -51,7 +53,7 @@ fun EstateDetailsScreen(estateWithPhotos: EstateWithPhotos, modifier: Modifier) 
                 Spacer(modifier = Modifier.height(8.dp))
                     EstateMediaRow(estateWithPhotos)
                     EstateDescriptionRow(estateWithPhotos)
-                    EstateDetailsRow(estateWithPhotos)
+                    EstateDetailsRow(estateWithPhotos, lat)
 
             }
         }
@@ -125,7 +127,7 @@ fun EstateDescriptionRow(estateWithPhotos: EstateWithPhotos) {
 }
 
 @Composable
-fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
+fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos, lat : LatLng?) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -153,7 +155,11 @@ fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
         }
 
 
-        // You can add a Map composable here for the location with a pin on the address
+
+        AsyncImage(model ="https://maps.googleapis.com/maps/api/staticmap?zoom=16&size=200x200&scale=2&maptype=roadmap\\&markers=size:mid%7Ccolor:red%7C "+lat?.latitude + "," + lat?.longitude + "&center=" + lat?.latitude + "," + lat?.longitude + "&key=AIzaSyA35rky_HYWt623gjs_5I3vCYUbBaxEilE" , contentDescription = null,
+            modifier = Modifier
+                .width(512.dp)
+                .height(512.dp))
     }
 }
 
@@ -164,5 +170,5 @@ fun EstateTest(){
         Estate("House","$100,000","300m2","5","3","1","","New York","","","","","",""),
         listOf( EstatePhoto(1L,"/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
             EstatePhoto(1L,"/storage/emulated/0/Download/estate1_living.jpg","Salon")))
-    EstateDetailsScreen(estateWithPhotos = estateWithPhotoTest, modifier = Modifier)
+   // EstateDetailsScreen(estateWithPhotos = estateWithPhotoTest, modifier = Modifier)
 }

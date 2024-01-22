@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
 import com.example.realestatemanager.model.EstateWithPhotos
+import com.google.android.gms.maps.model.LatLng
 
 @Composable
 fun EstateUiPortrait(estateWithPhotosList: List<EstateWithPhotos>, onEstateClick: (EstateWithPhotos) -> Unit, onAddClick: ()->Unit, modifier: Modifier){
@@ -42,7 +44,7 @@ fun EstateUiPortrait(estateWithPhotosList: List<EstateWithPhotos>, onEstateClick
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EstateUiLandscape( estateWithPhotosList : List<EstateWithPhotos>,estateWithPhotos : EstateWithPhotos, onEstateClick: (EstateWithPhotos) -> Unit){
+fun EstateUiLandscape( estateWithPhotosList : List<EstateWithPhotos>,estateWithPhotos : EstateWithPhotos, lat : LatLng?, onEstateClick: (EstateWithPhotos) -> Unit){
     Log.d("EstateListAndDetail", "Recomposing...")
     Scaffold(
         topBar = {
@@ -87,7 +89,7 @@ fun EstateUiLandscape( estateWithPhotosList : List<EstateWithPhotos>,estateWithP
                 Spacer(modifier = Modifier.height(8.dp))
                 EstateMediaRow(estateWithPhotos)
                 EstateDescriptionRow(estateWithPhotos)
-                EstateDetailsRow(estateWithPhotos)
+                EstateDetailsRow(estateWithPhotos, lat)
 
             }
 
@@ -112,5 +114,5 @@ fun Test(){
         listOf( EstatePhoto(1L,"/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
             EstatePhoto(1L,"/storage/emulated/0/Download/estate1_living.jpg","Salon")))
 
-    EstateUiLandscape(estateWithPhotos = estateWithPhotoTest , estateWithPhotosList = estatesTest, onEstateClick ={} )
+    //EstateUiLandscape(estateWithPhotos = estateWithPhotoTest , estateWithPhotosList = estatesTest, onEstateClick ={} )
 }

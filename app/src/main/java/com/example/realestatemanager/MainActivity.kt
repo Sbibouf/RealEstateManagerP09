@@ -1,6 +1,7 @@
 package com.example.realestatemanager
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,6 +29,8 @@ import android.util.Log
 import com.example.realestatemanager.model.EstateWithPhotos
 import com.example.realestatemanager.ui.estateList.EstateList
 import com.example.realestatemanager.ui.estateList.EstateListViewModel
+import com.google.android.gms.maps.model.LatLng
+import java.io.File
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -50,6 +53,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val test : Uri = Uri.fromFile(File("/storage/emulated/0/Download/estate1_front.jpg"))
+        Log.d("Test", "$test")
 
         //Ask for permission to user depending on Android SDK Version
         if (!isPermissionGranted) {
@@ -86,7 +91,7 @@ class MainActivity : ComponentActivity() {
                             EstateUiPortrait(
                                 estateWithPhotosList = estateList,
                                 onEstateClick =  {clickedEstate ->
-                                    //handleEstateItemClick(clickedEstate)
+                                    handleEstateItemClick(clickedEstate)
                                 },
                                 onAddClick = {
                                     handleAddClick()
@@ -96,7 +101,7 @@ class MainActivity : ComponentActivity() {
                         }
                         WindowWidthSizeClass.Expanded -> {
                             Log.d("EstateListAndDetail", "Recomposing...")
-                            EstateUiLandscape(estateWithPhotosList = estateList,estateWithPhotos = estateList[0],  onEstateClick = {})
+                           // EstateUiLandscape(estateWithPhotosList = estateList,estateWithPhotos = estateList[0], lat = LatLng(2323,23232),  onEstateClick = {})
                         }
                     }
 

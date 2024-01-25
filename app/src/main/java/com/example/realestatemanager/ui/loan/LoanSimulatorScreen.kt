@@ -1,6 +1,5 @@
 package com.example.realestatemanager.ui.loan
 
-import LoanViewModel
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,31 +10,31 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.realestatemanager.R
 import com.example.realestatemanager.model.LoanData
 import java.text.DecimalFormat
 import kotlin.math.pow
 
 
 @Composable
-fun LoanSimulatorScreen(
-    viewModel: LoanViewModel
-) {
+fun LoanSimulatorScreen() {
     var amount by remember { mutableStateOf("") }
     var downPayment by remember { mutableStateOf("") }
     var interestRate by remember { mutableStateOf("") }
     var loanTerm by remember { mutableStateOf("") }
-    val decimalFormat = DecimalFormat("#.###")
+    var loandata by remember { mutableStateOf<LoanData?>(null) }
+
 
     Column(
         modifier = Modifier
@@ -43,55 +42,82 @@ fun LoanSimulatorScreen(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text(stringResource(R.string.Simulateur))
+        Spacer(modifier = Modifier.height(16.dp))
         TextField(
             value = amount,
             onValueChange = { amount = it },
-            label = { Text("Loan Amount") },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+            label = { Text("Montant emprunté") },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            )
         )
         Spacer(modifier = Modifier.height(16.dp))
         TextField(
             value = downPayment,
             onValueChange = { downPayment = it },
-            label = { Text("Down Payment") },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+            label = { Text("Apport") },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            )
         )
         Spacer(modifier = Modifier.height(16.dp))
         TextField(
             value = interestRate,
-            onValueChange = { interestRate = it },
-            label = { Text("Interest Rate (Yearly)") },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+            onValueChange = { interestRate = it.replace(",",".") },
+            label = { Text("Taux d'interet annuel") },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            )
         )
         Spacer(modifier = Modifier.height(16.dp))
         TextField(
             value = loanTerm,
             onValueChange = { loanTerm = it },
-            label = { Text("Loan Term (Years)") },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done)
+            label = { Text("Durée du prêt") },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            )
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = {
-            val loanData = LoanData(
+            if(amount==""){
+                amount = "0"
+            }
+            else if (downPayment==""){
+                downPayment="0"
+            }
+            else if (interestRate==""){
+                interestRate="0"
+            }
+            else if(loanTerm==""){
+                loanTerm="0"
+            }
+            val data = LoanData(
                 amount.toDouble(),
                 downPayment.toDouble(),
                 interestRate.toDouble(),
                 loanTerm.toInt()
             )
-            viewModel.updateLoanData(loanData)
+            loandata = data
         }) {
             Text("Calculate")
         }
 
-        val currentLoanData by viewModel.loanData.collectAsState()
-        Text("Monthly Payment: ${calculateLoanDetail(currentLoanData, 1)}")
-        Text("Total Interest: ${calculateLoanDetail(currentLoanData, 2)}")
-        Text("Total Payment: ${calculateLoanDetail(currentLoanData, 3)}")
+        Text("Mensualités: ${loandata?.let { calculateLoanDetail(it, "monthly") }} $")
+        Text("Coût des intérêts: ${loandata?.let { calculateLoanDetail(it, "interest") }} $")
+        Text("Coût total du prêt: ${loandata?.let { calculateLoanDetail(it, "total") }} $")
+
 
     }
 }
 
-private fun calculateLoanDetail(loanData: LoanData, type: Int): Double {
+private fun calculateLoanDetail(loanData: LoanData, type: String): String {
+    val decimalFormat = DecimalFormat("#.##")
     val principal = loanData.amount - loanData.downPayment
     //val monthlyInterestRates = (1 + loanData.yearlyInterestRate / 100).pow(1 / 12) - 1
     val monthlyInterestRate = loanData.yearlyInterestRate / 100.0 / 12.0
@@ -101,16 +127,16 @@ private fun calculateLoanDetail(loanData: LoanData, type: Int): Double {
 
 
     when (type) {
-        1 -> return interest
-        2 -> return (interest * totalPaymentsDuration) - principal
-        3 -> return (interest * totalPaymentsDuration)
+        "monthly" -> return decimalFormat.format(interest)
+        "interest" -> return decimalFormat.format((interest * totalPaymentsDuration) - principal)
+        "total" -> return decimalFormat.format(interest * totalPaymentsDuration)
     }
-    return 0.0
+    return "0.0"
 }
 
 
 @Preview
 @Composable
 fun Test() {
-    // LoanSimulatorScreen()
+   LoanSimulatorScreen()
 }

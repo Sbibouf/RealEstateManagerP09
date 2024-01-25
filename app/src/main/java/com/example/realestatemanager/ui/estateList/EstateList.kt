@@ -80,6 +80,7 @@ fun EstateItem(estateWithPhotos: EstateWithPhotos, onEstateClick: (EstateWithPho
                     modifier = Modifier
                         .size(100.dp)
                         .padding(1.dp)
+                        .weight(1f)
                 )
             } else {
                 Image(
@@ -89,6 +90,7 @@ fun EstateItem(estateWithPhotos: EstateWithPhotos, onEstateClick: (EstateWithPho
                     modifier = Modifier
                         .size(100.dp)
                         .clip(RoundedCornerShape(16.dp))
+                        .weight(1f)
                 )
             }
 
@@ -96,6 +98,7 @@ fun EstateItem(estateWithPhotos: EstateWithPhotos, onEstateClick: (EstateWithPho
             Column(
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
+                    .weight(1f)
             ) {
                 //Type
                 estateWithPhotos.estate?.type?.let {
@@ -122,6 +125,27 @@ fun EstateItem(estateWithPhotos: EstateWithPhotos, onEstateClick: (EstateWithPho
                 }
 
             }
+            if(estateWithPhotos.estate?.soldDate==""){
+                Image(
+                    painter = painterResource(R.drawable.ic_not_sold_foreground),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(50.dp)
+
+                )
+            }
+            else {
+                Image(
+                    painter = painterResource(R.drawable.ic_sold_foreground),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(50.dp)
+
+                )
+            }
+
         }
         Divider()
 
@@ -136,7 +160,8 @@ fun EstateList(
     estateList: List<EstateWithPhotos>,
     onEstateClick: (EstateWithPhotos) -> Unit,
     onAddClick: () -> Unit,
-    onDrawerItemClick: () -> Unit,
+    onDrawerLoanClick: () -> Unit,
+    onDrawerMapClick: () -> Unit,
     modifier: Modifier
 ) {
 
@@ -187,7 +212,7 @@ fun EstateList(
         ModalNavigationDrawer(
             drawerState = drawerState,
             drawerContent = {
-                DrawerContent(onDrawerItemClick = { onDrawerItemClick() })
+                DrawerContent(onDrawerLoanClick = { onDrawerLoanClick() }, onDrawerMapClick = {onDrawerMapClick()})
             }, gesturesEnabled = false,
             modifier = Modifier.padding(innerPadding)
         ) {
@@ -205,22 +230,22 @@ fun EstateList(
 }
 
 @Composable
-fun DrawerContent(onDrawerItemClick: () -> Unit) {
+fun DrawerContent(onDrawerLoanClick: () -> Unit, onDrawerMapClick: ()-> Unit) {
     Column(
         modifier = Modifier
             .background(Color.Gray)
             .fillMaxHeight()
     ) {
         Text(
-            text = "Simulateur de prêt immobilier",
+            text = "Simulateur",
             modifier = Modifier
-                .clickable { onDrawerItemClick() }
+                .clickable { onDrawerLoanClick() }
                 .padding(16.dp)
         )
         Text(
-            text = "Settings",
+            text = "Carte",
             modifier = Modifier
-                .clickable { onDrawerItemClick() }
+                .clickable { onDrawerMapClick() }
                 .padding(16.dp)
         )
     }
@@ -278,7 +303,7 @@ fun EstateListPreview() {
 
     EstateTheme {
 
-        EstateList(estatesTest, onEstateClick = {}, onAddClick = {}, onDrawerItemClick = {}, modifier = Modifier)
+        EstateList(estatesTest, onEstateClick = {}, onAddClick = {}, onDrawerLoanClick = {}, onDrawerMapClick = {}, modifier = Modifier)
     }
 
 

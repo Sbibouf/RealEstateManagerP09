@@ -1,8 +1,12 @@
 package com.example.realestatemanager.ui.addEstate
 
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -36,10 +40,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -55,12 +61,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
 import com.example.realestatemanager.R
 import com.example.realestatemanager.data.local.service.ComposeFileProvider
@@ -118,6 +126,7 @@ fun AddEstate(onButtonClick: (Estate) -> Unit, onPhotoClick: () -> Unit) {
         })
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun CreateEstate(onButtonClick: (Estate) -> Unit, onPhotoClick: () -> Unit) {
@@ -154,12 +163,42 @@ fun CreateEstate(onButtonClick: (Estate) -> Unit, onPhotoClick: () -> Unit) {
         }
     )
 
+
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
         onResult = { success ->
             hasImage = success
         }
     )
+
+    var uri: Uri?
+
+    val cameraPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {
+        if (it) {
+            Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
+            uri = ComposeFileProvider.getImageUri(context)
+            imageUri = uri
+            imagesListUri.add(uri)
+            cameraLauncher.launch(uri)
+        } else {
+            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    val mediaPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {
+        if (it) {
+            Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
+            imagePicker.launch("image/*")
+        } else {
+            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
     var showDialog by remember { mutableStateOf(false) }
     var imageName by remember { mutableStateOf("") }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
@@ -254,16 +293,50 @@ fun CreateEstate(onButtonClick: (Estate) -> Unit, onPhotoClick: () -> Unit) {
                 modifier = Modifier.padding(8.dp)
             )
             IconButton(
-                onClick = { imagePicker.launch("image/*") },
+                onClick = {
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        val mediaPermissionCheckResult = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_MEDIA_IMAGES)
+                        if(mediaPermissionCheckResult == PackageManager.PERMISSION_GRANTED){
+                            imagePicker.launch("image/*")
+                        }
+                        else {
+                            //Request a permission
+                            mediaPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+                        }
+                    }
+                    else {
+                        val mediaPermissionCheckResult = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        if(mediaPermissionCheckResult == PackageManager.PERMISSION_GRANTED){
+                            imagePicker.launch("image/*")
+                        }
+                        else {
+                            //Request a permission
+                            mediaPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                        }
+                    }
+
+
+                     },
                 modifier = Modifier.align(Alignment.CenterVertically)
             ) {
                 Icon(imageVector = Icons.Default.AddCircle, contentDescription = null)
             }
             IconButton(onClick = {
-                val uri = ComposeFileProvider.getImageUri(context)
-                imageUri = uri
-                imagesListUri.add(uri)
-                cameraLauncher.launch(uri)
+                uri = ComposeFileProvider.getImageUri(context)
+
+                val cameraPermissionCheckResult =
+                    ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+                if (cameraPermissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+                    imageUri = uri
+                    imagesListUri.add(uri)
+                    cameraLauncher.launch(uri)
+                } else {
+                    // Request a permission
+                    cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                }
+
+
+                // cameraLauncher.launch(uri)
             }, modifier = Modifier.align(Alignment.CenterVertically)) {
                 Icon(
                     painter = painterResource(R.drawable.baseline_photo_camera_24),
@@ -299,7 +372,11 @@ fun CreateEstate(onButtonClick: (Estate) -> Unit, onPhotoClick: () -> Unit) {
                                 onValueChange = { newName ->
                                     imageName = newName
                                 },
-                                label = { Text("Nom de l'image") }
+                                label = { Text("Nom de l'image") },
+                                textStyle = TextStyle(color = Color.Black),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    cursorColor = Color.Black
+                                )
                             )
                         }
                     },
@@ -392,10 +469,6 @@ fun CreateEstate(onButtonClick: (Estate) -> Unit, onPhotoClick: () -> Unit) {
             }
 
         }
-
-
-
-        RadioButton(selected = true, onClick = { /*TODO*/ })
 
         Row(modifier = Modifier.padding(8.dp)) {
 

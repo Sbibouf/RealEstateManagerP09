@@ -60,6 +60,13 @@
             android:theme="@style/Theme.RealEstateManager">
 
         </activity>
+        <activity
+            android:name="com.example.realestatemanager.MapActivity"
+            android:exported="false"
+            android:theme="@style/Theme.RealEstateManager">
+
+        </activity>
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyA35rky_HYWt623gjs_5I3vCYUbBaxEilE"/>
     </application>
 
 </manifest>

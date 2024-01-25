@@ -18,7 +18,7 @@ import javax.inject.Inject
 class EstateListViewModel @Inject constructor(private val estateRepository: EstateRepository, private val executor: Executor = Executors.newSingleThreadExecutor()) : ViewModel() {
 
 val uiState : StateFlow<List<EstateWithPhotos>> = estateRepository.getAllEstateWithPhoto().stateIn(scope = viewModelScope, started = SharingStarted.WhileSubscribed(), initialValue = emptyList())
-
+val uiStateLandscape : StateFlow<EstateWithPhotos?> = estateRepository.getEstateWithPhotoById(1L).stateIn(scope = viewModelScope, started = SharingStarted.WhileSubscribed(), initialValue = null)
 
 
 }

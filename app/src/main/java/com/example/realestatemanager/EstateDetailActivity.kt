@@ -37,7 +37,7 @@ class EstateDetailActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     if (estate != null ) {
-                        EstateDetailsScreen(estate, lat = latLng, modifier = Modifier)
+                        EstateDetailsScreen(estate, lat = latLng, onBackClick = { finish() }, modifier = Modifier)
                     }
 
                 }

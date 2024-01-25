@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
@@ -38,9 +39,9 @@ import com.example.realestatemanager.model.EstateWithPhotos
 import com.google.android.gms.maps.model.LatLng
 
 @Composable
-fun EstateUiPortrait(estateWithPhotosList: List<EstateWithPhotos>, onEstateClick: (EstateWithPhotos) -> Unit, onAddClick: ()->Unit, onDrawerItemClick: ()->Unit, modifier: Modifier){
+fun EstateUiPortrait(estateWithPhotosList: List<EstateWithPhotos>, onEstateClick: (EstateWithPhotos) -> Unit, onAddClick: ()->Unit, onDrawerLoanClick: ()->Unit, onDrawerMapClick: ()->Unit, modifier: Modifier){
 
-    EstateList(estateList = estateWithPhotosList, onEstateClick = onEstateClick, onAddClick = onAddClick, onDrawerItemClick = onDrawerItemClick, modifier = modifier )
+    EstateList(estateList = estateWithPhotosList, onEstateClick = onEstateClick, onAddClick = onAddClick, onDrawerLoanClick = onDrawerLoanClick, onDrawerMapClick = onDrawerMapClick, modifier = modifier )
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -85,7 +86,8 @@ fun EstateUiLandscape( estateWithPhotosList : List<EstateWithPhotos>,estateWithP
                     EstateItem(estate, onEstateClick = onEstateClick)
                 }
             }
-            Column(modifier = Modifier.weight(2f)) {
+            Column(modifier = Modifier.weight(2f)
+                .verticalScroll(rememberScrollState())) {
                 Spacer(modifier = Modifier.height(8.dp))
                 EstateMediaRow(estateWithPhotos)
                 EstateDescriptionRow(estateWithPhotos)

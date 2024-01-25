@@ -2,6 +2,8 @@ package com.example.realestatemanager.ui.estateList
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
@@ -47,13 +51,13 @@ import com.google.android.gms.maps.model.LatLng
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EstateDetailsScreen(estateWithPhotos: EstateWithPhotos, lat: LatLng?, modifier: Modifier) {
+fun EstateDetailsScreen(estateWithPhotos: EstateWithPhotos, lat: LatLng?, onBackClick : ()-> Unit, modifier: Modifier) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { estateWithPhotos.estate?.type?.let { Text(text = it) } },
                 navigationIcon = {
-                    IconButton(onClick = { /* Handle navigation icon click */ }) {
+                    IconButton(onClick = { onBackClick() }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
                     }
                 },
@@ -65,6 +69,7 @@ fun EstateDetailsScreen(estateWithPhotos: EstateWithPhotos, lat: LatLng?, modifi
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(it)
+                    .verticalScroll(rememberScrollState())
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
                 EstateMediaRow(estateWithPhotos)
@@ -94,15 +99,16 @@ fun EstateMediaRow(estateWithPhotos: EstateWithPhotos) {
                     Box(
                         modifier = Modifier
                             .padding(8.dp)
-                            .width(80.dp)
+                            .width(150.dp)
                     ) {
                         AsyncImage(
                             model = photoUrI.uri, // Placeholder image
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
-                                .size(80.dp)
+                                .size(150.dp)
                                 .padding(1.dp)
+                                .clickable {  }
                         )
                         photoUrI.name?.let {
                             Text(

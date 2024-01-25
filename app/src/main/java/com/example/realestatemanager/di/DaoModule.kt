@@ -43,9 +43,9 @@ class DaoModule {
                     executor.execute {
                         libraryDao.insert(Estate("House", "$25.000.000", "225M²", "5","2","1", "","City Hall, New York", "Manhattan", "", "", "", "",""))
                         libraryDao.insert(Estate("Penthouse", "$20.000.000", "225M²", "5","2","1", "","Brooklyn", "Brooklyn", "", "", "", "",""))
-                        libraryDao.insert(Estate("House", "$15.000.000", "225M²", "5","2","1", "","Southampton", "Southampton", "", "", "", "",""))
+                        libraryDao.insert(Estate("House", "$15.000.000", "225M²", "5","2","1", "","Southampton", "Southampton", "", "", "", "21/11/2023",""))
                         libraryDao.insert(Estate("House", "$17.000.000", "225M²", "5","2","1", "","Upper East Side", "Upper East Side", "", "", "", "",""))
-                        libraryDao.insert(Estate("House", "$20.000.000", "225M²", "5","2","1", "","Hampton Bays", "Hampton Bays", "", "", "", "",""))
+                        libraryDao.insert(Estate("House", "$20.000.000", "225M²", "5","2","1", "","Hampton Bays", "Hampton Bays", "", "", "", "22/12/2023",""))
                         libraryDao.insert(Estate("House", "$22.000.000", "225M²", "5","2","1", "","Brooklyn", "Brooklyn", "", "", "", "",""))
                         libraryDao.insert(Estate("House", "$35.000.000", "250M²", "5","2","1", "","Montauk", "Montauk", "", "", "", "",""))
 

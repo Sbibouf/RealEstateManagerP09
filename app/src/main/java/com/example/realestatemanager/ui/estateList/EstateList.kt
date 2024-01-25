@@ -1,10 +1,15 @@
 package com.example.realestatemanager.ui.estateList
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,35 +19,41 @@ import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
+import com.example.realestatemanager.R
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
-
 import com.example.realestatemanager.model.EstateWithPhotos
+import com.example.realestatemanager.ui.loan.LoanSimulatorScreen
 import com.example.realestatemanager.ui.theme.EstateTheme
-import java.io.File
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -59,31 +70,28 @@ fun EstateItem(estateWithPhotos: EstateWithPhotos, onEstateClick: (EstateWithPho
                 .fillMaxWidth()
 
         ) {
-            val imgFile = estateWithPhotos.photos?.get(0)?.uri?.let { File(it) }
-            var imgBitmap : Bitmap? = null
-            if (imgFile != null) {
-                if(imgFile.exists()){
-                    imgBitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
-                }
-            }
-            // Avatar
 
-            AsyncImage(
-                model = estateWithPhotos.photos?.get(0)?.uri, // Placeholder image
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(100.dp)
-                    .padding(1.dp)
-            )
-//            Image(
-//                painter = rememberAsyncImagePainter(model = imgBitmap),
-//                contentDescription = null,
-//                contentScale = ContentScale.Crop,
-//                modifier = Modifier
-//                    .size(100.dp)
-//                    .clip(RoundedCornerShape(16.dp))
-//            )
+
+            if (estateWithPhotos.photos?.size!! > 0) {
+                AsyncImage(
+                    model = estateWithPhotos.photos?.get(0)?.uri,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(100.dp)
+                        .padding(1.dp)
+                )
+            } else {
+                Image(
+                    painter = painterResource(R.drawable.ic_no_photo_foreground),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                )
+            }
+
 
             Column(
                 modifier = Modifier
@@ -97,7 +105,7 @@ fun EstateItem(estateWithPhotos: EstateWithPhotos, onEstateClick: (EstateWithPho
                     )
                 }
 
-                //Address
+                //City
                 estateWithPhotos.estate?.city?.let {
                     Text(
                         text = it
@@ -122,24 +130,42 @@ fun EstateItem(estateWithPhotos: EstateWithPhotos, onEstateClick: (EstateWithPho
 }
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EstateList(estateList: List<EstateWithPhotos>, onEstateClick: (EstateWithPhotos) -> Unit, onAddClick: ()->Unit, modifier: Modifier) {
+fun EstateList(
+    estateList: List<EstateWithPhotos>,
+    onEstateClick: (EstateWithPhotos) -> Unit,
+    onAddClick: () -> Unit,
+    onDrawerItemClick: () -> Unit,
+    modifier: Modifier
+) {
+
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+
 
     Scaffold(
         topBar = {
-            TopAppBar( colors = TopAppBarDefaults.topAppBarColors(
+            TopAppBar(colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = Color.Gray,
                 titleContentColor = Color.White,
                 navigationIconContentColor = Color.White,
                 actionIconContentColor = Color.White
             ),
                 title = {
-                        Text(text = "Real Estate Manager", style = TextStyle.Default.copy(fontSize = 16.sp))
-                     },
+                    Text(
+                        text = "Real Estate Manager",
+                        style = TextStyle.Default.copy(fontSize = 16.sp)
+                    )
+                },
                 navigationIcon = {
-                    IconButton(onClick = { /* Handle navigation icon click */ }) {
+                    IconButton(onClick = {
+                        scope.launch {
+                            drawerState.apply {
+                                if (isClosed) open() else close()
+                            }
+                        }
+                    }) {
                         Icon(imageVector = Icons.Default.Menu, contentDescription = null)
                     }
                 },
@@ -158,15 +184,45 @@ fun EstateList(estateList: List<EstateWithPhotos>, onEstateClick: (EstateWithPho
                 }
             )
         }) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                DrawerContent(onDrawerItemClick = { onDrawerItemClick() })
+            }, gesturesEnabled = false,
+            modifier = Modifier.padding(innerPadding)
         ) {
-            items(estateList) { estate ->
-                EstateItem(estate, onEstateClick = onEstateClick)
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                items(estateList) { estate ->
+                    EstateItem(estate, onEstateClick = onEstateClick)
+                }
             }
         }
+    }
+
+}
+
+@Composable
+fun DrawerContent(onDrawerItemClick: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .background(Color.Gray)
+            .fillMaxHeight()
+    ) {
+        Text(
+            text = "Simulateur de prêt immobilier",
+            modifier = Modifier
+                .clickable { onDrawerItemClick() }
+                .padding(16.dp)
+        )
+        Text(
+            text = "Settings",
+            modifier = Modifier
+                .clickable { onDrawerItemClick() }
+                .padding(16.dp)
+        )
     }
 }
 
@@ -174,18 +230,56 @@ fun EstateList(estateList: List<EstateWithPhotos>, onEstateClick: (EstateWithPho
 @Composable
 fun EstateListPreview() {
     val estatesTest = listOf(
-        EstateWithPhotos(Estate("House","$100,000","300m2","5","3","1","","New York","","","","","",""),
-            listOf( EstatePhoto(1L,"/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
-                EstatePhoto(1L,"/storage/emulated/0/Download/estate1_living.jpg","Salon"))),
-        EstateWithPhotos(Estate("PentHouse","$100,000,000","300m2","5","3","1","","New York","","","","","",""),
-            listOf( EstatePhoto(1L,"/storage/emulated/0/Download/estate2_front.jpg", "Façade"),
-                EstatePhoto(1L,"/storage/emulated/0/Download/estate2_living.jpg","Salon"))))
+        EstateWithPhotos(
+            Estate(
+                "House",
+                "$100,000",
+                "300m2",
+                "5",
+                "3",
+                "1",
+                "",
+                "New York",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+            ),
+            listOf(
+                EstatePhoto(1L, "/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
+                EstatePhoto(1L, "/storage/emulated/0/Download/estate1_living.jpg", "Salon")
+            )
+        ),
+        EstateWithPhotos(
+            Estate(
+                "PentHouse",
+                "$100,000,000",
+                "300m2",
+                "5",
+                "3",
+                "1",
+                "",
+                "New York",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+            ),
+            listOf(
+                EstatePhoto(1L, "/storage/emulated/0/Download/estate2_front.jpg", "Façade"),
+                EstatePhoto(1L, "/storage/emulated/0/Download/estate2_living.jpg", "Salon")
+            )
+        )
+    )
 
     EstateTheme {
 
-       EstateList(estatesTest, onEstateClick = {}, onAddClick = {}, modifier = Modifier)
+        EstateList(estatesTest, onEstateClick = {}, onAddClick = {}, onDrawerItemClick = {}, modifier = Modifier)
     }
-
 
 
 }

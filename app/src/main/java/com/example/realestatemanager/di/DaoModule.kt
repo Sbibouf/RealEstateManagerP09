@@ -42,12 +42,15 @@ class DaoModule {
                     val executor = database.transactionExecutor
                     executor.execute {
                         libraryDao.insert(Estate("House", "$25.000.000", "225M²", "5","2","1", "","City Hall, New York", "Manhattan", "", "", "", "",""))
-                        libraryDao.insert(Estate("Penthouse", "$20.000.000", "225M²", "5","2","1", "","", "Brooklyn", "", "", "", "",""))
-                        libraryDao.insert(Estate("House", "$15.000.000", "225M²", "5","2","1", "","", "Southampton", "", "", "", "",""))
-                        libraryDao.insert(Estate("House", "$17.000.000", "225M²", "5","2","1", "","", "Upper East Side", "", "", "", "",""))
-                        libraryDao.insert(Estate("House", "$20.000.000", "225M²", "5","2","1", "","", "Hampton Bays", "", "", "", "",""))
-                        libraryDao.insert(Estate("House", "$22.000.000", "225M²", "5","2","1", "","", "Brooklyn", "", "", "", "",""))
+                        libraryDao.insert(Estate("Penthouse", "$20.000.000", "225M²", "5","2","1", "","Brooklyn", "Brooklyn", "", "", "", "",""))
+                        libraryDao.insert(Estate("House", "$15.000.000", "225M²", "5","2","1", "","Southampton", "Southampton", "", "", "", "",""))
+                        libraryDao.insert(Estate("House", "$17.000.000", "225M²", "5","2","1", "","Upper East Side", "Upper East Side", "", "", "", "",""))
+                        libraryDao.insert(Estate("House", "$20.000.000", "225M²", "5","2","1", "","Hampton Bays", "Hampton Bays", "", "", "", "",""))
+                        libraryDao.insert(Estate("House", "$22.000.000", "225M²", "5","2","1", "","Brooklyn", "Brooklyn", "", "", "", "",""))
+                        libraryDao.insert(Estate("House", "$35.000.000", "250M²", "5","2","1", "","Montauk", "Montauk", "", "", "", "",""))
+
                         libraryDao.insert(Estate("House", "$35.000.000", "250M²", "5","2","1", "","", "Montauk", "", "", "", "",""))
+
 
                         libraryDao.insertPhoto(EstatePhoto(1L,"https://images.pexels.com/photos/259593/pexels-photo-259593.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "Façade"))
                         libraryDao.insertPhoto(EstatePhoto(1L,"https://images.pexels.com/photos/3701434/pexels-photo-3701434.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Salon"))

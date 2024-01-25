@@ -54,6 +54,12 @@
             android:theme="@style/Theme.RealEstateManager">
 
         </activity>
+        <activity
+            android:name="com.example.realestatemanager.LoanActivity"
+            android:exported="false"
+            android:theme="@style/Theme.RealEstateManager">
+
+        </activity>
     </application>
 
 </manifest>

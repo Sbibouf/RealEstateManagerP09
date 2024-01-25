@@ -13,4 +13,5 @@
     <string name="Number_of_bathrooms">Nombre de salle d\'eau</string>
     <string name="Agent">Agent en charge</string>
     <string name="Valider">Ajouter le bien</string>
+    <string name="Erreur_adress">l\'adresse renseigner est incomplète pour afficher la carte </string>
 </resources>

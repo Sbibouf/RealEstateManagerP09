@@ -38,9 +38,9 @@ import com.example.realestatemanager.model.EstateWithPhotos
 import com.google.android.gms.maps.model.LatLng
 
 @Composable
-fun EstateUiPortrait(estateWithPhotosList: List<EstateWithPhotos>, onEstateClick: (EstateWithPhotos) -> Unit, onAddClick: ()->Unit, modifier: Modifier){
+fun EstateUiPortrait(estateWithPhotosList: List<EstateWithPhotos>, onEstateClick: (EstateWithPhotos) -> Unit, onAddClick: ()->Unit, onDrawerItemClick: ()->Unit, modifier: Modifier){
 
-    EstateList(estateList = estateWithPhotosList, onEstateClick = onEstateClick, onAddClick = onAddClick, modifier = modifier )
+    EstateList(estateList = estateWithPhotosList, onEstateClick = onEstateClick, onAddClick = onAddClick, onDrawerItemClick = onDrawerItemClick, modifier = modifier )
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

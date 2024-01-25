@@ -2,7 +2,9 @@ package com.example.realestatemanager
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,31 +22,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.realestatemanager.model.Estate
-import com.example.realestatemanager.ui.theme.EstateTheme
-import com.example.realestatemanager.ui.estateList.EstateUiLandscape
-import com.example.realestatemanager.ui.estateList.EstateUiPortrait
-import dagger.hilt.android.AndroidEntryPoint
-import android.os.Build
-import android.util.Log
 import com.example.realestatemanager.model.EstateWithPhotos
-import com.example.realestatemanager.ui.estateList.EstateList
 import com.example.realestatemanager.ui.estateList.EstateListViewModel
-import com.google.android.gms.maps.model.LatLng
+import com.example.realestatemanager.ui.estateList.EstateUiPortrait
+import com.example.realestatemanager.ui.theme.EstateTheme
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
 
-    private val estateViewModel : EstateListViewModel by viewModels()
+    private val estateViewModel: EstateListViewModel by viewModels()
     private var isPermissionGranted by mutableStateOf(false)
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if(isGranted){
+            if (isGranted) {
                 isPermissionGranted = isGranted
                 setupContent()
-            }
-            else{
+            } else {
                 finish()
             }
 
@@ -53,7 +49,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val test : Uri = Uri.fromFile(File("/storage/emulated/0/Download/estate1_front.jpg"))
+        val test: Uri = Uri.fromFile(File("/storage/emulated/0/Download/estate1_front.jpg"))
         Log.d("Test", "$test")
 
         //Ask for permission to user depending on Android SDK Version
@@ -62,6 +58,7 @@ class MainActivity : ComponentActivity() {
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
                     requestPermissionLauncher.launch(android.Manifest.permission.READ_MEDIA_IMAGES)
                 }
+
                 else -> {
                     requestPermissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
                 }
@@ -73,7 +70,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
-    private fun setupContent(){
+    private fun setupContent() {
         setContent {
 
             val windowSizeClass = calculateWindowSizeClass(this)
@@ -84,24 +81,31 @@ class MainActivity : ComponentActivity() {
 
             EstateTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
                     when (windowSizeClass.widthSizeClass) {
                         WindowWidthSizeClass.Compact -> {
                             Log.d("EstateList", "Recomposing...")
                             EstateUiPortrait(
                                 estateWithPhotosList = estateList,
-                                onEstateClick =  {clickedEstate ->
+                                onEstateClick = { clickedEstate ->
                                     handleEstateItemClick(clickedEstate)
                                 },
                                 onAddClick = {
                                     handleAddClick()
                                 },
+                                onDrawerItemClick = {
+                                    handleDrawerLoanClick()
+                                },
                                 modifier = Modifier
                             )
                         }
+
                         WindowWidthSizeClass.Expanded -> {
                             Log.d("EstateListAndDetail", "Recomposing...")
-                           // EstateUiLandscape(estateWithPhotosList = estateList,estateWithPhotos = estateList[0], lat = LatLng(2323,23232),  onEstateClick = {})
+                            // EstateUiLandscape(estateWithPhotosList = estateList,estateWithPhotos = estateList[0], lat = LatLng(2323,23232),  onEstateClick = {})
                         }
                     }
 
@@ -116,8 +120,13 @@ class MainActivity : ComponentActivity() {
         startActivity(intent)
     }
 
-    private fun handleAddClick(){
+    private fun handleAddClick() {
         val intent = Intent(this, AddEstateActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun handleDrawerLoanClick() {
+        val intent = Intent(this, LoanActivity::class.java)
         startActivity(intent)
     }
 }

@@ -36,7 +36,7 @@ class EstateDetailActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    if (estate != null && latLng != null) {
+                    if (estate != null ) {
                         EstateDetailsScreen(estate, lat = latLng, modifier = Modifier)
                     }
 

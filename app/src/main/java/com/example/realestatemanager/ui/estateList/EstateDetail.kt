@@ -42,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.realestatemanager.BuildConfig
 import com.example.realestatemanager.R
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
@@ -155,6 +156,7 @@ fun EstateDescriptionRow(estateWithPhotos: EstateWithPhotos) {
 
 @Composable
 fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos, lat: LatLng?) {
+    val api = BuildConfig.MAPS_API_KEY
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -195,8 +197,9 @@ fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos, lat: LatLng?) {
                     .height(300.dp)
             ) {
                 AsyncImage(
-                    model = "https://maps.googleapis.com/maps/api/staticmap?zoom=16&size=400x300&scale=2&maptype=roadmap\\&markers=size:mid%7Ccolor:red%7C " + lat?.latitude + "," + lat?.longitude + "&center=" + lat?.latitude + "," + lat?.longitude + "&key=AIzaSyA35rky_HYWt623gjs_5I3vCYUbBaxEilE",
+                    model = "https://maps.googleapis.com/maps/api/staticmap?zoom=16&size=400x300&scale=2&maptype=roadmap\\&markers=size:mid%7Ccolor:red%7C " + lat.latitude + "," + lat.longitude + "&center=" + lat?.latitude + "," + lat?.longitude + "&key=" + api,
                     contentDescription = null,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
                         .border(2.dp, Color.Gray)

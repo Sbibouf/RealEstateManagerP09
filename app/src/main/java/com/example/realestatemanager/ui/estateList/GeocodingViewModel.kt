@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.realestatemanager.BuildConfig
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.JsonParser
 import kotlinx.coroutines.Dispatchers
@@ -36,7 +37,7 @@ class GeocodingViewModel : ViewModel() {
     }
 
     private fun geocodeAddressInBackground(address: String?): LatLng? {
-        val apiKey = "AIzaSyA35rky_HYWt623gjs_5I3vCYUbBaxEilE" // Remplacez par votre clé API
+        val apiKey = BuildConfig.MAPS_API_KEY
 
         val urlString = "https://maps.googleapis.com/maps/api/geocode/json?address=$address&key=$apiKey"
 

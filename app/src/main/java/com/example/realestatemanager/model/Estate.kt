@@ -10,23 +10,24 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "Estate")
 data class Estate(
 
-    var type : String?,
-    var price : String?,
-    var size : String?,
-    var numberOfRooms : String?,
-    var numberOfBedrooms : String?,
-    var numberOfBathrooms : String?,
-    var description : String?,
-    var address : String?,
-    var city : String?,
-    var placesOfInterest : String?,
-    var state : String?,
-    var entryDate : String?,
-    var soldDate : String?,
-    var agent : String?
+    var type : String? = "",
+    var price : String? = "",
+    var size : String? = "",
+    var numberOfRooms : String? = "",
+    var numberOfBedrooms : String? = "",
+    var numberOfBathrooms : String? = "",
+    var description : String? = "",
+    var address : String? = "",
+    var city : String? = "",
+    var placesOfInterest : String? = "",
+    var state : String? = "",
+    var entryDate : String? = "",
+    var soldDate : String? = "",
+    var agent : String? = "",
     ) : Parcelable {
     @PrimaryKey(autoGenerate = true)
     var id : Long = 0
+
 
     constructor(parcel: Parcel) : this(
         parcel.readString(),

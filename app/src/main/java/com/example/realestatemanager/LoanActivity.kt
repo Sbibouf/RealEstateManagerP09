@@ -12,7 +12,7 @@ class LoanActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             EstateTheme {
-                LoanSimulatorScreen()
+                LoanSimulatorScreen(onBackClick = {finish()})
             }
         }
     }

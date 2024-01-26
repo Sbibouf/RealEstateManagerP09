@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.WRITE_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-feature android:name="android.hardware.camera.any"/>
 
 
@@ -66,7 +68,7 @@
             android:theme="@style/Theme.RealEstateManager">
 
         </activity>
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyA35rky_HYWt623gjs_5I3vCYUbBaxEilE"/>
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="${MAPS_API_KEY}"/>
     </application>
 
 </manifest>

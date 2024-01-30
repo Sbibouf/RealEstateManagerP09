@@ -1,8 +1,6 @@
 package com.example.realestatemanager.ui.addEstate
 
-
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -41,11 +39,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -69,16 +66,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.realestatemanager.R
 import com.example.realestatemanager.data.local.service.ComposeFileProvider
+import com.example.realestatemanager.data.local.service.MaskVisualTransformation
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddEstate(onButtonClick: (Estate) -> Unit, onPhotoClick: () -> Unit) {
+fun AddEstate(onButtonClick: (Estate) -> Unit, estate: Estate, photoList: List<EstatePhoto?>) {
     Scaffold(
         topBar = {
             TopAppBar(colors = TopAppBarDefaults.topAppBarColors(
@@ -120,28 +118,24 @@ fun AddEstate(onButtonClick: (Estate) -> Unit, onPhotoClick: () -> Unit) {
                     .padding(it)
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
-                CreateEstate(onButtonClick = onButtonClick, onPhotoClick = onPhotoClick)
+                CreateEstate(
+                    onButtonClick = onButtonClick,
+                    estate = estate,
+                    photoList = photoList
+                )
 
             }
         })
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("SuspiciousIndentation")
 @Composable
-fun CreateEstate(onButtonClick: (Estate) -> Unit, onPhotoClick: () -> Unit) {
-    var nomDuBien by remember { mutableStateOf("") }
-    var superficie by remember { mutableStateOf("") }
-    var adresse by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var prix by remember { mutableStateOf("") }
-    var photos by remember { mutableStateOf("") }
-    var nombreDePieces by remember { mutableStateOf("") }
-    var nombreDeSalleDeau by remember { mutableStateOf("") }
-    var nombreDeChambres by remember { mutableStateOf("") }
-    var dateDentre by remember { mutableStateOf("") }
-    var dateDeVente by remember { mutableStateOf("") }
-    var agent by remember { mutableStateOf("") }
+fun CreateEstate(
+    onButtonClick: (Estate) -> Unit,
+    estate: Estate,
+    viewModel: AddEstateViewModel = viewModel(),
+    photoList: List<EstatePhoto?>
+) {
+    var estatePhoto by remember { mutableStateOf(EstatePhoto()) }
 
     val context = LocalContext.current
 
@@ -163,7 +157,6 @@ fun CreateEstate(onButtonClick: (Estate) -> Unit, onPhotoClick: () -> Unit) {
         }
     )
 
-
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
         onResult = { success ->
@@ -171,16 +164,13 @@ fun CreateEstate(onButtonClick: (Estate) -> Unit, onPhotoClick: () -> Unit) {
         }
     )
 
-    var uri: Uri?
-
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) {
         if (it) {
             Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
-            uri = ComposeFileProvider.getImageUri(context)
-            imageUri = uri
-            imagesListUri.add(uri)
+            val uri = ComposeFileProvider.getImageUri(context)
+            viewModel.updatePhotoList { listOf(EstatePhoto(estate.id, uri.toString(), "")) }
             cameraLauncher.launch(uri)
         } else {
             Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
@@ -200,11 +190,6 @@ fun CreateEstate(onButtonClick: (Estate) -> Unit, onPhotoClick: () -> Unit) {
 
 
     var showDialog by remember { mutableStateOf(false) }
-    var imageName by remember { mutableStateOf("") }
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-    val imagesNameList = remember { mutableStateListOf<String?>() }
-    val test by remember { mutableStateOf<EstatePhoto?>(null) }
-    val test2 = remember { mutableStateListOf<List<EstatePhoto>?>() }
 
     Column(
         modifier = Modifier
@@ -213,122 +198,146 @@ fun CreateEstate(onButtonClick: (Estate) -> Unit, onPhotoClick: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        Text(text = "Ajouter un bien immobilier", modifier = Modifier.padding(16.dp))
 
         Row(modifier = Modifier.padding(8.dp)) {
 
-            TextField(
-                value = nomDuBien,
-                onValueChange = { newTextValue ->
-                    nomDuBien = newTextValue
-                },
-                placeholder = {
-                    Text(stringResource(R.string.Nom_du_bien_immobilier))
-                },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(1.dp)
-            )
-            TextField(
-                value = superficie,
-                onValueChange = { newTextValue ->
-                    superficie = newTextValue
-                },
-                placeholder = {
-                    Text(stringResource(R.string.Superficie))
-                },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(1.dp)
-            )
+
+            estate.type?.let {
+                TextField(
+                    value = it,
+                    onValueChange = { newTextValue ->
+                        viewModel.updateEstate { copy(type = newTextValue) }
+
+                    },
+                    placeholder = {
+                        Text(stringResource(R.string.Nom_du_bien_immobilier))
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(1.dp),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+                )
+            }
+            estate.size?.let {
+                TextField(
+                    value = it,
+                    onValueChange = { newTextValue ->
+                        viewModel.updateEstate { copy(size = newTextValue) }
+                    },
+                    placeholder = {
+                        Text(stringResource(R.string.Superficie))
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(1.dp),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    )
+                )
+            }
 
         }
 
-        TextField(
-            value = adresse,
-            onValueChange = { newTextValue ->
-                adresse = newTextValue
-            },
-            placeholder = {
-                Text(stringResource(R.string.Address))
-            },
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-        )
-        TextField(
-            value = description,
-            onValueChange = { newTextValue ->
-                description = newTextValue
-            },
-            placeholder = {
-                Text(stringResource(R.string.Description))
-            },
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-        )
-        TextField(
-            value = prix,
-            onValueChange = { newTextValue ->
-                prix = newTextValue
-            },
-            placeholder = {
-                Text(stringResource(R.string.Price))
-            },
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-        )
-
-        Row {
-
+        estate.address?.let {
             TextField(
-                value = photos,
+                value = it,
                 onValueChange = { newTextValue ->
-                    photos = newTextValue
+                    viewModel.updateEstate { copy(address = newTextValue) }
                 },
                 placeholder = {
-                    Text(stringResource(R.string.Photo))
+                    Text(stringResource(R.string.Address))
                 },
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
             )
+        }
+        estate.description?.let {
+            TextField(
+                value = it,
+                onValueChange = { newTextValue ->
+                    viewModel.updateEstate { copy(description = newTextValue) }
+                },
+                placeholder = {
+                    Text(stringResource(R.string.Description))
+                },
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+            )
+        }
+        estate.price?.let {
+            TextField(
+                value = it,
+                onValueChange = { newTextValue ->
+                    viewModel.updateEstate { copy(price = newTextValue) }
+                },
+                placeholder = {
+                    Text(stringResource(R.string.Price))
+                },
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                )
+            )
+        }
+
+        Row {
+            
+            Text(text = stringResource(R.string.Photo),
+                modifier = Modifier.padding(8.dp))
             IconButton(
                 onClick = {
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        val mediaPermissionCheckResult = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_MEDIA_IMAGES)
-                        if(mediaPermissionCheckResult == PackageManager.PERMISSION_GRANTED){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        val mediaPermissionCheckResult = ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.READ_MEDIA_IMAGES
+                        )
+                        if (mediaPermissionCheckResult == PackageManager.PERMISSION_GRANTED) {
                             imagePicker.launch("image/*")
-                        }
-                        else {
+                        } else {
                             //Request a permission
                             mediaPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
                         }
-                    }
-                    else {
-                        val mediaPermissionCheckResult = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
-                        if(mediaPermissionCheckResult == PackageManager.PERMISSION_GRANTED){
+                    } else {
+                        val mediaPermissionCheckResult = ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                        )
+                        if (mediaPermissionCheckResult == PackageManager.PERMISSION_GRANTED) {
                             imagePicker.launch("image/*")
-                        }
-                        else {
+                        } else {
                             //Request a permission
                             mediaPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
                         }
                     }
 
 
-                     },
+                },
                 modifier = Modifier.align(Alignment.CenterVertically)
             ) {
                 Icon(imageVector = Icons.Default.AddCircle, contentDescription = null)
             }
             IconButton(onClick = {
-                uri = ComposeFileProvider.getImageUri(context)
+                val uri = ComposeFileProvider.getImageUri(context)
 
                 val cameraPermissionCheckResult =
                     ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
                 if (cameraPermissionCheckResult == PackageManager.PERMISSION_GRANTED) {
                     imageUri = uri
                     imagesListUri.add(uri)
+                    viewModel.updatePhotoList { listOf(EstatePhoto(estate.id, uri.toString(), "")) }
                     cameraLauncher.launch(uri)
                 } else {
                     // Request a permission
@@ -351,8 +360,7 @@ fun CreateEstate(onButtonClick: (Estate) -> Unit, onPhotoClick: () -> Unit) {
                     onDismissRequest = {
                         showDialog = false
                         // Réinitialisez l'image sélectionnée et le nom
-                        selectedImageUri = null
-                        imageName = ""
+                        estatePhoto = EstatePhoto()
                     },
                     title = {
                         Text("Donner un nom à l'image")
@@ -360,35 +368,36 @@ fun CreateEstate(onButtonClick: (Estate) -> Unit, onPhotoClick: () -> Unit) {
                     text = {
                         Column {
                             AsyncImage(
-                                model = selectedImageUri,
+                                model = Uri.parse(estatePhoto.uri),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(150.dp),
                                 contentDescription = "Selected image",
                             )
                             Spacer(modifier = Modifier.height(16.dp))
-                            OutlinedTextField(
-                                value = imageName,
-                                onValueChange = { newName ->
-                                    imageName = newName
-                                },
-                                label = { Text("Nom de l'image") },
-                                textStyle = TextStyle(color = Color.Black),
-                                colors = OutlinedTextFieldDefaults.colors(
-                                    cursorColor = Color.Black
+                            estatePhoto.name?.let {
+                                OutlinedTextField(
+                                    value = it,
+                                    onValueChange = { newName ->
+                                        estatePhoto.name = newName
+                                    },
+                                    label = { Text("Nom de l'image") },
+                                    textStyle = TextStyle(color = Color.Black),
+                                    colors = OutlinedTextFieldDefaults.colors(
+                                        cursorColor = Color.Black
+                                    )
                                 )
-                            )
+                            }
                         }
                     },
                     confirmButton = {
                         Button(
                             onClick = {
                                 // Fermez le dialogue
-                                imagesNameList.add(imageName)
+                                //viewModel.updatePhotoList { listOf(EstatePhoto(estate.id, estatePhoto.uri,estatePhoto.name)) }
                                 showDialog = false
                                 // Réinitialisez l'image sélectionnée et le nom
-                                selectedImageUri = null
-                                imageName = ""
+                                estatePhoto = EstatePhoto()
 
                             }
                         ) {
@@ -401,7 +410,7 @@ fun CreateEstate(onButtonClick: (Estate) -> Unit, onPhotoClick: () -> Unit) {
 
                                 showDialog = false
                                 // Réinitialisez l'image sélectionnée et le nom
-                                selectedImageUri = null
+                                estatePhoto = EstatePhoto()
                             }
                         ) {
                             Text("Annuler")
@@ -411,50 +420,47 @@ fun CreateEstate(onButtonClick: (Estate) -> Unit, onPhotoClick: () -> Unit) {
             }
 
             LazyRow(modifier = Modifier.fillMaxWidth()) {
-                itemsIndexed(imagesListUri) { index, uri ->
+                itemsIndexed(photoList) { index, photo ->
                     Box(
                         modifier = Modifier
                             .width(150.dp)
                             .height(150.dp)
                             .clickable {
                                 // Mettre à jour l'image sélectionnée lorsque l'utilisateur clique
-                                selectedImageUri = uri
+                                if (photo != null) {
+                                    estatePhoto = photo
+                                }
                                 // Afficher le dialogue pour donner un nom à l'image
                                 showDialog = true
                             },
                     ) {
                         AsyncImage(
-                            model = uri,
+                            model = Uri.parse(photo?.uri),
                             modifier = Modifier
                                 .width(150.dp)
                                 .height(150.dp),
                             contentDescription = "Selected image",
                         )
-                        if (imagesNameList.size > index) {
 
-
-                            imagesNameList[index]?.let {
-                                Text(
-                                    text = it,
-                                    color = Color.White,
-                                    fontSize = 12.sp,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    textAlign = TextAlign.Center,
-                                    modifier = Modifier
-                                        .width(100.dp)
-                                        .background(Color.Black.copy(alpha = 0.5f))
-                                        .padding(4.dp)
-                                        .align(Alignment.BottomCenter)
-                                )
-                            }
-
-
+                        photo?.name?.let {
+                            Text(
+                                text = it,
+                                color = Color.White,
+                                fontSize = 12.sp,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier
+                                    .width(100.dp)
+                                    .background(Color.Black.copy(alpha = 0.5f))
+                                    .padding(4.dp)
+                                    .align(Alignment.BottomCenter)
+                            )
                         }
+
                         IconButton(
                             onClick = {
-                                imagesListUri.remove(uri)
-                                imagesNameList.removeAt(index)
+
                             }, modifier = Modifier
                                 .align(Alignment.BottomEnd)
                                 .padding(4.dp)
@@ -462,8 +468,6 @@ fun CreateEstate(onButtonClick: (Estate) -> Unit, onPhotoClick: () -> Unit) {
                             Icon(imageVector = Icons.Default.Delete, contentDescription = null)
 
                         }
-
-
                     }
                 }
             }
@@ -472,79 +476,114 @@ fun CreateEstate(onButtonClick: (Estate) -> Unit, onPhotoClick: () -> Unit) {
 
         Row(modifier = Modifier.padding(8.dp)) {
 
-            TextField(
-                value = nombreDePieces,
-                onValueChange = {
-                    nombreDePieces = it
-                },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                placeholder = {
-                    Text(stringResource(R.string.Number_of_rooms))
-                },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(1.dp)
-            )
-            TextField(
-                value = nombreDeSalleDeau,
-                onValueChange = {
-                    nombreDeSalleDeau = it
-                },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                placeholder = {
-                    Text(stringResource(R.string.Number_of_bathrooms))
-                },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(1.dp)
-            )
-            TextField(
-                value = nombreDeChambres,
-                onValueChange = {
-                    nombreDeChambres = it
-                },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                placeholder = {
-                    Text(stringResource(R.string.Number_of_bedrooms))
-                },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(1.dp)
-            )
+            estate.numberOfRooms?.let {
+                TextField(
+                    value = it,
+                    onValueChange = { newTextValue ->
+                        viewModel.updateEstate { copy(numberOfRooms = newTextValue) }
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    ),
+                    placeholder = {
+                        Text(stringResource(R.string.Number_of_rooms))
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(1.dp)
+                )
+            }
+            estate.numberOfBathrooms?.let {
+                TextField(
+                    value = it,
+                    onValueChange = { newTextValue ->
+                        viewModel.updateEstate { copy(numberOfBathrooms = newTextValue) }
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    ),
+                    placeholder = {
+                        Text(stringResource(R.string.Number_of_bathrooms))
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(1.dp)
+                )
+            }
+            estate.numberOfBedrooms?.let {
+                TextField(
+                    value = it,
+                    onValueChange = { newTextValue ->
+                        viewModel.updateEstate { copy(numberOfBedrooms = newTextValue) }
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    ),
+                    placeholder = {
+                        Text(stringResource(R.string.Number_of_bedrooms))
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(1.dp)
+                )
+            }
         }
 
         Row(modifier = Modifier.padding(8.dp)) {
 
-            TextField(
-                value = dateDentre,
-                onValueChange = { newTextValue ->
-                    dateDentre = newTextValue
-                },
-                placeholder = {
-                    Text(stringResource(R.string.Date_entrée))
-                },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(1.dp)
-            )
+            estate.entryDate?.let {
+                TextField(
+                    value = it,
+                    onValueChange = {
+                        if (it.length <= DateDefaults.DATE_LENGTH) {
+                            viewModel.updateEstate { copy(entryDate = it) }
+                        }
+
+                    },
+                    placeholder = {
+                        Text(stringResource(R.string.Date_entrée))
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(1.dp),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    ),
+                    visualTransformation = MaskVisualTransformation(DateDefaults.DATE_MASK)
+                )
+            }
             IconButton(
                 onClick = { /*TODO*/ },
                 modifier = Modifier.align(Alignment.CenterVertically)
             ) {
                 Icon(imageVector = Icons.Default.DateRange, contentDescription = null)
             }
-            TextField(
-                value = dateDeVente,
-                onValueChange = { newTextValue ->
-                    dateDeVente = newTextValue
-                },
-                placeholder = {
-                    Text(stringResource(R.string.Date_vente))
-                },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(1.dp)
-            )
+            estate.soldDate?.let {
+                TextField(
+                    value = it,
+                    onValueChange = {
+                        if (it.length <= DateDefaults.DATE_LENGTH) {
+                            viewModel.updateEstate { copy(soldDate = it) }
+                        }
+
+                    },
+                    placeholder = {
+                        Text(stringResource(R.string.Date_vente))
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(1.dp),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    ),
+                    visualTransformation = MaskVisualTransformation(DateDefaults.DATE_MASK)
+                )
+            }
             IconButton(
                 onClick = { /*TODO*/ },
                 modifier = Modifier.align(Alignment.CenterVertically)
@@ -553,47 +592,120 @@ fun CreateEstate(onButtonClick: (Estate) -> Unit, onPhotoClick: () -> Unit) {
             }
         }
 
-        TextField(
-            value = agent,
-            onValueChange = { newTextValue ->
-                agent = newTextValue
-            },
-            placeholder = {
-                Text(stringResource(R.string.Agent))
-            },
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-        )
+        estate.agent?.let {
+            TextField(
+                value = it,
+                onValueChange = { newTextValue ->
+                    viewModel.updateEstate { copy(agent = newTextValue) }
+                },
+                placeholder = {
+                    Text(stringResource(R.string.Agent))
+                },
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+            )
+        }
+        Text(text = "Points d'interet à proximité :", modifier = Modifier.padding(vertical = 8.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(text = "Ecole")
+            estate.school?.let {
+                RadioButton(
+                    selected = it,
+                    onClick = {
+                        if (estate.school == false) {
+                            viewModel.updateEstate { copy(school = true) }
+                        } else {
+                            viewModel.updateEstate { copy(school = false) }
+                        }
+                    },
+                    enabled = true
+                )
+            }
+
+            Text(text = "Commerce")
+            estate.shops?.let {
+                RadioButton(selected = it, onClick = {
+                    if (estate.shops == false) {
+                        viewModel.updateEstate { copy(shops = true) }
+                    } else {
+                        viewModel.updateEstate { copy(shops = false) }
+                    }
+                })
+            }
+
+            Text(text = "Parc")
+            estate.parc?.let {
+                RadioButton(selected = it, onClick = {
+                    if (estate.parc == false) {
+                        viewModel.updateEstate { copy(parc = true) }
+                    } else {
+                        viewModel.updateEstate { copy(parc = false) }
+                    }
+                })
+            }
+
+        }
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(text = "Hopital")
+            estate.hospital?.let {
+                RadioButton(
+                    selected = it,
+                    onClick = {
+                        if (estate.hospital == false) {
+                            viewModel.updateEstate { copy(hospital = true) }
+                        } else {
+                            viewModel.updateEstate { copy(hospital = false) }
+                        }
+                    })
+            }
+
+            Text(text = "Restaurant")
+            estate.restaurant?.let {
+                RadioButton(
+                    selected = it,
+                    onClick = {
+                        if (estate.restaurant == false) {
+                            viewModel.updateEstate { copy(restaurant = true) }
+                        } else {
+                            viewModel.updateEstate { copy(restaurant = false) }
+                        }
+                    })
+            }
+
+            Text(text = "Sport")
+            estate.sport?.let {
+                RadioButton(selected = it, onClick = {
+                    if (estate.sport == false) {
+                        viewModel.updateEstate { copy(sport = true) }
+                    } else {
+                        viewModel.updateEstate { copy(sport = false) }
+                    }
+                })
+            }
+        }
+
 
         Button(onClick = {
-            val data = Estate(
-                type = nomDuBien,
-                price = prix,
-                size = superficie,
-                numberOfRooms = nombreDePieces,
-                numberOfBedrooms = nombreDeChambres,
-                numberOfBathrooms = nombreDeSalleDeau,
-                description = description,
-                address = adresse,
-                city = adresse,
-                placesOfInterest = null,
-                state = null,
-                entryDate = null,
-                soldDate = null,
-                agent = agent
-            )
-            onButtonClick(data)
+            onButtonClick(estate)
         }) {
             Text(stringResource(R.string.Valider))
 
         }
 
+
     }
+}
+
+object DateDefaults {
+    const val DATE_MASK = "##/##/####"
+    const val DATE_LENGTH = 8 // Equals to "##/##/####".count { it == '#' }
 }
 
 @Preview
 @Composable
 fun Preview() {
-    AddEstate(onButtonClick = {}, onPhotoClick = {})
+    AddEstate(onButtonClick = {}, estate = Estate(), photoList = emptyList())
 }

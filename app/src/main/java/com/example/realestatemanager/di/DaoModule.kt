@@ -41,15 +41,14 @@ class DaoModule {
                     val libraryDao = database.libraryDao()
                     val executor = database.transactionExecutor
                     executor.execute {
-                        libraryDao.insert(Estate("House", "$25.000.000", "225M²", "5","2","1", "","City Hall, New York", "Manhattan", "", "", "", "",""))
-                        libraryDao.insert(Estate("Penthouse", "$20.000.000", "225M²", "5","2","1", "","Brooklyn", "Brooklyn", "", "", "", "",""))
-                        libraryDao.insert(Estate("House", "$15.000.000", "225M²", "5","2","1", "","Southampton", "Southampton", "", "", "", "21/11/2023",""))
-                        libraryDao.insert(Estate("House", "$17.000.000", "225M²", "5","2","1", "","Upper East Side", "Upper East Side", "", "", "", "",""))
-                        libraryDao.insert(Estate("House", "$20.000.000", "225M²", "5","2","1", "","Hampton Bays", "Hampton Bays", "", "", "", "22/12/2023",""))
-                        libraryDao.insert(Estate("House", "$22.000.000", "225M²", "5","2","1", "","Brooklyn", "Brooklyn", "", "", "", "",""))
-                        libraryDao.insert(Estate("House", "$35.000.000", "250M²", "5","2","1", "","Montauk", "Montauk", "", "", "", "",""))
-
-                        libraryDao.insert(Estate("House", "$35.000.000", "250M²", "5","2","1", "","", "Montauk", "", "", "", "",""))
+                        libraryDao.insert(Estate("House", "$25.000.000", "225M²", "5","2","1", "","City Hall, New York", "Manhattan", "40.713282","-74.006978", false, "21/12/2023", "","",true,true,true,false,false,false))
+                        libraryDao.insert(Estate("Penthouse", "$20.000.000", "225M²", "5","2","1", "","Brookln", "Brooklyn", "40.6526006","-73.9497211", false, "", "21/12/2023","",true,true,false,true,false,false))
+                        libraryDao.insert(Estate("House", "$15.000.000", "225M²", "5","2","1", "","Southampton", "Southampton", "40.884267","-72.3895296", true, "", "21/11/2023","",false,true,false,true,true,false))
+                        libraryDao.insert(Estate("House", "$17.000.000", "225M²", "5","2","1", "","Upper East Side", "Upper East Side", "","", false, "21/12/2023", "","",false,true,true,false,false,false))
+                        libraryDao.insert(Estate("House", "$20.000.000", "225M²", "5","2","1", "","Hampton Bays", "Hampton Bays", "","", true, "21/12/2023", "22/12/2023","",false,false,false,false,false,false))
+                        libraryDao.insert(Estate("House", "$22.000.000", "225M²", "5","2","1", "","Brooklyn", "Brooklyn", "","", false, "21/12/2023", "","",true,true,true,true,true,true))
+                        libraryDao.insert(Estate("House", "$35.000.000", "250M²", "5","2","1", "","Montauk", "Montauk", "41.0347223","-71.9442623", false, "21/12/2023", "","",false,true,true,false,false,true))
+                        libraryDao.insert(Estate("House", "$35.000.000", "250M²", "5","2","1", "","", "Montauk", "","", false, "21/12/2023", "","",false,false,false,false,false,false))
 
 
                         libraryDao.insertPhoto(EstatePhoto(1L,"https://images.pexels.com/photos/259593/pexels-photo-259593.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "Façade"))

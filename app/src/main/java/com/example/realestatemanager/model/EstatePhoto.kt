@@ -10,24 +10,26 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "EstatePhoto", foreignKeys = [ForeignKey(entity = Estate::class, parentColumns = ["id"], childColumns = ["estateId"])], indices = [Index("estateId")])
 data class EstatePhoto(
-    var estateId : Long,
-                       var uri : String?,
-                       var name : String?) : Parcelable {
+    var estateId : Long? = 0,
+                       var uri : String? = "",
+                       var name : String? ="") : Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     var id : Long = 0
 
     constructor(parcel: Parcel) : this(
-        parcel.readLong(),
+        parcel.readValue(Long::class.java.classLoader) as? Long,
         parcel.readString(),
         parcel.readString()
     ) {
+        id = parcel.readLong()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeLong(estateId)
+        parcel.writeValue(estateId)
         parcel.writeString(uri)
         parcel.writeString(name)
+        parcel.writeLong(id)
     }
 
     override fun describeContents(): Int {
@@ -43,6 +45,8 @@ data class EstatePhoto(
             return arrayOfNulls(size)
         }
     }
+
+
 }
 
 

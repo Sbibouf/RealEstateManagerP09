@@ -3,7 +3,6 @@ package com.example.realestatemanager.ui.estateList
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -52,7 +52,11 @@ import com.google.android.gms.maps.model.LatLng
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EstateDetailsScreen(estateWithPhotos: EstateWithPhotos, lat: LatLng?, onBackClick : ()-> Unit, modifier: Modifier) {
+fun EstateDetailsScreen(
+    estateWithPhotos: EstateWithPhotos,
+    onBackClick: () -> Unit,
+    modifier: Modifier
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -75,7 +79,7 @@ fun EstateDetailsScreen(estateWithPhotos: EstateWithPhotos, lat: LatLng?, onBack
                 Spacer(modifier = Modifier.height(8.dp))
                 EstateMediaRow(estateWithPhotos)
                 EstateDescriptionRow(estateWithPhotos)
-                EstateDetailsRow(estateWithPhotos, lat)
+                EstateDetailsRow(estateWithPhotos)
 
             }
         }
@@ -109,7 +113,7 @@ fun EstateMediaRow(estateWithPhotos: EstateWithPhotos) {
                             modifier = Modifier
                                 .size(150.dp)
                                 .padding(1.dp)
-                                .clickable {  }
+                                .clickable { }
                         )
                         photoUrI.name?.let {
                             Text(
@@ -155,41 +159,111 @@ fun EstateDescriptionRow(estateWithPhotos: EstateWithPhotos) {
 }
 
 @Composable
-fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos, lat: LatLng?) {
+fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
     val api = BuildConfig.MAPS_API_KEY
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        Row {
+        Row(modifier = Modifier.padding(vertical = 8.dp)) {
+
             Icon(
                 painter = painterResource(R.drawable.baseline_aspect_ratio_24),
                 contentDescription = null
             )
             Text(text = "Surface: ${estateWithPhotos.estate?.size}")
-        }
-        Row {
+
+            Spacer(modifier = Modifier.width(16.dp))
+
             Icon(imageVector = Icons.Default.Home, contentDescription = null)
-            Text(text = "Nombre de pièces: ${estateWithPhotos.estate?.numberOfRooms}")
+            Text(text = "Pièces: ${estateWithPhotos.estate?.numberOfRooms}")
+
+
         }
-        Row {
+        Row(modifier = Modifier.padding(vertical = 8.dp)) {
+
+
             Icon(painter = painterResource(R.drawable.baseline_bed_24), contentDescription = null)
-            Text(text = "Nombre de chambres: ${estateWithPhotos.estate?.numberOfBedrooms}")
-        }
-        Row {
+            Text(text = "Chambres: ${estateWithPhotos.estate?.numberOfBedrooms}")
+
+            Spacer(modifier = Modifier.width(16.dp))
+
             Icon(
                 painter = painterResource(R.drawable.baseline_bathtub_24),
                 contentDescription = null
             )
-            Text(text = "Nombre de salles de bains: ${estateWithPhotos.estate?.numberOfBathrooms}")
+            Text(text = "Salles de bains: ${estateWithPhotos.estate?.numberOfBathrooms}")
         }
+
+        Row(modifier = Modifier.padding(vertical = 8.dp)) {
+            Icon(imageVector = Icons.Default.DateRange, contentDescription = null)
+            Text(text = "Arrivée: ${estateWithPhotos.estate?.entryDate}")
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Icon(imageVector = Icons.Default.DateRange, contentDescription = null)
+            Text(text = "Vente: ${estateWithPhotos.estate?.soldDate}")
+        }
+        Text(text = "Points d'interet à proximité :", modifier = Modifier.padding(vertical = 8.dp))
         Row {
+            if (estateWithPhotos.estate?.school == true) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_school_foreground),
+                    modifier = Modifier.size(50.dp),
+                    contentDescription = null
+                )
+            }
+            if (estateWithPhotos.estate?.shops == true) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_shop_foreground),
+                    modifier = Modifier.size(50.dp),
+                    contentDescription = null
+                )
+            }
+            if (estateWithPhotos.estate?.parc == true) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_parc_foreground),
+                    modifier = Modifier.size(50.dp),
+                    contentDescription = null
+                )
+            }
+            if (estateWithPhotos.estate?.hospital == true) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_hospital_foreground),
+                    modifier = Modifier.size(50.dp),
+                    contentDescription = null
+                )
+            }
+            if (estateWithPhotos.estate?.restaurant == true) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_restaurant_foreground),
+                    modifier = Modifier.size(50.dp),
+                    contentDescription = null
+                )
+            }
+            if (estateWithPhotos.estate?.sport == true) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_sport_foreground),
+                    modifier = Modifier.size(50.dp),
+                    contentDescription = null
+                )
+            }
+            if ((estateWithPhotos.estate?.school == false) && (estateWithPhotos.estate.shops == false) && (estateWithPhotos.estate.parc == false) && (estateWithPhotos.estate.hospital == false) && (estateWithPhotos.estate.restaurant == false) && (estateWithPhotos.estate.sport == false)) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_none_foreground),
+                    modifier = Modifier.size(50.dp),
+                    contentDescription = null
+                )
+            }
+        }
+        Row(modifier = Modifier.padding(vertical = 8.dp)) {
+            Spacer(modifier = Modifier.height(16.dp))
             Icon(imageVector = Icons.Default.LocationOn, contentDescription = null)
             Text(text = "Localisation: ${estateWithPhotos.estate?.address}")
         }
 
-        if (lat != null) {
+        if (estateWithPhotos.estate?.latitude != "" && estateWithPhotos.estate?.latitude != null ) {
             Box(
                 modifier = Modifier
                     .padding(8.dp)
@@ -197,7 +271,7 @@ fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos, lat: LatLng?) {
                     .height(300.dp)
             ) {
                 AsyncImage(
-                    model = "https://maps.googleapis.com/maps/api/staticmap?zoom=16&size=400x300&scale=2&maptype=roadmap\\&markers=size:mid%7Ccolor:red%7C " + lat.latitude + "," + lat.longitude + "&center=" + lat?.latitude + "," + lat?.longitude + "&key=" + api,
+                    model = "https://maps.googleapis.com/maps/api/staticmap?zoom=16&size=400x300&scale=2&maptype=roadmap\\&markers=size:mid%7Ccolor:red%7C " + estateWithPhotos.estate?.latitude + "," + estateWithPhotos.estate?.longitude + "&center=" + estateWithPhotos.estate?.latitude + "," + estateWithPhotos.estate?.longitude + "&key=" + api,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -223,11 +297,37 @@ fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos, lat: LatLng?) {
 @Composable
 fun EstateTest() {
     val estateWithPhotoTest = EstateWithPhotos(
-        Estate("House", "$100,000", "300m2", "5", "3", "1", "", "New York", "", "", "", "", "", ""),
+        Estate(
+            "House",
+            "$100,000",
+            "300m2",
+            "5",
+            "3",
+            "1",
+            "",
+            "New York",
+            "",
+            "",
+            "",
+            false,
+            "21/12/2023",
+            "31/12/2023",
+            "",
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+        ),
         listOf(
             EstatePhoto(1L, "/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
             EstatePhoto(1L, "/storage/emulated/0/Download/estate1_living.jpg", "Salon")
         )
     )
-    // EstateDetailsScreen(estateWithPhotos = estateWithPhotoTest, modifier = Modifier)
+    EstateDetailsScreen(
+        estateWithPhotos = estateWithPhotoTest,
+        onBackClick = {},
+        modifier = Modifier
+    )
 }

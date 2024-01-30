@@ -20,27 +20,27 @@ interface LibraryDao {
      * Insert new estate
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(estate : Estate)
+    fun insert(estate: Estate)
 
     /**
      * Insert a new estatePhoto
      */
     @Insert
-    fun insertPhoto(photo : EstatePhoto)
+    fun insertPhoto(photo: EstatePhoto)
 
     /**
      * Add photo to estate and return all EstateWithPhoto
      */
     @Transaction
     @Query("SELECT * FROM estate")
-    fun getAllEstateWithPhoto() : Flow<List<EstateWithPhotos>>
+    fun getAllEstateWithPhoto(): Flow<List<EstateWithPhotos>>
 
     /**
      * Add photo to estate and return EstateWithPhoto
      */
     @Transaction
     @Query("SELECT * FROM estate WHERE id = :id")
-    fun getEstateWithPhotoById(id : Long): Flow<EstateWithPhotos>
+    fun getEstateWithPhotoById(id: Long): Flow<EstateWithPhotos>
 
 
     /**
@@ -75,13 +75,30 @@ interface LibraryDao {
     @Update
     fun update(estate: Estate)
 
-
-
-
-
-
-
-
+    /**
+     * Query for the search engine
+     * get the Estate with provided parameters or default
+     */
+    @Transaction
+    @Query("SELECT * FROM Estate WHERE price = :estatePrice AND type = :estateType AND size = :estateSize AND numberOfRooms = :estateNumberOfRooms AND numberOfBedrooms = :estateNumberOfBedrooms AND numberOfBathrooms = :estateNumberOfBathrooms AND soldState = :estateSoldState AND address = :estateAddress AND entryDate = :estateEntryDate AND soldState = :estateSoldDate AND school = :estateSchool AND shops = :estateShops AND parc = :estateParc AND hospital = :estateHospital AND restaurant = :estateRestaurant AND sport = :estateSport")
+    fun getEstateFromSearch(
+        estatePrice: String?,
+        estateType: String?,
+        estateSize: String?,
+        estateNumberOfRooms: String?,
+        estateNumberOfBedrooms: String?,
+        estateNumberOfBathrooms: String?,
+        estateSoldState: String?,
+        estateAddress: String?,
+        estateEntryDate : String?,
+        estateSoldDate : String?,
+        estateSchool : String?,
+        estateShops : String?,
+        estateParc : String?,
+        estateHospital : String?,
+        estateRestaurant : String?,
+        estateSport : String?
+    ): Flow<List<EstateWithPhotos>>
 
 
 }

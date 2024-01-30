@@ -39,9 +39,9 @@ import com.example.realestatemanager.model.EstateWithPhotos
 import com.google.android.gms.maps.model.LatLng
 
 @Composable
-fun EstateUiPortrait(estateWithPhotosList: List<EstateWithPhotos>, onEstateClick: (EstateWithPhotos) -> Unit, onAddClick: ()->Unit, onDrawerLoanClick: ()->Unit, onDrawerMapClick: ()->Unit, modifier: Modifier){
+fun EstateUiPortrait(estateWithPhotosList: List<EstateWithPhotos>, onEstateClick: (EstateWithPhotos) -> Unit, onAddClick: ()->Unit, onDrawerLoanClick: ()->Unit, onDrawerMapClick: ()->Unit, onSearchClick : ()->Unit, modifier: Modifier){
 
-    EstateList(estateList = estateWithPhotosList, onEstateClick = onEstateClick, onAddClick = onAddClick, onDrawerLoanClick = onDrawerLoanClick, onDrawerMapClick = onDrawerMapClick, modifier = modifier )
+    EstateList(estateList = estateWithPhotosList, onEstateClick = onEstateClick, onAddClick = onAddClick, onDrawerLoanClick = onDrawerLoanClick, onDrawerMapClick = onDrawerMapClick, onSearchClick = onSearchClick, modifier = modifier )
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -91,7 +91,7 @@ fun EstateUiLandscape( estateWithPhotosList : List<EstateWithPhotos>,estateWithP
                 Spacer(modifier = Modifier.height(8.dp))
                 EstateMediaRow(estateWithPhotos)
                 EstateDescriptionRow(estateWithPhotos)
-                EstateDetailsRow(estateWithPhotos, lat)
+                EstateDetailsRow(estateWithPhotos)
 
             }
 
@@ -105,14 +105,14 @@ fun EstateUiLandscape( estateWithPhotosList : List<EstateWithPhotos>,estateWithP
 fun Test(){
 
     val estatesTest = listOf(
-        EstateWithPhotos(Estate("House","$100,000","300m2","5","3","1","","New York","","","","","",""),
+        EstateWithPhotos(Estate("House","$100,000","300m2","5","3","1","","New York","","","",false,"","","",false,false,false,false,false,false),
             listOf( EstatePhoto(1L,"/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
                 EstatePhoto(1L,"/storage/emulated/0/Download/estate1_living.jpg","Salon"))),
-        EstateWithPhotos(Estate("PentHouse","$100,000,000","300m2","5","3","1","","New York","","","","","",""),
+        EstateWithPhotos(Estate("PentHouse","$100,000,000","300m2","5","3","1","","New York","","","",false,"","","",false,false,false,false,false,false),
             listOf( EstatePhoto(1L,"/storage/emulated/0/Download/estate2_front.jpg", "Façade"),
                 EstatePhoto(1L,"/storage/emulated/0/Download/estate2_living.jpg","Salon"))))
 
-    val estateWithPhotoTest = EstateWithPhotos(Estate("House","$100,000","300m2","5","3","1","","New York","","","","","",""),
+    val estateWithPhotoTest = EstateWithPhotos(Estate("House","$100,000","300m2","5","3","1","","New York","","","",false,"","","",false,false,false,false,false,false),
         listOf( EstatePhoto(1L,"/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
             EstatePhoto(1L,"/storage/emulated/0/Download/estate1_living.jpg","Salon")))
 

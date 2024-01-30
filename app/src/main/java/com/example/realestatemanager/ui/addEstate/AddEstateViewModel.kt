@@ -19,10 +19,19 @@ class AddEstateViewModel @Inject constructor(private val estateRepository: Estat
     private val _estate : MutableStateFlow<Estate> = MutableStateFlow(Estate())
      val estate : StateFlow<Estate> get() =  _estate
 
+    private val _photoList : MutableStateFlow<List<EstatePhoto>> = MutableStateFlow(emptyList())
+
+    val photoList : StateFlow<List<EstatePhoto>> get() = _photoList
+
 
     fun updateEstate(transform : Estate.()->Estate){
         _estate.value = transform.invoke(_estate.value)
     }
+
+    fun updatePhotoList(transform: List<EstatePhoto>.()-> List<EstatePhoto>){
+        _photoList.value = transform.invoke(_photoList.value)
+    }
+
     fun insertEstate(
         type : String?,
         price : String?,
@@ -33,11 +42,18 @@ class AddEstateViewModel @Inject constructor(private val estateRepository: Estat
         description : String?,
         address : String?,
         city : String?,
-        placesOfInterest : String?,
-        state : String?,
+        latitude : String?,
+        longitude : String?,
+        soldState : Boolean?,
         entryDate : String?,
         soldDate : String?,
-        agent : String?){
+        agent : String?,
+        school : Boolean?,
+        shops : Boolean?,
+        parc : Boolean?,
+        hospital : Boolean?,
+        restaurant : Boolean?,
+        sport : Boolean?){
 
         Log.d("AddEstateViewModel", "Inserting estate: Type=$type, Price=$price, ...")
         executor.execute {
@@ -52,11 +68,48 @@ class AddEstateViewModel @Inject constructor(private val estateRepository: Estat
                     description,
                     address,
                     city,
-                    placesOfInterest,
-                    state,
+                    latitude,
+                    longitude,
+                    soldState,
                     entryDate,
                     soldDate,
-                    agent
+                    agent,
+                    school,
+                    shops,
+                    parc,
+                    hospital,
+                    restaurant,
+                    sport
+                )
+            )
+        }
+    }
+
+    fun insertHoleEstate(estate:Estate){
+        executor.execute {
+            estateRepository.insertEstate(
+                Estate(
+                    estate.type,
+                    estate.price,
+                    estate.size,
+                    estate.numberOfRooms,
+                    estate.numberOfBedrooms,
+                    estate.numberOfBathrooms,
+                    estate.description,
+                    estate.address,
+                    estate.city,
+                    estate.latitude,
+                    estate.longitude,
+                    estate.soldState,
+                    estate.entryDate,
+                    estate.soldDate,
+                    estate.agent,
+                    estate.school,
+                    estate.shops,
+                    estate.parc,
+                    estate.hospital,
+                    estate.restaurant,
+                    estate.sport
                 )
             )
         }

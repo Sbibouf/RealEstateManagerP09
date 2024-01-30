@@ -19,15 +19,21 @@ data class Estate(
     var description : String? = "",
     var address : String? = "",
     var city : String? = "",
-    var placesOfInterest : String? = "",
-    var state : String? = "",
+    var latitude : String? = "",
+    var longitude : String? = "",
+    var soldState : Boolean? = false,
     var entryDate : String? = "",
     var soldDate : String? = "",
     var agent : String? = "",
+    var school : Boolean? = false,
+    var shops : Boolean? = false,
+    var parc : Boolean? = false,
+    var hospital : Boolean? = false,
+    var restaurant : Boolean? = false,
+    var sport : Boolean? = false
     ) : Parcelable {
     @PrimaryKey(autoGenerate = true)
     var id : Long = 0
-
 
     constructor(parcel: Parcel) : this(
         parcel.readString(),
@@ -41,9 +47,16 @@ data class Estate(
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
+        parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
         parcel.readString(),
         parcel.readString(),
-        parcel.readString()
+        parcel.readString(),
+        parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
+        parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
+        parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
+        parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
+        parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
+        parcel.readValue(Boolean::class.java.classLoader) as? Boolean
     ) {
         id = parcel.readLong()
     }
@@ -58,11 +71,18 @@ data class Estate(
         parcel.writeString(description)
         parcel.writeString(address)
         parcel.writeString(city)
-        parcel.writeString(placesOfInterest)
-        parcel.writeString(state)
+        parcel.writeString(latitude)
+        parcel.writeString(longitude)
+        parcel.writeValue(soldState)
         parcel.writeString(entryDate)
         parcel.writeString(soldDate)
         parcel.writeString(agent)
+        parcel.writeValue(school)
+        parcel.writeValue(shops)
+        parcel.writeValue(parc)
+        parcel.writeValue(hospital)
+        parcel.writeValue(restaurant)
+        parcel.writeValue(sport)
         parcel.writeLong(id)
     }
 

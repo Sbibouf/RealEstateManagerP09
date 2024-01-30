@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">RealEstateManager</string>
-    <string name="Nom_du_bien_immobilier">Nom du bien</string>
+    <string name="Nom_du_bien_immobilier">Type du bien</string>
     <string name="Superficie">Superficie en M²</string>
     <string name="Address">Adresse du bien</string>
     <string name="Description">Description</string>
     <string name="Price">Prix</string>
-    <string name="Photo">Photos</string>
-    <string name="Date_entrée">Date d\'entrée</string>
-    <string name="Date_vente">Date vente</string>
+    <string name="Photo">Ajouter une photo</string>
+    <string name="Date_entrée">Arrivée</string>
+    <string name="Date_vente">Vente</string>
     <string name="Number_of_rooms">Nb de pièces</string>
     <string name="Number_of_bedrooms">Nb de chambres</string>
     <string name="Number_of_bathrooms">Nb de salle d\'eau</string>

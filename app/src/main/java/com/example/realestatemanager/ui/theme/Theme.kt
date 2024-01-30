@@ -54,3 +54,21 @@ fun EstateTheme(
             content = content
     )
 }
+
+@Composable
+fun EstateDetailTheme(
+    useDarkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable() () -> Unit
+) {
+    val colors = if (!useDarkTheme) {
+        LightColorScheme
+    } else {
+        DarkColorScheme
+    }
+
+    MaterialTheme(
+        colorScheme = colors,
+        typography = Typography2,
+        content = content
+    )
+}

@@ -125,7 +125,7 @@ fun EstateItem(estateWithPhotos: EstateWithPhotos, onEstateClick: (EstateWithPho
                 }
 
             }
-            if(estateWithPhotos.estate?.soldDate==""){
+            if(estateWithPhotos.estate?.soldState==false){
                 Image(
                     painter = painterResource(R.drawable.ic_not_sold_foreground),
                     contentDescription = null,
@@ -160,6 +160,7 @@ fun EstateList(
     estateList: List<EstateWithPhotos>,
     onEstateClick: (EstateWithPhotos) -> Unit,
     onAddClick: () -> Unit,
+    onSearchClick: ()->Unit,
     onDrawerLoanClick: () -> Unit,
     onDrawerMapClick: () -> Unit,
     modifier: Modifier
@@ -199,10 +200,8 @@ fun EstateList(
                     IconButton(onClick = { onAddClick() }) {
                         Icon(imageVector = Icons.Default.Add, contentDescription = null)
                     }
-                    IconButton(onClick = { /* Handle settings icon click */ }) {
-                        Icon(imageVector = Icons.Default.Create, contentDescription = null)
-                    }
-                    IconButton(onClick = { /* Handle settings icon click */ }) {
+
+                    IconButton(onClick = { onSearchClick() }) {
                         Icon(imageVector = Icons.Default.Search, contentDescription = null)
                     }
 
@@ -266,11 +265,11 @@ fun EstateListPreview() {
                 "",
                 "New York",
                 "",
+                "","",
+                false,
                 "",
                 "",
-                "",
-                "",
-                ""
+                "",false,false,false,false,false,false
             ),
             listOf(
                 EstatePhoto(1L, "/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
@@ -288,11 +287,11 @@ fun EstateListPreview() {
                 "",
                 "New York",
                 "",
+                "","",
+                false,
                 "",
                 "",
-                "",
-                "",
-                ""
+                "",false,false,false,false,false,false
             ),
             listOf(
                 EstatePhoto(1L, "/storage/emulated/0/Download/estate2_front.jpg", "Façade"),
@@ -303,7 +302,7 @@ fun EstateListPreview() {
 
     EstateTheme {
 
-        EstateList(estatesTest, onEstateClick = {}, onAddClick = {}, onDrawerLoanClick = {}, onDrawerMapClick = {}, modifier = Modifier)
+        EstateList(estatesTest, onEstateClick = {}, onAddClick = {}, onDrawerLoanClick = {}, onDrawerMapClick = {}, onSearchClick = {}, modifier = Modifier)
     }
 
 

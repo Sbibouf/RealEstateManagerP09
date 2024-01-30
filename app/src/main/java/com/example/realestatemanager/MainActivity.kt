@@ -3,6 +3,7 @@ package com.example.realestatemanager
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -14,6 +15,7 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import com.example.realestatemanager.data.local.service.Utils
 import com.example.realestatemanager.model.EstateWithPhotos
 import com.example.realestatemanager.ui.estateList.EstateListViewModel
 import com.example.realestatemanager.ui.estateList.EstateUiLandscape
@@ -62,6 +64,9 @@ class MainActivity : ComponentActivity() {
                                 onDrawerMapClick = {
                                     handleDrawerMapClick()
                                 },
+                                onSearchClick = {
+
+                                },
                                 modifier = Modifier
                             )
                         }
@@ -93,6 +98,9 @@ class MainActivity : ComponentActivity() {
                                 onDrawerMapClick = {
                                     handleDrawerMapClick()
                                 },
+                                onSearchClick = {
+
+                                },
                                 modifier = Modifier
                             )
                         }
@@ -121,7 +129,18 @@ class MainActivity : ComponentActivity() {
 
     private fun handleDrawerMapClick() {
         val intent = Intent(this, MapActivity::class.java)
-        startActivity(intent)
+        if(Utils.isInternetAvailable(applicationContext)){
+            startActivity(intent)
+        }
+        else {
+            Toast.makeText(applicationContext, "Vous n'avez pas accès a internet", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+    private fun handleSearchClick(){
+        //intent
+        //startActivity
     }
 }
 

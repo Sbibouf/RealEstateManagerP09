@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,7 +38,7 @@ fun MapScreen(onBackClick: () -> Unit, estateList : List<EstateWithPhotos>, onEs
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Gray,
                     titleContentColor = Color.White,
@@ -45,7 +46,7 @@ fun MapScreen(onBackClick: () -> Unit, estateList : List<EstateWithPhotos>, onEs
                 ),
                 title = {
                     Text(
-                        text = "Retour",
+                        text = "Carte des biens",
                         style = TextStyle.Default.copy(fontSize = 20.sp)
                     )
                 },

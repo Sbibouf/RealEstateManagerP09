@@ -92,6 +92,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling:1.5.4")
     implementation("androidx.compose.material3:material3:1.1.2")
     implementation("androidx.compose.material3:material3-window-size-class:1.1.2")
+    implementation ("androidx.compose.material3:material3:1.2.0-rc01")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation ("androidx.compose.runtime:runtime-livedata:1.5.4")
@@ -138,6 +139,7 @@ dependencies {
     kapt ("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.5.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
     implementation("androidx.hilt:hilt-navigation-fragment:1.0.0")
+    //implementation ("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
 
 }
 kapt {

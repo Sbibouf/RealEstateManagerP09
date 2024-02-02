@@ -9,6 +9,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,15 +35,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.realestatemanager.R
 import com.example.realestatemanager.model.LoanData
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
+
 import java.text.DecimalFormat
 import kotlin.math.pow
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoanSimulatorScreen(onBackClick : ()->Unit) {
+fun LoanSimulatorScreen(onBackClick: () -> Unit) {
     var amount by remember { mutableStateOf("") }
     var downPayment by remember { mutableStateOf("") }
     var interestRate by remember { mutableStateOf("") }
@@ -51,7 +51,7 @@ fun LoanSimulatorScreen(onBackClick : ()->Unit) {
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Gray,
                     titleContentColor = Color.White,
@@ -59,7 +59,7 @@ fun LoanSimulatorScreen(onBackClick : ()->Unit) {
                 ),
                 title = {
                     Text(
-                        text = "Retour",
+                        text = "Simulateur de prêt immobilier",
                         style = TextStyle.Default.copy(fontSize = 20.sp)
                     )
                 },
@@ -78,7 +78,6 @@ fun LoanSimulatorScreen(onBackClick : ()->Unit) {
                     .padding(it),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(stringResource(R.string.Simulateur))
                 Spacer(modifier = Modifier.height(16.dp))
                 TextField(
                     value = amount,
@@ -102,7 +101,7 @@ fun LoanSimulatorScreen(onBackClick : ()->Unit) {
                 Spacer(modifier = Modifier.height(16.dp))
                 TextField(
                     value = interestRate,
-                    onValueChange = { interestRate = it.replace(",",".") },
+                    onValueChange = { interestRate = it.replace(",", ".") },
                     label = { Text("Taux d'interet annuel") },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Number,
@@ -121,17 +120,14 @@ fun LoanSimulatorScreen(onBackClick : ()->Unit) {
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = {
-                    if(amount==""){
+                    if (amount == "") {
                         amount = "0"
-                    }
-                    else if (downPayment==""){
-                        downPayment="0"
-                    }
-                    else if (interestRate==""){
-                        interestRate="0"
-                    }
-                    else if(loanTerm==""){
-                        loanTerm="0"
+                    } else if (downPayment == "") {
+                        downPayment = "0"
+                    } else if (interestRate == "") {
+                        interestRate = "0"
+                    } else if (loanTerm == "") {
+                        loanTerm = "0"
                     }
                     val data = LoanData(
                         amount.toDouble(),
@@ -144,11 +140,33 @@ fun LoanSimulatorScreen(onBackClick : ()->Unit) {
                     Text("Calculate")
                 }
 
-                Text("Mensualités: ${loandata?.let { calculateLoanDetail(it, "monthly") }} $")
-                Text("Coût des intérêts: ${loandata?.let { calculateLoanDetail(it, "interest") }} $")
-                Text("Coût total du prêt: ${loandata?.let { calculateLoanDetail(it, "total") }} $")
-
-
+                if (loandata == null) {
+                    Text("Mensualités: 0 $")
+                    Text("Coût des intérêts: 0 $")
+                    Text("Coût total du prêt: 0 $")
+                } else {
+                    Text("Mensualités: ${loandata?.let { calculateLoanDetail(it, "monthly") }} $")
+                    Text(
+                        "Coût des intérêts: ${
+                            loandata?.let {
+                                calculateLoanDetail(
+                                    it,
+                                    "interest"
+                                )
+                            }
+                        } $"
+                    )
+                    Text(
+                        "Coût total du prêt: ${
+                            loandata?.let {
+                                calculateLoanDetail(
+                                    it,
+                                    "total"
+                                )
+                            }
+                        } $"
+                    )
+                }
             }
         }
     )
@@ -159,7 +177,6 @@ fun LoanSimulatorScreen(onBackClick : ()->Unit) {
 private fun calculateLoanDetail(loanData: LoanData, type: String): String {
     val decimalFormat = DecimalFormat("#.##")
     val principal = loanData.amount - loanData.downPayment
-    //val monthlyInterestRates = (1 + loanData.yearlyInterestRate / 100).pow(1 / 12) - 1
     val monthlyInterestRate = loanData.yearlyInterestRate / 100.0 / 12.0
     val totalPaymentsDuration = loanData.loanTermYears * 12
     val interest =
@@ -178,5 +195,5 @@ private fun calculateLoanDetail(loanData: LoanData, type: String): String {
 @Preview
 @Composable
 fun Test() {
-   LoanSimulatorScreen(onBackClick = {})
+    LoanSimulatorScreen(onBackClick = {})
 }

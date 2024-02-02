@@ -33,13 +33,11 @@ class EstateDetailActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     if (estate != null ) {
-                        EstateDetailsScreen(estate, onBackClick = { finish() }, modifier = Modifier)
+                        EstateDetailsScreen(estate, onBackClick = { finish() }, onModifyClick = {}, modifier = Modifier)
                     }
 
                 }
             }
-
-
         }
     }
 }

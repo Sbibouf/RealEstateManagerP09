@@ -237,12 +237,14 @@ fun DrawerContent(onDrawerLoanClick: () -> Unit, onDrawerMapClick: ()-> Unit) {
     ) {
         Text(
             text = "Simulateur",
+            color = Color.White,
             modifier = Modifier
                 .clickable { onDrawerLoanClick() }
                 .padding(16.dp)
         )
         Text(
             text = "Carte",
+            color = Color.White,
             modifier = Modifier
                 .clickable { onDrawerMapClick() }
                 .padding(16.dp)

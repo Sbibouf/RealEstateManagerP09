@@ -1,10 +1,12 @@
 package com.example.realestatemanager.data.local.repository
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import com.example.realestatemanager.data.local.dao.LibraryDao
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
 import com.example.realestatemanager.model.EstateWithPhotos
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton

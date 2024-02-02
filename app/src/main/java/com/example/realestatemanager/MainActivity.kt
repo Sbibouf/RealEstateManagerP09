@@ -129,16 +129,19 @@ class MainActivity : ComponentActivity() {
 
     private fun handleDrawerMapClick() {
         val intent = Intent(this, MapActivity::class.java)
-        if(Utils.isInternetAvailable(applicationContext)){
+        if (Utils.isInternetAvailable(applicationContext)) {
             startActivity(intent)
-        }
-        else {
-            Toast.makeText(applicationContext, "Vous n'avez pas accès a internet", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(
+                applicationContext,
+                "Vous n'avez pas accès a internet",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
     }
 
-    private fun handleSearchClick(){
+    private fun handleSearchClick() {
         //intent
         //startActivity
     }

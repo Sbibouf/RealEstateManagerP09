@@ -4,8 +4,8 @@
         name="my_images"
         path="images/" />
     <cache-path
-        name="my_images"
-        path="images/" />
+        name="cache"
+        path="." />
     <external-files-path name="cache" path="/"/>
     <external-path
         name="my_images"

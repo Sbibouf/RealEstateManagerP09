@@ -38,7 +38,6 @@ class MainActivity : ComponentActivity() {
             val windowSizeClass = calculateWindowSizeClass(this)
             val estateList = estateViewModel.uiState.collectAsState().value
             val estateWithPhoto = estateViewModel.uiStateLandscape.collectAsState().value
-            //var selectedEstate by remember { mutableStateOf<Estate?>(null) }
 
 
             EstateTheme {
@@ -65,7 +64,7 @@ class MainActivity : ComponentActivity() {
                                     handleDrawerMapClick()
                                 },
                                 onSearchClick = {
-
+                                    handleSearchClick()
                                 },
                                 modifier = Modifier
                             )
@@ -142,8 +141,8 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun handleSearchClick() {
-        //intent
-        //startActivity
+        val intent = Intent(this, SearchActivity::class.java)
+        startActivity(intent)
     }
 }
 

@@ -17,6 +17,8 @@ class EstateRepository @Inject constructor(private val libraryDao: LibraryDao){
 
     fun insertEstate(estate : Estate) = libraryDao.insert(estate)
 
+    suspend fun getInsertedEstateId(estate : Estate) : Long = libraryDao.getInsertedEstateId(estate)
+
     fun insertEstatePhoto(photo: EstatePhoto) = libraryDao.insertPhoto(photo)
 
     fun getAllEstateWithPhoto() : Flow<List<EstateWithPhotos>> = libraryDao.getAllEstateWithPhoto()

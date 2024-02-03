@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,8 +26,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -50,7 +51,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -69,25 +69,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.core.content.FileProvider
 import coil.compose.AsyncImage
 import com.example.realestatemanager.R
-import com.example.realestatemanager.data.local.service.ComposeFileProvider
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.reflect.KFunction1
+import kotlin.reflect.KFunction2
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEstate(
-    onButtonClick: (Estate) -> Unit,
+    onAddEstateClick: (Estate, List<EstatePhoto>) -> Unit,
     estate: Estate,
     onUpdateEstate: KFunction1<Estate.() -> Estate, Unit>,
     photoList: List<EstatePhoto>,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onAddPhotoButtonClick: (EstatePhoto) -> Unit,
+    onChangePhotoButtonClick: KFunction2<Uri, EstatePhoto, Unit>
 ) {
     Scaffold(
         topBar = {
@@ -106,7 +109,10 @@ fun AddEstate(
                 },
                 navigationIcon = {
                     IconButton(onClick = { onBackClick() }) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null
+                        )
                     }
                 },
 
@@ -120,10 +126,12 @@ fun AddEstate(
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
                 CreateEstate(
-                    onButtonClick = onButtonClick,
+                    onAddEstateClick = onAddEstateClick,
                     estate = estate,
                     onUpdateEstate = onUpdateEstate,
-                    photoList = photoList
+                    photoList = photoList,
+                    onAddPhotoButtonClick = onAddPhotoButtonClick,
+                    onChangePhotoButtonClick = onChangePhotoButtonClick
                 )
 
             }
@@ -132,14 +140,15 @@ fun AddEstate(
 
 @Composable
 fun CreateEstate(
-    onButtonClick: (Estate) -> Unit,
+    onAddEstateClick: (Estate, List<EstatePhoto>) -> Unit,
     estate: Estate,
     onUpdateEstate: KFunction1<Estate.() -> Estate, Unit>,
-    photoList: List<EstatePhoto>
+    photoList: List<EstatePhoto>,
+    onAddPhotoButtonClick: (EstatePhoto) -> Unit,
+    onChangePhotoButtonClick: KFunction2<Uri, EstatePhoto, Unit>
 ) {
 
-    val viewModel: AddEstateViewModel = viewModel()
-    var estatePhoto by remember { mutableStateOf(EstatePhoto()) }
+    val REQUEST_CODE_OPEN_DOCUMENT = 123
 
     val context = LocalContext.current
 
@@ -150,12 +159,33 @@ fun CreateEstate(
         mutableStateOf<Uri?>(null)
     }
 
+    var imageName by remember { mutableStateOf("") }
+
+    // Créer un fichier pour l'image
+    val imageUriProvider = remember {
+        object {
+            fun provideUri(): Uri {
+                val tempFile = File.createTempFile(
+                    "photo_", ".jpg", Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_PICTURES
+                    )
+                )
+                return FileProvider.getUriForFile(
+                    context,
+                    "${context.packageName}.fileprovider",
+                    tempFile
+                )
+            }
+        }
+    }
+
 
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
             hasImage = uri != null
             imageUri = uri
+            onAddPhotoButtonClick(EstatePhoto(estate.id, imageUri.toString(), ""))
 
 
         }
@@ -165,6 +195,7 @@ fun CreateEstate(
         contract = ActivityResultContracts.TakePicture(),
         onResult = { success ->
             hasImage = success
+            onAddPhotoButtonClick(EstatePhoto(estate.id, imageUri.toString(), ""))
         }
     )
 
@@ -173,9 +204,9 @@ fun CreateEstate(
     ) {
         if (it) {
             Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
-            val uri = ComposeFileProvider.getImageUri(context)
-            //viewModel.updatePhotoList { listOf(EstatePhoto(estate.id, uri.toString(), "")) }
-            cameraLauncher.launch(uri)
+            val uri = imageUriProvider.provideUri()
+            imageUri = uri
+            cameraLauncher.launch(imageUri)
         } else {
             Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
         }
@@ -242,8 +273,6 @@ fun CreateEstate(
 
                 )
             }
-
-
             DropdownMenu(
                 expanded = isDropDownMenuExpanded,
                 onDismissRequest = { isDropDownMenuExpanded = false }) {
@@ -256,9 +285,6 @@ fun CreateEstate(
 
                 }
             }
-
-
-
             estate.size?.let {
                 OutlinedTextField(
                     value = it,
@@ -371,23 +397,21 @@ fun CreateEstate(
                 Icon(imageVector = Icons.Default.AddCircle, contentDescription = null)
             }
             IconButton(onClick = {
-                val uri = ComposeFileProvider.getImageUri(context)
+                val uri = imageUriProvider.provideUri()
 
                 val cameraPermissionCheckResult =
                     ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
                 if (cameraPermissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-                    //photoList.add(EstatePhoto(estate.id, uri.toString(), ""))
-                    viewModel.addPhoto(EstatePhoto(estate.id,uri.toString(),""))
-                    //viewModel.replaceOdlPhotoByNewPhoto(photoList, EstatePhoto(estate.id,uri.toString(),""))
 
-                    cameraLauncher.launch(uri)
+                    imageUri = uri
+                    cameraLauncher.launch(imageUri)
                 } else {
                     // Request a permission
                     cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
                 }
 
 
-                // cameraLauncher.launch(uri)
+
             }, modifier = Modifier.align(Alignment.CenterVertically)) {
                 Icon(
                     painter = painterResource(R.drawable.baseline_photo_camera_24),
@@ -409,36 +433,36 @@ fun CreateEstate(
                     text = {
                         Column {
                             AsyncImage(
-                                model = Uri.parse(estatePhoto.uri),
+                                model = imageUri,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(100.dp),
                                 contentDescription = "Selected image",
                             )
                             Spacer(modifier = Modifier.height(8.dp))
-                            estatePhoto.name?.let {
-                                OutlinedTextField(
-                                    value = it,
-                                    onValueChange = { newName ->
-                                        estatePhoto.name = newName
-                                    },
-                                    label = { Text("Nom de l'image") },
-                                    textStyle = TextStyle(color = Color.Black),
-                                    colors = OutlinedTextFieldDefaults.colors(
-                                        cursorColor = Color.Black
-                                    )
+
+                            OutlinedTextField(
+                                value = imageName,
+                                onValueChange = { newName ->
+                                    imageName = newName
+                                },
+                                label = { Text("Nom de l'image") },
+                                textStyle = TextStyle(color = Color.Black),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    cursorColor = Color.Black
                                 )
-                            }
+                            )
+
                         }
                     },
                     confirmButton = {
                         Button(
                             onClick = {
                                 // Fermez le dialogue
-                                //viewModel.replaceOdlPhotoByNewPhoto(photoList, estatePhoto)
+                                onChangePhotoButtonClick(imageUri!!, EstatePhoto(estate.id, imageUri.toString(), imageName))
                                 showDialog = false
                                 // Réinitialisez l'image sélectionnée et le nom
-                                estatePhoto = EstatePhoto()
+                               imageName = ""
 
                             }
                         ) {
@@ -448,10 +472,7 @@ fun CreateEstate(
                     dismissButton = {
                         Button(
                             onClick = {
-
                                 showDialog = false
-                                // Réinitialisez l'image sélectionnée et le nom
-                                estatePhoto = EstatePhoto()
                             }
                         ) {
                             Text("Annuler")
@@ -469,7 +490,7 @@ fun CreateEstate(
                             .clickable {
                                 // Mettre à jour l'image sélectionnée lorsque l'utilisateur clique
 
-                                estatePhoto = photo
+                                imageUri = Uri.parse(photo.uri)
 
                                 // Afficher le dialogue pour donner un nom à l'image
                                 showDialog = true
@@ -744,7 +765,7 @@ fun CreateEstate(
             }
         }
         Button(onClick = {
-            onButtonClick(estate)
+            onAddEstateClick(estate, photoList)
         }) {
             Text(stringResource(R.string.Valider))
         }

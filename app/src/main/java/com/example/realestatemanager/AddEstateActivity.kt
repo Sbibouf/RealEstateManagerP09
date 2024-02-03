@@ -29,12 +29,21 @@ class AddEstateActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AddEstate(onButtonClick = { data ->
-                        lifecycleScope.launch {
-                            addEstateViewModel.geocodeAndInserts(data)
-                        }
-                        finish()
-                    }, estate = estate, onUpdateEstate = addEstateViewModel::updateEstate, onBackClick = {finish()}, photoList = photoList)
+                    AddEstate(
+                        onAddEstateClick = { estate, list ->
+                            lifecycleScope.launch {
+                                addEstateViewModel.geocodeAndInserts(estate, list)
+                                //addEstateViewModel.insertEstateAndPhotos(estate, list)
+                            }
+                            finish()
+                        },
+                        estate = estate,
+                        onUpdateEstate = addEstateViewModel::updateEstate,
+                        onBackClick = { finish() },
+                        photoList = photoList,
+                        onAddPhotoButtonClick = addEstateViewModel::addPhoto,
+                        onChangePhotoButtonClick = addEstateViewModel::replaceOldPhotoByNewPhoto
+                    )
 
                 }
             }

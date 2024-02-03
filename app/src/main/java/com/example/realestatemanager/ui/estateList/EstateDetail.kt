@@ -1,5 +1,7 @@
 package com.example.realestatemanager.ui.estateList
 
+import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -38,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -52,6 +56,7 @@ import com.example.realestatemanager.R
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
 import com.example.realestatemanager.model.EstateWithPhotos
+import java.io.InputStream
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -101,9 +106,11 @@ fun EstateDetailsScreen(
     )
 }
 
+@SuppressLint("Recycle")
 @Composable
 fun EstateMediaRow(estateWithPhotos: EstateWithPhotos) {
-    val estatesTest: List<EstatePhoto> = estateWithPhotos.photos ?: emptyList()
+    val estatePhotos: List<EstatePhoto> = estateWithPhotos.photos ?: emptyList()
+    val context = LocalContext.current
     Column(modifier = Modifier.padding(8.dp)) {
 
         Text(text = "Media")
@@ -115,14 +122,16 @@ fun EstateMediaRow(estateWithPhotos: EstateWithPhotos) {
             LazyRow(
                 modifier = Modifier
             ) {
-                items(estatesTest) { photoUrI ->
+                items(estatePhotos) { photo ->
+                    val contentResolver = context.contentResolver
+                    val inputStream: InputStream? = contentResolver.openInputStream(Uri.parse(photo.uri))
                     Box(
                         modifier = Modifier
                             .padding(8.dp)
                             .width(150.dp)
                     ) {
                         AsyncImage(
-                            model = photoUrI.uri, // Placeholder image
+                            model = Uri.parse(photo.uri), // Placeholder image
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
@@ -130,7 +139,7 @@ fun EstateMediaRow(estateWithPhotos: EstateWithPhotos) {
                                 .padding(1.dp)
                                 .clickable { }
                         )
-                        photoUrI.name?.let {
+                        photo.name?.let {
                             Text(
                                 text = it,
                                 color = Color.White,

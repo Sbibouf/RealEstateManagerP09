@@ -22,6 +22,9 @@ interface LibraryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(estate: Estate)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun getInsertedEstateId(estate: Estate): Long
+
     /**
      * Insert a new estatePhoto
      */

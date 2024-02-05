@@ -1,26 +1,18 @@
-package com.example.realestatemanager
+package com.example.realestatemanager.ui.modifyEstate
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.IntentCompat
 import com.example.realestatemanager.model.EstateWithPhotos
 import com.example.realestatemanager.ui.estateList.EstateDetailsScreen
-import com.example.realestatemanager.ui.estateList.GeocodingViewModel
-import com.example.realestatemanager.ui.modifyEstate.ModifyEstateActivity
 import com.example.realestatemanager.ui.theme.EstateDetailTheme
 
-
-class EstateDetailActivity : ComponentActivity() {
-
+class ModifyEstateActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val estate: EstateWithPhotos? =
@@ -35,20 +27,11 @@ class EstateDetailActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     if (estate != null ) {
-                        EstateDetailsScreen(estate, onBackClick = { finish() }, onModifyClick = {handleOnModifyClick(estate)
-                                                                                                finish()}, modifier = Modifier)
+                        //Add
                     }
 
                 }
             }
         }
     }
-
-
-    private fun handleOnModifyClick(estate: EstateWithPhotos){
-        val intent = Intent(this, AddEstateActivity::class.java)
-        intent.putExtra("estate", estate)
-        startActivity(intent)
-    }
 }
-

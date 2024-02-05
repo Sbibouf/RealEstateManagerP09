@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -48,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.realestatemanager.R
+import com.example.realestatemanager.data.local.service.Utils
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
 import com.example.realestatemanager.model.EstateWithPhotos
@@ -74,11 +76,11 @@ fun EstateItem(estateWithPhotos: EstateWithPhotos, onEstateClick: (EstateWithPho
 
             if (estateWithPhotos.photos?.size!! > 0) {
                 AsyncImage(
-                    model = estateWithPhotos.photos?.get(0)?.uri,
+                    model = estateWithPhotos.photos[0].uri,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .size(100.dp)
+                        .size(150.dp)
                         .padding(1.dp)
                         .weight(1f)
                 )
@@ -88,7 +90,7 @@ fun EstateItem(estateWithPhotos: EstateWithPhotos, onEstateClick: (EstateWithPho
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .size(100.dp)
+                        .size(150.dp)
                         .clip(RoundedCornerShape(16.dp))
                         .weight(1f)
                 )
@@ -118,7 +120,7 @@ fun EstateItem(estateWithPhotos: EstateWithPhotos, onEstateClick: (EstateWithPho
                 //Price
                 estateWithPhotos.estate?.price?.let {
                     Text(
-                        text = it,
+                        text = Utils.formatCurrency(it),
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.tertiary
                     )

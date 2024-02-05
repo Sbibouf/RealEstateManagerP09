@@ -9,7 +9,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.core.content.IntentCompat
 import androidx.lifecycle.lifecycleScope
+import com.example.realestatemanager.model.EstateWithPhotos
 import com.example.realestatemanager.ui.addEstate.AddEstate
 import com.example.realestatemanager.ui.addEstate.AddEstateViewModel
 import com.example.realestatemanager.ui.theme.EstateDetailTheme
@@ -21,28 +23,35 @@ class AddEstateActivity : ComponentActivity() {
     private val addEstateViewModel: AddEstateViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (intent.hasExtra("estate")){
+            val estateExtra : EstateWithPhotos? =
+            IntentCompat.getParcelableExtra(intent, "estate", EstateWithPhotos::class.java)
+            if (estateExtra != null) {
+                addEstateViewModel.setEstateWithPhoto(estateExtra)
+            }
+        }
         setContent {
-            val estate = addEstateViewModel.estate.collectAsState().value
-            val photoList = addEstateViewModel.photoList.collectAsState().value
+            val vmEstate = addEstateViewModel.estate.collectAsState().value
+            val vmPhotoList = addEstateViewModel.photoList.collectAsState().value
             EstateDetailTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     AddEstate(
-                        onAddEstateClick = { estate, list ->
+                        onAddEstateClick = { estate, photoList ->
                             lifecycleScope.launch {
-                                addEstateViewModel.geocodeAndInserts(estate, list)
-                                //addEstateViewModel.insertEstateAndPhotos(estate, list)
+                                addEstateViewModel.geocodeAndInserts(estate, photoList)
                             }
                             finish()
                         },
-                        estate = estate,
+                        estate = vmEstate,
                         onUpdateEstate = addEstateViewModel::updateEstate,
                         onBackClick = { finish() },
-                        photoList = photoList,
+                        photoList = vmPhotoList,
                         onAddPhotoButtonClick = addEstateViewModel::addPhoto,
-                        onChangePhotoButtonClick = addEstateViewModel::replaceOldPhotoByNewPhoto
+                        onChangePhotoButtonClick = addEstateViewModel::replaceOldPhotoByNewPhoto,
+                        onDeletePhotoClick = addEstateViewModel::deletePhoto
                     )
 
                 }

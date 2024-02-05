@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import androidx.room.Upsert
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
 import com.example.realestatemanager.model.EstateWithPhotos
@@ -23,12 +24,19 @@ interface LibraryDao {
     fun insert(estate: Estate)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertEstate(estate: Estate)
+
+    /**
+     * Insert Estate in database and return ID
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun getInsertedEstateId(estate: Estate): Long
+
 
     /**
      * Insert a new estatePhoto
      */
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPhoto(photo: EstatePhoto)
 
     /**
@@ -70,6 +78,9 @@ interface LibraryDao {
      */
     @Query("DELETE FROM Estate WHERE id = :estateId")
     fun deleteEstate(estateId: Long?)
+
+    @Query("DELETE FROM EstatePhoto WHERE id = :estatePhotoId ")
+    suspend fun deleteEstatePhoto(estatePhotoId: Long?)
 
 
     /**

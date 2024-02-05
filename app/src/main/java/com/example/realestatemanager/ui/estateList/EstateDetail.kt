@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.DateRange
@@ -53,6 +54,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.realestatemanager.BuildConfig
 import com.example.realestatemanager.R
+import com.example.realestatemanager.data.local.service.Utils
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
 import com.example.realestatemanager.model.EstateWithPhotos
@@ -79,7 +81,7 @@ fun EstateDetailsScreen(
                 title = { estateWithPhotos.estate?.type?.let { Text(text = it) } },
                 navigationIcon = {
                     IconButton(onClick = { onBackClick() }) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                     }
                 },
                 actions = {
@@ -110,7 +112,6 @@ fun EstateDetailsScreen(
 @Composable
 fun EstateMediaRow(estateWithPhotos: EstateWithPhotos) {
     val estatePhotos: List<EstatePhoto> = estateWithPhotos.photos ?: emptyList()
-    val context = LocalContext.current
     Column(modifier = Modifier.padding(8.dp)) {
 
         Text(text = "Media")
@@ -123,8 +124,6 @@ fun EstateMediaRow(estateWithPhotos: EstateWithPhotos) {
                 modifier = Modifier
             ) {
                 items(estatePhotos) { photo ->
-                    val contentResolver = context.contentResolver
-                    val inputStream: InputStream? = contentResolver.openInputStream(Uri.parse(photo.uri))
                     Box(
                         modifier = Modifier
                             .padding(8.dp)
@@ -190,6 +189,13 @@ fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
             .fillMaxWidth()
             .padding(8.dp)
     ) {
+        Row(modifier = Modifier.padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically){
+            Icon(
+                painter = painterResource(R.drawable.baseline_diamond_24),
+                contentDescription = null
+            )
+            Text(text = "Prix: ${Utils.formatCurrency(estateWithPhotos.estate?.price)}")
+        }
         Row(modifier = Modifier.padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
 
             Icon(

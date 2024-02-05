@@ -2,13 +2,16 @@ package com.example.realestatemanager.ui.addEstate
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.realestatemanager.BuildConfig
 import com.example.realestatemanager.data.local.repository.EstateRepository
 import com.example.realestatemanager.data.local.service.Utils
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
+import com.example.realestatemanager.model.EstateWithPhotos
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.JsonParser
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,9 +19,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.io.InputStreamReader
+import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.Executor
@@ -42,6 +47,11 @@ class AddEstateViewModel @Inject constructor(
     )
 
     val photoList: StateFlow<List<EstatePhoto>> get() = _photoList
+
+    fun setEstateWithPhoto(estateWithPhotos: EstateWithPhotos){
+        _estate.value = estateWithPhotos.estate!!
+        _photoList.value = estateWithPhotos.photos as MutableList<EstatePhoto>
+    }
 
 
     fun updateEstate(transform: Estate.() -> Estate) {
@@ -88,6 +98,7 @@ class AddEstateViewModel @Inject constructor(
     }
 
     suspend fun geocodeAndInserts(estate: Estate, photos: List<EstatePhoto>) {
+
         if (Utils.isInternetAvailable(application)) {
             val location = geocodeAddressSuspended(estate.address)
             if (location != null) {
@@ -111,38 +122,11 @@ class AddEstateViewModel @Inject constructor(
     }
 
     private suspend fun insertEstateWithLatitudeAndLongitude(location: LatLng, estate: Estate, photos : List<EstatePhoto>) {
-        val estateId = estateRepository.getInsertedEstateId(Estate(
-            estate.type,
-            estate.price,
-            estate.size,
-            estate.numberOfRooms,
-            estate.numberOfBedrooms,
-            estate.numberOfBathrooms,
-            estate.description,
-            estate.address,
-            estate.city,
-            location.latitude.toString(),
-            location.longitude.toString(),
-            estate.soldState,
-            estate.entryDate,
-            estate.soldDate,
-            estate.agent,
-            estate.school,
-            estate.shops,
-            estate.parc,
-            estate.hospital,
-            estate.restaurant,
-            estate.sport
-        ))
-        if (photos.isNotEmpty()) {
-            val photosWithEstateId = photos.map { it.copy(estateId = estateId) }
 
-            for (estatePhoto in photosWithEstateId) {
-                executor.execute {
-                    estateRepository.insertEstatePhoto(estatePhoto)
-                }
-            }
-        }
+        estate.latitude = location.latitude.toString()
+        estate.longitude = location.longitude.toString()
+
+        insertEstateAndPhotos(estate, photos)
     }
 
     fun addPhoto(newPhoto: EstatePhoto) {
@@ -151,10 +135,16 @@ class AddEstateViewModel @Inject constructor(
             _photoList.value = _photoList.value.toMutableList().apply { add(newPhoto) }
         }
         else {
-            Toast.makeText(application, "Cette phot est déjà dans la liste", Toast.LENGTH_LONG).show()
+            Toast.makeText(application, "Cette photo est déjà dans la liste", Toast.LENGTH_LONG).show()
         }
 
+    }
 
+    fun deletePhoto(photo: EstatePhoto){
+        _photoList.value = _photoList.value.toMutableList().apply { remove(photo) }
+        viewModelScope.launch {
+            estateRepository.deleteEstatePhoto(photo.id)
+        }
     }
 
     fun replaceOldPhotoByNewPhoto(uri: Uri, newPhoto: EstatePhoto) {
@@ -167,21 +157,37 @@ class AddEstateViewModel @Inject constructor(
         }
     }
 
-
     suspend fun insertEstateAndPhotos(estate: Estate, photos: List<EstatePhoto>) {
         // Insérer l'Estate et obtenir son ID
-        val estateId = estateRepository.getInsertedEstateId(estate)
+        try{
+            if(estate.id==0L){
+                val estateId = estateRepository.getInsertedEstateId(estate)
+                Log.d("InsertEstate", "Inserted Estate ID: $estateId")
 
-        if (photos.isNotEmpty()) {
-            val photosWithEstateId = photos.map { it.copy(estateId = estateId) }
+                if (photos.isNotEmpty()) {
+                    val photosWithEstateId = photos.map { it.copy(estateId = estateId) }
 
-            for (estatePhoto in photosWithEstateId) {
-                executor.execute {
-                    estateRepository.insertEstatePhoto(estatePhoto)
+                    for (estatePhoto in photosWithEstateId) {
+                        executor.execute {
+                            estateRepository.insertEstatePhoto(estatePhoto)
+                        }
+                    }
                 }
             }
+            else{
+                estateRepository.insertEstate(estate)
+                for (estatePhoto in photos) {
+                    executor.execute {
+                        estateRepository.insertEstatePhoto(estatePhoto)
+                    }
+                }
+            }
+
         }
+        catch (e: Exception){
+            Log.e("InsertEstate", "Error inserting estate with photos", e)
+        }
+
+
     }
-
-
 }

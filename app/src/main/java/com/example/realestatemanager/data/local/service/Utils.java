@@ -8,6 +8,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -64,4 +65,26 @@ public class Utils {
         return networkCapabilities != null &&
                 networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
     }
+
+    public static String formatCurrency(String value) {
+        // Convertir la chaîne en un nombre
+        long numericValue = 0;
+        try {
+            numericValue = Long.parseLong(value);
+        } catch (NumberFormatException e) {
+            //exception
+        }
+
+        // Créer un formateur de devise avec le style approprié
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+
+        // Utiliser le format "$#,###" pour exclure les décimales
+        String pattern = ((java.text.DecimalFormat) currencyFormat).toPattern().replace(".00", "");
+        NumberFormat customFormat = NumberFormat.getNumberInstance(Locale.US);
+        ((java.text.DecimalFormat) customFormat).applyPattern(pattern);
+
+        // Formater la valeur et la renvoyer
+        return customFormat.format(numericValue);
+    }
+
 }

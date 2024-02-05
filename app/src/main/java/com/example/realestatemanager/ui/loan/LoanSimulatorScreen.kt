@@ -16,7 +16,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,16 +25,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.realestatemanager.R
 import com.example.realestatemanager.model.LoanData
-
 import java.text.DecimalFormat
 import kotlin.math.pow
 
@@ -81,7 +77,7 @@ fun LoanSimulatorScreen(onBackClick: () -> Unit) {
                 Spacer(modifier = Modifier.height(16.dp))
                 TextField(
                     value = amount,
-                    onValueChange = { amount = it },
+                    onValueChange = { amount = it.filter { char -> char.isDigit() } },
                     label = { Text("Montant emprunté") },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Number,
@@ -91,7 +87,7 @@ fun LoanSimulatorScreen(onBackClick: () -> Unit) {
                 Spacer(modifier = Modifier.height(16.dp))
                 TextField(
                     value = downPayment,
-                    onValueChange = { downPayment = it },
+                    onValueChange = { downPayment = it.filter { char -> char.isDigit() } },
                     label = { Text("Apport") },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Number,
@@ -111,7 +107,7 @@ fun LoanSimulatorScreen(onBackClick: () -> Unit) {
                 Spacer(modifier = Modifier.height(16.dp))
                 TextField(
                     value = loanTerm,
-                    onValueChange = { loanTerm = it },
+                    onValueChange = { loanTerm = it.filter { char -> char.isDigit() } },
                     label = { Text("Durée du prêt") },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Number,
@@ -141,30 +137,30 @@ fun LoanSimulatorScreen(onBackClick: () -> Unit) {
                 }
 
                 if (loandata == null) {
-                    Text("Mensualités: 0 $")
-                    Text("Coût des intérêts: 0 $")
-                    Text("Coût total du prêt: 0 $")
+                    Text("Mensualités: $ 0")
+                    Text("Coût des intérêts: $ 0")
+                    Text("Coût total du prêt: $ 0")
                 } else {
-                    Text("Mensualités: ${loandata?.let { calculateLoanDetail(it, "monthly") }} $")
+                    Text("Mensualités: $ ${loandata?.let { calculateLoanDetail(it, "monthly") }}")
                     Text(
-                        "Coût des intérêts: ${
+                        "Coût des intérêts: $ ${
                             loandata?.let {
                                 calculateLoanDetail(
                                     it,
                                     "interest"
                                 )
                             }
-                        } $"
+                        }"
                     )
                     Text(
-                        "Coût total du prêt: ${
+                        "Coût total du prêt: $ ${
                             loandata?.let {
                                 calculateLoanDetail(
                                     it,
                                     "total"
                                 )
                             }
-                        } $"
+                        }"
                     )
                 }
             }

@@ -15,7 +15,11 @@ import javax.inject.Singleton
 class EstateRepository @Inject constructor(private val libraryDao: LibraryDao){
 
 
-    fun insertEstate(estate : Estate) = libraryDao.insert(estate)
+    fun insert(estate : Estate) = libraryDao.insert(estate)
+
+    suspend fun insertEstate(estate : Estate) = libraryDao.insertEstate(estate)
+
+    suspend fun deleteEstatePhoto(estatePhotoId : Long?) = libraryDao.deleteEstatePhoto(estatePhotoId)
 
     suspend fun getInsertedEstateId(estate : Estate) : Long = libraryDao.getInsertedEstateId(estate)
 

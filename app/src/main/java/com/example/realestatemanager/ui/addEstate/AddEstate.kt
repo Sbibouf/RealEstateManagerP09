@@ -1,6 +1,8 @@
 package com.example.realestatemanager.ui.addEstate
 
 import android.Manifest
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -28,6 +30,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -57,6 +60,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -72,6 +76,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import coil.compose.AsyncImage
 import com.example.realestatemanager.R
+import com.example.realestatemanager.data.local.service.MaskVisualTransformation
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
 import java.io.File
@@ -90,6 +95,7 @@ fun AddEstate(
     photoList: List<EstatePhoto>,
     onBackClick: () -> Unit,
     onAddPhotoButtonClick: (EstatePhoto) -> Unit,
+    onDeletePhotoClick : (EstatePhoto) -> Unit,
     onChangePhotoButtonClick: KFunction2<Uri, EstatePhoto, Unit>
 ) {
     Scaffold(
@@ -131,7 +137,8 @@ fun AddEstate(
                     onUpdateEstate = onUpdateEstate,
                     photoList = photoList,
                     onAddPhotoButtonClick = onAddPhotoButtonClick,
-                    onChangePhotoButtonClick = onChangePhotoButtonClick
+                    onChangePhotoButtonClick = onChangePhotoButtonClick,
+                    onDeletePhotoClick = onDeletePhotoClick
                 )
 
             }
@@ -145,16 +152,19 @@ fun CreateEstate(
     onUpdateEstate: KFunction1<Estate.() -> Estate, Unit>,
     photoList: List<EstatePhoto>,
     onAddPhotoButtonClick: (EstatePhoto) -> Unit,
+    onDeletePhotoClick : (EstatePhoto) -> Unit,
     onChangePhotoButtonClick: KFunction2<Uri, EstatePhoto, Unit>
 ) {
 
-    val REQUEST_CODE_OPEN_DOCUMENT = 123
-
     val context = LocalContext.current
+
+    val estateId = remember {estate.id }
+
 
     var hasImage by remember {
         mutableStateOf(false)
     }
+
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
     }
@@ -181,21 +191,37 @@ fun CreateEstate(
 
 
     val imagePicker = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-        onResult = { uri ->
-            hasImage = uri != null
-            imageUri = uri
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            val selectedUri = data?.data
+            hasImage = selectedUri != null
+            imageUri = selectedUri
+
+            // Obtenez le contentResolver à partir du contexte local
+            val contentResolver = context.contentResolver
+
+            // Prendre une permission persistante pour l'URI
+            contentResolver.takePersistableUriPermission(
+                imageUri!!,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+
             onAddPhotoButtonClick(EstatePhoto(estate.id, imageUri.toString(), ""))
-
-
         }
-    )
+    }
 
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
         onResult = { success ->
             hasImage = success
-            onAddPhotoButtonClick(EstatePhoto(estate.id, imageUri.toString(), ""))
+            if (success) {
+                onAddPhotoButtonClick(EstatePhoto(estate.id, imageUri.toString(), ""))
+            } else {
+                hasImage = true
+            }
+
         }
     )
 
@@ -217,7 +243,9 @@ fun CreateEstate(
     ) {
         if (it) {
             Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
-            imagePicker.launch("image/*")
+            imagePicker.launch(Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                type = "image/*"
+            })
         } else {
             Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
         }
@@ -342,7 +370,10 @@ fun CreateEstate(
             OutlinedTextField(
                 value = it,
                 onValueChange = { newTextValue ->
-                    onUpdateEstate { copy(price = newTextValue) }
+                    if (it.length <= PriceDefaults.HIGH_PRICE_LENGTH) {
+                        onUpdateEstate { copy(price = newTextValue.filter { char -> char.isDigit() }) }
+                    }
+
                 },
                 placeholder = {
                     Text(stringResource(R.string.Price))
@@ -354,7 +385,10 @@ fun CreateEstate(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done
-                )
+                ),
+                visualTransformation = getMask(it.length)
+
+
             )
         }
 
@@ -372,7 +406,9 @@ fun CreateEstate(
                             Manifest.permission.READ_MEDIA_IMAGES
                         )
                         if (mediaPermissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-                            imagePicker.launch("image/*")
+                            imagePicker.launch(Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                                type = "image/*"
+                            })
                         } else {
                             //Request a permission
                             mediaPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
@@ -383,7 +419,9 @@ fun CreateEstate(
                             Manifest.permission.READ_EXTERNAL_STORAGE
                         )
                         if (mediaPermissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-                            imagePicker.launch("image/*")
+                            imagePicker.launch(Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                                type = "image/*"
+                            })
                         } else {
                             //Request a permission
                             mediaPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -411,7 +449,6 @@ fun CreateEstate(
                 }
 
 
-
             }, modifier = Modifier.align(Alignment.CenterVertically)) {
                 Icon(
                     painter = painterResource(R.drawable.baseline_photo_camera_24),
@@ -420,122 +457,129 @@ fun CreateEstate(
             }
         }
 
-        if (hasImage && imageUri != null) {
-            if (showDialog) {
-                AlertDialog(
-                    onDismissRequest = {
-                        showDialog = false
-                        // Réinitialisez l'image sélectionnée et le nom
-                    },
-                    title = {
-                        Text("Donner un nom à l'image")
-                    },
-                    text = {
-                        Column {
-                            AsyncImage(
-                                model = imageUri,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(100.dp),
-                                contentDescription = "Selected image",
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
 
-                            OutlinedTextField(
-                                value = imageName,
-                                onValueChange = { newName ->
-                                    imageName = newName
-                                },
-                                label = { Text("Nom de l'image") },
-                                textStyle = TextStyle(color = Color.Black),
-                                colors = OutlinedTextFieldDefaults.colors(
-                                    cursorColor = Color.Black
-                                )
-                            )
-
-                        }
-                    },
-                    confirmButton = {
-                        Button(
-                            onClick = {
-                                // Fermez le dialogue
-                                onChangePhotoButtonClick(imageUri!!, EstatePhoto(estate.id, imageUri.toString(), imageName))
-                                showDialog = false
-                                // Réinitialisez l'image sélectionnée et le nom
-                               imageName = ""
-
-                            }
-                        ) {
-                            Text("Enregistrer")
-                        }
-                    },
-                    dismissButton = {
-                        Button(
-                            onClick = {
-                                showDialog = false
-                            }
-                        ) {
-                            Text("Annuler")
-                        }
-                    },
-                )
-            }
-
-            LazyRow(modifier = Modifier.fillMaxWidth()) {
-                items(photoList) { photo ->
-                    Box(
-                        modifier = Modifier
-                            .width(150.dp)
-                            .height(150.dp)
-                            .clickable {
-                                // Mettre à jour l'image sélectionnée lorsque l'utilisateur clique
-
-                                imageUri = Uri.parse(photo.uri)
-
-                                // Afficher le dialogue pour donner un nom à l'image
-                                showDialog = true
-                            },
-                    ) {
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = {
+                    showDialog = false
+                    imageName = ""
+                },
+                title = {
+                    Text("Donner un nom à l'image")
+                },
+                text = {
+                    Column {
                         AsyncImage(
-                            model = Uri.parse(photo?.uri),
+                            model = imageUri,
                             modifier = Modifier
-                                .width(150.dp)
-                                .height(150.dp),
+                                .fillMaxWidth()
+                                .height(100.dp),
                             contentDescription = "Selected image",
                         )
+                        Spacer(modifier = Modifier.height(8.dp))
 
-                        photo?.name?.let {
-                            Text(
-                                text = it,
-                                color = Color.White,
-                                fontSize = 12.sp,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier
-                                    .width(100.dp)
-                                    .background(Color.Black.copy(alpha = 0.5f))
-                                    .padding(4.dp)
-                                    .align(Alignment.BottomCenter)
+                        OutlinedTextField(
+                            value = imageName,
+                            onValueChange = { newName ->
+                                imageName = newName
+                            },
+                            label = { Text("Nom de l'image") },
+                            textStyle = TextStyle(color = Color.Black),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                cursorColor = Color.Black
                             )
+                        )
+
+                    }
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            // Fermez le dialogue
+                            onChangePhotoButtonClick(
+                                imageUri!!,
+                                EstatePhoto(estate.id, imageUri.toString(), imageName)
+                            )
+                            showDialog = false
+                            // Réinitialisez l'image sélectionnée et le nom
+                            imageName = ""
+
                         }
+                    ) {
+                        Text("Enregistrer")
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = {
+                            showDialog = false
+                        }
+                    ) {
+                        Text("Annuler")
+                    }
+                },
+            )
+        }
 
-                        IconButton(
-                            onClick = {
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+        ) {
+            items(photoList) { photo ->
+                Box(
+                    modifier = Modifier
+                        .width(150.dp)
+                        .height(150.dp)
+                        .clickable {
+                            // Mettre à jour l'image sélectionnée lorsque l'utilisateur clique
 
+                            imageUri = Uri.parse(photo.uri)
 
-                            }, modifier = Modifier
-                                .align(Alignment.BottomEnd)
+                            // Afficher le dialogue pour donner un nom à l'image
+                            showDialog = true
+                        },
+                ) {
+                    AsyncImage(
+                        model = Uri.parse(photo.uri),
+                        modifier = Modifier
+                            .width(150.dp)
+                            .height(150.dp),
+                        contentDescription = "Selected image",
+                        contentScale = ContentScale.Crop
+                    )
+                    photo.name?.let {
+                        Text(
+                            text = it,
+                            color = Color.White,
+                            fontSize = 12.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .width(100.dp)
+                                .background(Color.Black.copy(alpha = 0.5f))
                                 .padding(4.dp)
-                        ) {
-                            Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+                                .align(Alignment.BottomCenter)
+                        )
+                    }
 
-                        }
+                    IconButton(
+                        onClick = {
+                                  onDeletePhotoClick(photo)
+                        }, modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(4.dp)
+                    ) {
+                        Icon(imageVector = Icons.Default.Clear, tint = Color.White, contentDescription = null)
+
                     }
                 }
+                Spacer(modifier = Modifier.width(8.dp))
             }
-
         }
+
+
 
         Row(modifier = Modifier.padding(8.dp)) {
 
@@ -684,7 +728,7 @@ fun CreateEstate(
                     .padding(8.dp)
                     .fillMaxWidth(),
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             )
         }
         Text(text = "Points d'interet à proximité :", modifier = Modifier.padding(vertical = 8.dp))
@@ -765,16 +809,46 @@ fun CreateEstate(
             }
         }
         Button(onClick = {
-            onAddEstateClick(estate, photoList)
+            if (estate.type == "" || estate.price == "") {
+                Toast.makeText(
+                    context,
+                    "Veuillez renseigner un type et un prix",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                estate.id = estateId
+                onAddEstateClick(estate, photoList)
+
+            }
+
+
         }) {
             Text(stringResource(R.string.Valider))
         }
     }
 }
 
+
 private fun convertMillisToDate(millis: Long): String {
     val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE)
     return formatter.format(Date(millis))
+}
+
+private fun getMask(length: Int): MaskVisualTransformation {
+    return when (length) {
+        7 -> MaskVisualTransformation(PriceDefaults.LOW_PRICE_MASK)
+        8 -> MaskVisualTransformation(PriceDefaults.MID_PRICE_MASK)
+        9 -> MaskVisualTransformation(PriceDefaults.HIGH_PRICE_MASK)
+        else -> MaskVisualTransformation(PriceDefaults.HIGH_PRICE_MASK)
+    }
+
+}
+
+object PriceDefaults {
+    const val HIGH_PRICE_MASK = "$###.###.###.###"
+    const val MID_PRICE_MASK = "$##.###.###"
+    const val LOW_PRICE_MASK = "$#.###.###"
+    const val HIGH_PRICE_LENGTH = 11
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

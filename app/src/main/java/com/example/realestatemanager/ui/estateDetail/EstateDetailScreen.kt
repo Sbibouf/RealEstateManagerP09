@@ -1,11 +1,10 @@
-package com.example.realestatemanager.ui.estateList
+package com.example.realestatemanager.ui.estateDetail
 
 import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,26 +22,22 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -58,7 +53,6 @@ import com.example.realestatemanager.data.local.service.Utils
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
 import com.example.realestatemanager.model.EstateWithPhotos
-import java.io.InputStream
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +60,7 @@ import java.io.InputStream
 fun EstateDetailsScreen(
     estateWithPhotos: EstateWithPhotos,
     onBackClick: () -> Unit,
-    onModifyClick : () ->Unit,
+    onModifyClick: () -> Unit,
     modifier: Modifier
 ) {
     Scaffold(
@@ -81,7 +75,10 @@ fun EstateDetailsScreen(
                 title = { estateWithPhotos.estate?.type?.let { Text(text = it) } },
                 navigationIcon = {
                     IconButton(onClick = { onBackClick() }) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null
+                        )
                     }
                 },
                 actions = {
@@ -89,7 +86,7 @@ fun EstateDetailsScreen(
                         Icon(imageVector = Icons.Default.Create, contentDescription = null)
                     }
                 }
-                )
+            )
         },
         content = {
             Column(
@@ -189,14 +186,20 @@ fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        Row(modifier = Modifier.padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically){
+        Row(
+            modifier = Modifier.padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Icon(
                 painter = painterResource(R.drawable.baseline_diamond_24),
                 contentDescription = null
             )
             Text(text = "Prix: ${Utils.formatCurrency(estateWithPhotos.estate?.price)}")
         }
-        Row(modifier = Modifier.padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier.padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
 
             Icon(
                 painter = painterResource(R.drawable.baseline_aspect_ratio_24),
@@ -211,7 +214,10 @@ fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
 
 
         }
-        Row(modifier = Modifier.padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier.padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
 
 
             Icon(painter = painterResource(R.drawable.baseline_bed_24), contentDescription = null)
@@ -227,7 +233,10 @@ fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
 
         }
 
-        Row(modifier = Modifier.padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier.padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Icon(imageVector = Icons.Default.DateRange, contentDescription = null)
             Text(text = "Arrivée: ${estateWithPhotos.estate?.entryDate}")
 

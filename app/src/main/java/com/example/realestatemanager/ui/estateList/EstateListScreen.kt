@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,7 +15,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Divider
@@ -25,9 +23,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -53,7 +49,6 @@ import com.example.realestatemanager.data.local.service.Utils
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
 import com.example.realestatemanager.model.EstateWithPhotos
-import com.example.realestatemanager.ui.loan.LoanSimulatorScreen
 import com.example.realestatemanager.ui.theme.EstateTheme
 import kotlinx.coroutines.launch
 
@@ -127,7 +122,7 @@ fun EstateItem(estateWithPhotos: EstateWithPhotos, onEstateClick: (EstateWithPho
                 }
 
             }
-            if(estateWithPhotos.estate?.soldState==false){
+            if (estateWithPhotos.estate?.soldState == false) {
                 Image(
                     painter = painterResource(R.drawable.ic_not_sold_foreground),
                     contentDescription = null,
@@ -136,8 +131,7 @@ fun EstateItem(estateWithPhotos: EstateWithPhotos, onEstateClick: (EstateWithPho
                         .size(50.dp)
 
                 )
-            }
-            else {
+            } else {
                 Image(
                     painter = painterResource(R.drawable.ic_sold_foreground),
                     contentDescription = null,
@@ -162,7 +156,7 @@ fun EstateList(
     estateList: List<EstateWithPhotos>,
     onEstateClick: (EstateWithPhotos) -> Unit,
     onAddClick: () -> Unit,
-    onSearchClick: ()->Unit,
+    onSearchClick: () -> Unit,
     onDrawerLoanClick: () -> Unit,
     onDrawerMapClick: () -> Unit,
     modifier: Modifier
@@ -213,7 +207,9 @@ fun EstateList(
         ModalNavigationDrawer(
             drawerState = drawerState,
             drawerContent = {
-                DrawerContent(onDrawerLoanClick = { onDrawerLoanClick() }, onDrawerMapClick = {onDrawerMapClick()})
+                DrawerContent(
+                    onDrawerLoanClick = { onDrawerLoanClick() },
+                    onDrawerMapClick = { onDrawerMapClick() })
             }, gesturesEnabled = false,
             modifier = Modifier.padding(innerPadding)
         ) {
@@ -231,7 +227,7 @@ fun EstateList(
 }
 
 @Composable
-fun DrawerContent(onDrawerLoanClick: () -> Unit, onDrawerMapClick: ()-> Unit) {
+fun DrawerContent(onDrawerLoanClick: () -> Unit, onDrawerMapClick: () -> Unit) {
     Column(
         modifier = Modifier
             .background(Color.Gray)
@@ -269,11 +265,11 @@ fun EstateListPreview() {
                 "",
                 "New York",
                 "",
-                "","",
+                "", "",
                 false,
                 "",
                 "",
-                "",false,false,false,false,false,false
+                "", false, false, false, false, false, false
             ),
             listOf(
                 EstatePhoto(1L, "/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
@@ -291,11 +287,11 @@ fun EstateListPreview() {
                 "",
                 "New York",
                 "",
-                "","",
+                "", "",
                 false,
                 "",
                 "",
-                "",false,false,false,false,false,false
+                "", false, false, false, false, false, false
             ),
             listOf(
                 EstatePhoto(1L, "/storage/emulated/0/Download/estate2_front.jpg", "Façade"),
@@ -306,7 +302,15 @@ fun EstateListPreview() {
 
     EstateTheme {
 
-        EstateList(estatesTest, onEstateClick = {}, onAddClick = {}, onDrawerLoanClick = {}, onDrawerMapClick = {}, onSearchClick = {}, modifier = Modifier)
+        EstateList(
+            estatesTest,
+            onEstateClick = {},
+            onAddClick = {},
+            onDrawerLoanClick = {},
+            onDrawerMapClick = {},
+            onSearchClick = {},
+            modifier = Modifier
+        )
     }
 
 

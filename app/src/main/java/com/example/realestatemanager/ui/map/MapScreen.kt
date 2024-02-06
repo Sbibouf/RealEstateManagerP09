@@ -10,7 +10,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstateWithPhotos
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -29,7 +27,11 @@ import com.google.maps.android.compose.rememberCameraPositionState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapScreen(onBackClick: () -> Unit, estateList : List<EstateWithPhotos>, onEstateClick: (EstateWithPhotos) -> Unit) {
+fun MapScreen(
+    onBackClick: () -> Unit,
+    estateList: List<EstateWithPhotos>,
+    onEstateClick: (EstateWithPhotos) -> Unit
+) {
 
     val newYork = LatLng(40.7127744, -74.006059)
     val cameraPositionState = rememberCameraPositionState() {
@@ -65,14 +67,17 @@ fun MapScreen(onBackClick: () -> Unit, estateList : List<EstateWithPhotos>, onEs
                     .padding(it),
                 cameraPositionState = cameraPositionState
             ) {
-                for(estate : EstateWithPhotos in estateList){
-                    if(estate.estate?.latitude != ""){
+                for (estate: EstateWithPhotos in estateList) {
+                    if (estate.estate?.latitude != "") {
                         val latitude = estate.estate?.latitude?.toDoubleOrNull()
                         val longitude = estate.estate?.longitude?.toDoubleOrNull()
-                        if(latitude!=null && longitude!=null){
+                        if (latitude != null && longitude != null) {
                             val latLng = LatLng(latitude, longitude)
                             val position = MarkerState(position = latLng)
-                            Marker(state = position, title = estate.estate.type, onInfoWindowClick = {onEstateClick(estate)})
+                            Marker(
+                                state = position,
+                                title = estate.estate.type,
+                                onInfoWindowClick = { onEstateClick(estate) })
                         }
 
                     }

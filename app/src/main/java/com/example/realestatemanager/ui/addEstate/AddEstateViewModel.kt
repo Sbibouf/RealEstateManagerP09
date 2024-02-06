@@ -23,7 +23,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.io.InputStreamReader
-import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.Executor
@@ -48,7 +47,7 @@ class AddEstateViewModel @Inject constructor(
 
     val photoList: StateFlow<List<EstatePhoto>> get() = _photoList
 
-    fun setEstateWithPhoto(estateWithPhotos: EstateWithPhotos){
+    fun setEstateWithPhoto(estateWithPhotos: EstateWithPhotos) {
         _estate.value = estateWithPhotos.estate!!
         _photoList.value = estateWithPhotos.photos as MutableList<EstatePhoto>
     }
@@ -121,7 +120,11 @@ class AddEstateViewModel @Inject constructor(
         }
     }
 
-    private suspend fun insertEstateWithLatitudeAndLongitude(location: LatLng, estate: Estate, photos : List<EstatePhoto>) {
+    private suspend fun insertEstateWithLatitudeAndLongitude(
+        location: LatLng,
+        estate: Estate,
+        photos: List<EstatePhoto>
+    ) {
 
         estate.latitude = location.latitude.toString()
         estate.longitude = location.longitude.toString()
@@ -131,16 +134,16 @@ class AddEstateViewModel @Inject constructor(
 
     fun addPhoto(newPhoto: EstatePhoto) {
         val containsUri = _photoList.value.any { it.uri == newPhoto.uri }
-        if(!containsUri){
+        if (!containsUri) {
             _photoList.value = _photoList.value.toMutableList().apply { add(newPhoto) }
-        }
-        else {
-            Toast.makeText(application, "Cette photo est déjà dans la liste", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(application, "Cette photo est déjà dans la liste", Toast.LENGTH_LONG)
+                .show()
         }
 
     }
 
-    fun deletePhoto(photo: EstatePhoto){
+    fun deletePhoto(photo: EstatePhoto) {
         _photoList.value = _photoList.value.toMutableList().apply { remove(photo) }
         viewModelScope.launch {
             estateRepository.deleteEstatePhoto(photo.id)
@@ -158,9 +161,10 @@ class AddEstateViewModel @Inject constructor(
     }
 
     suspend fun insertEstateAndPhotos(estate: Estate, photos: List<EstatePhoto>) {
-        // Insérer l'Estate et obtenir son ID
-        try{
-            if(estate.id==0L){
+
+        try {
+            //If estate doesn't exist we get its id before adding photos
+            if (estate.id == 0L) {
                 val estateId = estateRepository.getInsertedEstateId(estate)
                 Log.d("InsertEstate", "Inserted Estate ID: $estateId")
 
@@ -173,8 +177,7 @@ class AddEstateViewModel @Inject constructor(
                         }
                     }
                 }
-            }
-            else{
+            } else {
                 estateRepository.insertEstate(estate)
                 for (estatePhoto in photos) {
                     executor.execute {
@@ -183,8 +186,7 @@ class AddEstateViewModel @Inject constructor(
                 }
             }
 
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             Log.e("InsertEstate", "Error inserting estate with photos", e)
         }
 

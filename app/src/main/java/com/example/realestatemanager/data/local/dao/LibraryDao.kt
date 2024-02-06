@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import androidx.room.Upsert
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
 import com.example.realestatemanager.model.EstateWithPhotos
@@ -104,14 +103,14 @@ interface LibraryDao {
         estateNumberOfBathrooms: String?,
         estateSoldState: String?,
         estateAddress: String?,
-        estateEntryDate : String?,
-        estateSoldDate : String?,
-        estateSchool : String?,
-        estateShops : String?,
-        estateParc : String?,
-        estateHospital : String?,
-        estateRestaurant : String?,
-        estateSport : String?
+        estateEntryDate: String?,
+        estateSoldDate: String?,
+        estateSchool: String?,
+        estateShops: String?,
+        estateParc: String?,
+        estateHospital: String?,
+        estateRestaurant: String?,
+        estateSport: String?
     ): Flow<List<EstateWithPhotos>>
 
 

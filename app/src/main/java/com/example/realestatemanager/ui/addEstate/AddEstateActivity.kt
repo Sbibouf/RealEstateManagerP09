@@ -1,4 +1,4 @@
-package com.example.realestatemanager
+package com.example.realestatemanager.ui.addEstate
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,8 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.core.content.IntentCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.realestatemanager.model.EstateWithPhotos
-import com.example.realestatemanager.ui.addEstate.AddEstate
-import com.example.realestatemanager.ui.addEstate.AddEstateViewModel
 import com.example.realestatemanager.ui.theme.EstateDetailTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -23,9 +21,9 @@ class AddEstateActivity : ComponentActivity() {
     private val addEstateViewModel: AddEstateViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (intent.hasExtra("estate")){
-            val estateExtra : EstateWithPhotos? =
-            IntentCompat.getParcelableExtra(intent, "estate", EstateWithPhotos::class.java)
+        if (intent.hasExtra("estate")) {
+            val estateExtra: EstateWithPhotos? =
+                IntentCompat.getParcelableExtra(intent, "estate", EstateWithPhotos::class.java)
             if (estateExtra != null) {
                 addEstateViewModel.setEstateWithPhoto(estateExtra)
             }

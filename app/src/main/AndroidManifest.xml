@@ -35,7 +35,7 @@
                 android:resource="@xml/path_provider" />
         </provider>
         <activity
-            android:name="com.example.realestatemanager.MainActivity"
+            android:name="com.example.realestatemanager.ui.estateList.EstateListActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.RealEstateManager">
@@ -46,31 +46,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.realestatemanager.EstateDetailActivity"
+            android:name="com.example.realestatemanager.ui.estateDetail.EstateDetailActivity"
             android:exported="false"
             android:theme="@style/Theme.RealEstateManager">
 
         </activity>
         <activity
-            android:name="com.example.realestatemanager.AddEstateActivity"
+            android:name="com.example.realestatemanager.ui.addEstate.AddEstateActivity"
             android:exported="false"
             android:theme="@style/Theme.RealEstateManager">
 
         </activity>
         <activity
-            android:name="com.example.realestatemanager.LoanActivity"
+            android:name="com.example.realestatemanager.ui.loan.LoanActivity"
             android:exported="false"
             android:theme="@style/Theme.RealEstateManager">
 
         </activity>
         <activity
-            android:name="com.example.realestatemanager.MapActivity"
+            android:name="com.example.realestatemanager.ui.map.MapActivity"
             android:exported="false"
             android:theme="@style/Theme.RealEstateManager">
 
         </activity>
         <activity
-            android:name="com.example.realestatemanager.SearchActivity"
+            android:name="com.example.realestatemanager.ui.search.SearchActivity"
             android:exported="false"
             android:theme="@style/Theme.RealEstateManager">
 

@@ -1,4 +1,4 @@
-package com.example.realestatemanager
+package com.example.realestatemanager.ui.search
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -8,7 +8,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.example.realestatemanager.model.SearchCriteria
-import com.example.realestatemanager.ui.search.SearchCriteria
 import com.example.realestatemanager.ui.theme.EstateDetailTheme
 
 class SearchActivity : ComponentActivity() {

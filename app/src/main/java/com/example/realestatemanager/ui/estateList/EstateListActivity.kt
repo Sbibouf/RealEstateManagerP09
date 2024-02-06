@@ -1,4 +1,4 @@
-package com.example.realestatemanager
+package com.example.realestatemanager.ui.estateList
 
 import android.content.Intent
 import android.os.Bundle
@@ -17,15 +17,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import com.example.realestatemanager.data.local.service.Utils
 import com.example.realestatemanager.model.EstateWithPhotos
-import com.example.realestatemanager.ui.estateList.EstateListViewModel
-import com.example.realestatemanager.ui.estateList.EstateUiLandscape
-import com.example.realestatemanager.ui.estateList.EstateUiPortrait
+import com.example.realestatemanager.ui.addEstate.AddEstateActivity
+import com.example.realestatemanager.ui.estateDetail.EstateDetailActivity
+import com.example.realestatemanager.ui.loan.LoanActivity
+import com.example.realestatemanager.ui.map.MapActivity
+import com.example.realestatemanager.ui.search.SearchActivity
 import com.example.realestatemanager.ui.theme.EstateTheme
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class EstateListActivity : ComponentActivity() {
 
     private val estateViewModel: EstateListViewModel by viewModels()
 

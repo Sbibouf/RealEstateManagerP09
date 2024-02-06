@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenu
@@ -166,7 +165,8 @@ fun SearchForm(
                     onValueChange = { newValue ->
                         searchCriteria.minPrice = newValue.toInt()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    label = { Text("Prix minimum") }
                 )
                 Spacer(modifier = Modifier.width(8.dp))
 
@@ -175,7 +175,8 @@ fun SearchForm(
                     onValueChange = { newValue ->
                         searchCriteria.maxPrice = newValue.toInt()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    label = { Text("Prix maximum") }
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -185,7 +186,8 @@ fun SearchForm(
                     onValueChange = { newValue ->
                         searchCriteria.minSize = newValue.toInt()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    label = { Text("Surface minimum") }
                 )
                 Spacer(modifier = Modifier.width(8.dp))
 
@@ -194,7 +196,8 @@ fun SearchForm(
                     onValueChange = { newValue ->
                         searchCriteria.maxSize = newValue.toInt()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    label = { Text("Surface maximum") }
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -211,7 +214,8 @@ fun SearchForm(
                         Text(stringResource(R.string.Number_of_rooms))
                     },
                     modifier = Modifier
-                        .weight(1f)
+                        .weight(1f),
+                    label = { Text("Nombre de pièces") }
                 )
                 Spacer(modifier = Modifier.width(4.dp))
 
@@ -228,7 +232,8 @@ fun SearchForm(
                         Text(stringResource(R.string.Number_of_bedrooms))
                     },
                     modifier = Modifier
-                        .weight(1f)
+                        .weight(1f),
+                    label = { Text("Nombre de chambres") }
                 )
 
                 Spacer(modifier = Modifier.width(4.dp))
@@ -245,15 +250,19 @@ fun SearchForm(
                         Text(stringResource(R.string.Number_of_bathrooms))
                     },
                     modifier = Modifier
-                        .weight(1f)
+                        .weight(1f),
+                    label = { Text("Nombre de salle d'eau") }
                 )
             }
+            Text(
+                text = "Points d'interets à proximité :",
+                modifier = Modifier.padding(vertical = 16.dp)
+            )
 
             Row(verticalAlignment = Alignment.CenterVertically) {
 
                 Text(text = "Ecole")
                 RadioButton(selected = searchCriteria.school, onClick = { /*TODO*/ })
-                Checkbox(checked = searchCriteria.school, onCheckedChange ={} )
                 Text(text = "Commerce")
                 RadioButton(selected = searchCriteria.shops, onClick = { /*TODO*/ })
                 Text(text = "Parc")
@@ -281,7 +290,8 @@ fun SearchForm(
                         focusedBorderColor = Color.Black,
                         unfocusedBorderColor = Color.Black,
                         disabledBorderColor = Color.Black,
-                    )
+                    ),
+                    label = { Text("Date d'entrée") }
                 )
                 IconButton(onClick = {
                     showDatePicker = true
@@ -302,7 +312,8 @@ fun SearchForm(
                         focusedBorderColor = Color.Black,
                         unfocusedBorderColor = Color.Black,
                         disabledBorderColor = Color.Black,
-                    )
+                    ),
+                    label = { Text("Date de vente") }
                 )
                 IconButton(onClick = {
                     showDatePicker = true
@@ -311,6 +322,7 @@ fun SearchForm(
                     Icon(imageVector = Icons.Default.DateRange, contentDescription = null)
                 }
             }
+            Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = {
 

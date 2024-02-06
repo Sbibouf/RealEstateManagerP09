@@ -32,7 +32,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -95,7 +94,7 @@ fun AddEstate(
     photoList: List<EstatePhoto>,
     onBackClick: () -> Unit,
     onAddPhotoButtonClick: (EstatePhoto) -> Unit,
-    onDeletePhotoClick : (EstatePhoto) -> Unit,
+    onDeletePhotoClick: (EstatePhoto) -> Unit,
     onChangePhotoButtonClick: KFunction2<Uri, EstatePhoto, Unit>
 ) {
     Scaffold(
@@ -152,13 +151,15 @@ fun CreateEstate(
     onUpdateEstate: KFunction1<Estate.() -> Estate, Unit>,
     photoList: List<EstatePhoto>,
     onAddPhotoButtonClick: (EstatePhoto) -> Unit,
-    onDeletePhotoClick : (EstatePhoto) -> Unit,
+    onDeletePhotoClick: (EstatePhoto) -> Unit,
     onChangePhotoButtonClick: KFunction2<Uri, EstatePhoto, Unit>
 ) {
 
+    //Variables and authorisation permission
+
     val context = LocalContext.current
 
-    val estateId = remember {estate.id }
+    val estateId = remember { estate.id }
 
 
     var hasImage by remember {
@@ -171,7 +172,7 @@ fun CreateEstate(
 
     var imageName by remember { mutableStateOf("") }
 
-    // Créer un fichier pour l'image
+    // Create an URI tempFile for the photo
     val imageUriProvider = remember {
         object {
             fun provideUri(): Uri {
@@ -189,7 +190,7 @@ fun CreateEstate(
         }
     }
 
-
+    // If permission is granted, select photo from gallery and get a persistent access to it then add it to list
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -198,20 +199,16 @@ fun CreateEstate(
             val selectedUri = data?.data
             hasImage = selectedUri != null
             imageUri = selectedUri
-
-            // Obtenez le contentResolver à partir du contexte local
             val contentResolver = context.contentResolver
-
-            // Prendre une permission persistante pour l'URI
             contentResolver.takePersistableUriPermission(
                 imageUri!!,
                 Intent.FLAG_GRANT_READ_URI_PERMISSION
             )
-
             onAddPhotoButtonClick(EstatePhoto(estate.id, imageUri.toString(), ""))
         }
     }
 
+    //If permission is granted only get the photo from camera and add it if success
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
         onResult = { success ->
@@ -221,10 +218,10 @@ fun CreateEstate(
             } else {
                 hasImage = true
             }
-
         }
     )
 
+    // Ask user for permission to access camera
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) {
@@ -238,6 +235,7 @@ fun CreateEstate(
         }
     }
 
+    // Ask user for permission to access gallery
     val mediaPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) {
@@ -258,6 +256,9 @@ fun CreateEstate(
 
     var showDialog by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
+
+
+    //Composable
 
     Column(
         modifier = Modifier
@@ -297,7 +298,8 @@ fun CreateEstate(
                         focusedBorderColor = Color.Black,
                         unfocusedBorderColor = Color.Black,
                         disabledBorderColor = Color.Black,
-                    )
+                    ),
+                    label = { Text(stringResource(R.string.Nom_du_bien_immobilier)) }
 
                 )
             }
@@ -322,6 +324,7 @@ fun CreateEstate(
                     placeholder = {
                         Text(stringResource(R.string.Superficie))
                     },
+                    label = { Text(stringResource(R.string.Superficie)) },
                     modifier = Modifier
                         .weight(1f)
                         .padding(1.dp),
@@ -348,7 +351,8 @@ fun CreateEstate(
                     .padding(8.dp)
                     .fillMaxWidth(),
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                label = { Text(stringResource(R.string.Address)) }
             )
         }
         estate.description?.let {
@@ -363,7 +367,8 @@ fun CreateEstate(
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                label = { Text(stringResource(R.string.Description)) }
             )
         }
         estate.price?.let {
@@ -386,9 +391,8 @@ fun CreateEstate(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done
                 ),
-                visualTransformation = getMask(it.length)
-
-
+                visualTransformation = getMask(it.length),
+                label = { Text(stringResource(R.string.Price)) }
             )
         }
 
@@ -410,7 +414,6 @@ fun CreateEstate(
                                 type = "image/*"
                             })
                         } else {
-                            //Request a permission
                             mediaPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
                         }
                     } else {
@@ -423,7 +426,6 @@ fun CreateEstate(
                                 type = "image/*"
                             })
                         } else {
-                            //Request a permission
                             mediaPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
                         }
                     }
@@ -444,7 +446,6 @@ fun CreateEstate(
                     imageUri = uri
                     cameraLauncher.launch(imageUri)
                 } else {
-                    // Request a permission
                     cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
                 }
 
@@ -456,8 +457,6 @@ fun CreateEstate(
                 )
             }
         }
-
-
         if (showDialog) {
             AlertDialog(
                 onDismissRequest = {
@@ -495,13 +494,12 @@ fun CreateEstate(
                 confirmButton = {
                     Button(
                         onClick = {
-                            // Fermez le dialogue
+                            // Replace old photo by new one with name and reset imageName
                             onChangePhotoButtonClick(
                                 imageUri!!,
                                 EstatePhoto(estate.id, imageUri.toString(), imageName)
                             )
                             showDialog = false
-                            // Réinitialisez l'image sélectionnée et le nom
                             imageName = ""
 
                         }
@@ -532,11 +530,9 @@ fun CreateEstate(
                         .width(150.dp)
                         .height(150.dp)
                         .clickable {
-                            // Mettre à jour l'image sélectionnée lorsque l'utilisateur clique
+                            // Update imageUri with data and show dialog
 
                             imageUri = Uri.parse(photo.uri)
-
-                            // Afficher le dialogue pour donner un nom à l'image
                             showDialog = true
                         },
                 ) {
@@ -566,12 +562,16 @@ fun CreateEstate(
 
                     IconButton(
                         onClick = {
-                                  onDeletePhotoClick(photo)
+                            onDeletePhotoClick(photo)
                         }, modifier = Modifier
                             .align(Alignment.TopEnd)
                             .padding(4.dp)
                     ) {
-                        Icon(imageVector = Icons.Default.Clear, tint = Color.White, contentDescription = null)
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            tint = Color.White,
+                            contentDescription = null
+                        )
 
                     }
                 }
@@ -598,7 +598,8 @@ fun CreateEstate(
                     },
                     modifier = Modifier
                         .weight(1f)
-                        .padding(1.dp)
+                        .padding(1.dp),
+                    label = { Text(stringResource(R.string.Number_of_rooms)) }
                 )
             }
             estate.numberOfBathrooms?.let {
@@ -616,7 +617,8 @@ fun CreateEstate(
                     },
                     modifier = Modifier
                         .weight(1f)
-                        .padding(1.dp)
+                        .padding(1.dp),
+                    label = { Text(stringResource(R.string.Number_of_bathrooms)) }
                 )
             }
             estate.numberOfBedrooms?.let {
@@ -634,7 +636,8 @@ fun CreateEstate(
                     },
                     modifier = Modifier
                         .weight(1f)
-                        .padding(1.dp)
+                        .padding(1.dp),
+                    label = { Text(stringResource(R.string.Number_of_bedrooms)) }
                 )
             }
         }
@@ -659,7 +662,8 @@ fun CreateEstate(
                         focusedBorderColor = Color.Black,
                         unfocusedBorderColor = Color.Black,
                         disabledBorderColor = Color.Black,
-                    )
+                    ),
+                    label = { Text(stringResource(R.string.Date_entrée)) }
                 )
             }
             IconButton(
@@ -689,7 +693,8 @@ fun CreateEstate(
                         focusedBorderColor = Color.Black,
                         unfocusedBorderColor = Color.Black,
                         disabledBorderColor = Color.Black,
-                    )
+                    ),
+                    label = { Text(stringResource(R.string.Date_vente)) }
                 )
             }
             IconButton(
@@ -729,6 +734,7 @@ fun CreateEstate(
                     .fillMaxWidth(),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                label = { Text(stringResource(R.string.Agent)) }
             )
         }
         Text(text = "Points d'interet à proximité :", modifier = Modifier.padding(vertical = 8.dp))
@@ -809,6 +815,7 @@ fun CreateEstate(
             }
         }
         Button(onClick = {
+            // If type and price fields are filled then we give back estateId and add it with its photo to database
             if (estate.type == "" || estate.price == "") {
                 Toast.makeText(
                     context,
@@ -818,10 +825,7 @@ fun CreateEstate(
             } else {
                 estate.id = estateId
                 onAddEstateClick(estate, photoList)
-
             }
-
-
         }) {
             Text(stringResource(R.string.Valider))
         }

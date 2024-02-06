@@ -1,4 +1,5 @@
 package com.example.realestatemanager.ui.estateList
+
 import android.util.Log
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
@@ -26,7 +27,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -36,27 +36,55 @@ import androidx.compose.ui.unit.sp
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
 import com.example.realestatemanager.model.EstateWithPhotos
+import com.example.realestatemanager.ui.estateDetail.EstateDescriptionRow
+import com.example.realestatemanager.ui.estateDetail.EstateDetailsRow
+import com.example.realestatemanager.ui.estateDetail.EstateMediaRow
 import com.google.android.gms.maps.model.LatLng
 
 @Composable
-fun EstateUiPortrait(estateWithPhotosList: List<EstateWithPhotos>, onEstateClick: (EstateWithPhotos) -> Unit, onAddClick: ()->Unit, onDrawerLoanClick: ()->Unit, onDrawerMapClick: ()->Unit, onSearchClick : ()->Unit, modifier: Modifier){
+fun EstateUiPortrait(
+    estateWithPhotosList: List<EstateWithPhotos>,
+    onEstateClick: (EstateWithPhotos) -> Unit,
+    onAddClick: () -> Unit,
+    onDrawerLoanClick: () -> Unit,
+    onDrawerMapClick: () -> Unit,
+    onSearchClick: () -> Unit,
+    modifier: Modifier
+) {
 
-    EstateList(estateList = estateWithPhotosList, onEstateClick = onEstateClick, onAddClick = onAddClick, onDrawerLoanClick = onDrawerLoanClick, onDrawerMapClick = onDrawerMapClick, onSearchClick = onSearchClick, modifier = modifier )
+    EstateList(
+        estateList = estateWithPhotosList,
+        onEstateClick = onEstateClick,
+        onAddClick = onAddClick,
+        onDrawerLoanClick = onDrawerLoanClick,
+        onDrawerMapClick = onDrawerMapClick,
+        onSearchClick = onSearchClick,
+        modifier = modifier
+    )
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EstateUiLandscape( estateWithPhotosList : List<EstateWithPhotos>,estateWithPhotos : EstateWithPhotos, lat : LatLng?, onEstateClick: (EstateWithPhotos) -> Unit){
+fun EstateUiLandscape(
+    estateWithPhotosList: List<EstateWithPhotos>,
+    estateWithPhotos: EstateWithPhotos,
+    lat: LatLng?,
+    onEstateClick: (EstateWithPhotos) -> Unit
+) {
     Log.d("EstateListAndDetail", "Recomposing...")
     Scaffold(
         topBar = {
-            TopAppBar( colors = TopAppBarDefaults.topAppBarColors(
+            TopAppBar(colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = Color.Gray,
                 titleContentColor = Color.White,
                 navigationIconContentColor = Color.White,
                 actionIconContentColor = Color.White
             ),
                 title = {
-                    Text(text = "Real Estate Manager", style = TextStyle.Default.copy(fontSize = 16.sp))
+                    Text(
+                        text = "Real Estate Manager",
+                        style = TextStyle.Default.copy(fontSize = 16.sp)
+                    )
                 },
                 navigationIcon = {
                     IconButton(onClick = { /* Handle navigation icon click */ }) {
@@ -78,43 +106,130 @@ fun EstateUiLandscape( estateWithPhotosList : List<EstateWithPhotos>,estateWithP
                 }
             )
         }, content = {
-            Row(modifier = Modifier
-            .fillMaxSize()
-            .horizontalScroll(rememberScrollState()).padding(it)) {
-            LazyColumn(modifier = Modifier.weight(1f)) {
-                items(estateWithPhotosList) { estate ->
-                    EstateItem(estate, onEstateClick = onEstateClick)
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .horizontalScroll(rememberScrollState())
+                    .padding(it)
+            ) {
+                LazyColumn(modifier = Modifier.weight(1f)) {
+                    items(estateWithPhotosList) { estate ->
+                        EstateItem(estate, onEstateClick = onEstateClick)
+                    }
                 }
-            }
-            Column(modifier = Modifier.weight(2f)
-                .verticalScroll(rememberScrollState())) {
-                Spacer(modifier = Modifier.height(8.dp))
-                EstateMediaRow(estateWithPhotos)
-                EstateDescriptionRow(estateWithPhotos)
-                EstateDetailsRow(estateWithPhotos)
+                Column(
+                    modifier = Modifier
+                        .weight(2f)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    EstateMediaRow(estateWithPhotos)
+                    EstateDescriptionRow(estateWithPhotos)
+                    EstateDetailsRow(estateWithPhotos)
+
+                }
 
             }
-
-        }})
+        })
 }
 
-@Preview(showSystemUi = true,
+@Preview(
+    showSystemUi = true,
     device = "spec:width=411dp,height=891dp,dpi=420,isRound=false,chinSize=0dp,orientation=landscape"
 )
 @Composable
-fun Test(){
+fun Test() {
 
     val estatesTest = listOf(
-        EstateWithPhotos(Estate("House","$100,000","300m2","5","3","1","","New York","","","",false,"","","",false,false,false,false,false,false),
-            listOf( EstatePhoto(1L,"/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
-                EstatePhoto(1L,"/storage/emulated/0/Download/estate1_living.jpg","Salon"))),
-        EstateWithPhotos(Estate("PentHouse","$100,000,000","300m2","5","3","1","","New York","","","",false,"","","",false,false,false,false,false,false),
-            listOf( EstatePhoto(1L,"/storage/emulated/0/Download/estate2_front.jpg", "Façade"),
-                EstatePhoto(1L,"/storage/emulated/0/Download/estate2_living.jpg","Salon"))))
+        EstateWithPhotos(
+            Estate(
+                "House",
+                "$100,000",
+                "300m2",
+                "5",
+                "3",
+                "1",
+                "",
+                "New York",
+                "",
+                "",
+                "",
+                false,
+                "",
+                "",
+                "",
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ),
+            listOf(
+                EstatePhoto(1L, "/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
+                EstatePhoto(1L, "/storage/emulated/0/Download/estate1_living.jpg", "Salon")
+            )
+        ),
+        EstateWithPhotos(
+            Estate(
+                "PentHouse",
+                "$100,000,000",
+                "300m2",
+                "5",
+                "3",
+                "1",
+                "",
+                "New York",
+                "",
+                "",
+                "",
+                false,
+                "",
+                "",
+                "",
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ),
+            listOf(
+                EstatePhoto(1L, "/storage/emulated/0/Download/estate2_front.jpg", "Façade"),
+                EstatePhoto(1L, "/storage/emulated/0/Download/estate2_living.jpg", "Salon")
+            )
+        )
+    )
 
-    val estateWithPhotoTest = EstateWithPhotos(Estate("House","$100,000","300m2","5","3","1","","New York","","","",false,"","","",false,false,false,false,false,false),
-        listOf( EstatePhoto(1L,"/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
-            EstatePhoto(1L,"/storage/emulated/0/Download/estate1_living.jpg","Salon")))
+    val estateWithPhotoTest = EstateWithPhotos(
+        Estate(
+            "House",
+            "$100,000",
+            "300m2",
+            "5",
+            "3",
+            "1",
+            "",
+            "New York",
+            "",
+            "",
+            "",
+            false,
+            "",
+            "",
+            "",
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+        ),
+        listOf(
+            EstatePhoto(1L, "/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
+            EstatePhoto(1L, "/storage/emulated/0/Download/estate1_living.jpg", "Salon")
+        )
+    )
 
     //EstateUiLandscape(estateWithPhotos = estateWithPhotoTest , estateWithPhotosList = estatesTest, onEstateClick ={} )
 }

@@ -12,6 +12,7 @@ android {
     namespace = "com.example.realestatemanager"
     compileSdk = 34
 
+
     defaultConfig {
         applicationId = "com.example.realestatemanager"
         minSdk = 24

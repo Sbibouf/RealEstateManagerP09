@@ -1,5 +1,6 @@
 package com.example.realestatemanager.data.local.dao
 
+import android.database.Cursor
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
@@ -20,7 +21,7 @@ interface LibraryDao {
      * Insert new estate
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(estate: Estate)
+    fun insert(estate: Estate) : Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEstate(estate: Estate)
@@ -76,7 +77,7 @@ interface LibraryDao {
      * @return
      */
     @Query("DELETE FROM Estate WHERE id = :estateId")
-    fun deleteEstate(estateId: Long?)
+    fun deleteEstate(estateId: Long?) : Int
 
     @Query("DELETE FROM EstatePhoto WHERE id = :estatePhotoId ")
     suspend fun deleteEstatePhoto(estatePhotoId: Long?)
@@ -86,7 +87,7 @@ interface LibraryDao {
      * Update Estate with new data
      */
     @Update
-    fun update(estate: Estate)
+    fun updateEstate(estate: Estate) : Int
 
     /**
      * Query for the search engine
@@ -113,5 +114,8 @@ interface LibraryDao {
         estateSport: String?
     ): Flow<List<EstateWithPhotos>>
 
+
+    @Query("SELECT * FROM Estate WHERE Id = :estateId")
+    fun getEstateWithCursor(estateId : Long) : Cursor
 
 }

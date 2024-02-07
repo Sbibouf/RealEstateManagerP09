@@ -7,12 +7,12 @@ import androidx.room.Relation
 
 data class EstateWithPhotos(
     @Embedded
-    val estate: Estate?,
+    val estate: Estate? = Estate(),
     @Relation(
         parentColumn = "id",
         entityColumn = "estateId"
     )
-    val photos: List<EstatePhoto>?
+    val photos: List<EstatePhoto>? = emptyList()
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         estate = parcel.readParcelable(Estate::class.java.classLoader),

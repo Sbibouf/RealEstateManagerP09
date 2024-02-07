@@ -21,19 +21,14 @@ import java.util.concurrent.Executors
 class DaoModule {
     lateinit var database: EstateDatabase
     @Provides
-    fun provideContactDao(
-        @ApplicationContext context: Context
-    ): LibraryDao {
-        /**
-         * Create and return an instance of EstateDao
-         */
+    fun provideEstateDao(@ApplicationContext context: Context): EstateDatabase {
         database = Room.databaseBuilder(
             context,
             EstateDatabase::class.java,
             "EstateDatabase.db"
         )
             /**
-             * Prepopulate database with some estate
+             * Prepopulate database with some estates and photos
              */
             .addCallback(object : RoomDatabase.Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
@@ -41,14 +36,14 @@ class DaoModule {
                     val libraryDao = database.libraryDao()
                     val executor = database.transactionExecutor
                     executor.execute {
-                        libraryDao.insert(Estate("House", "25000000", "225M²", "5","2","1", "","City Hall, New York", "Manhattan", "40.713282","-74.006978", false, "21/12/2023", "","",true,true,true,false,false,false))
-                        libraryDao.insert(Estate("Penthouse", "20000000", "225M²", "5","2","1", "","Brookln", "Brooklyn", "40.6526006","-73.9497211", false, "", "21/12/2023","",true,true,false,true,false,false))
-                        libraryDao.insert(Estate("House", "15000000", "225M²", "5","2","1", "","Southampton", "Southampton", "40.884267","-72.3895296", true, "", "21/11/2023","",false,true,false,true,true,false))
-                        libraryDao.insert(Estate("House", "17000000", "225M²", "5","2","1", "","Upper East Side", "Upper East Side", "","", false, "21/12/2023", "","",false,true,true,false,false,false))
-                        libraryDao.insert(Estate("House", "20000000", "225M²", "5","2","1", "","Hampton Bays", "Hampton Bays", "","", true, "21/12/2023", "22/12/2023","",false,false,false,false,false,false))
-                        libraryDao.insert(Estate("House", "22000000", "225M²", "5","2","1", "","Brooklyn", "Brooklyn", "","", false, "21/12/2023", "","",true,true,true,true,true,true))
-                        libraryDao.insert(Estate("House", "35000000", "250M²", "5","2","1", "","Montauk", "Montauk", "41.0347223","-71.9442623", false, "21/12/2023", "","",false,true,true,false,false,true))
-                        libraryDao.insert(Estate("House", "35000000", "250M²", "5","2","1", "","", "Montauk", "","", false, "21/12/2023", "","",false,false,false,false,false,false))
+                        libraryDao.insert(Estate("House", "25000000", "225M²", "5","2","1", "Ce petit texte décrit le bien immobilier","City Hall, New York", "Manhattan", "40.713282","-74.006978", false, "21/12/2023", "","",true,true,true,false,false,false))
+                        libraryDao.insert(Estate("Penthouse", "20000000", "225M²", "5","2","1", "Ce petit texte décrit le bien immobilier","Brookln", "Brooklyn", "40.6526006","-73.9497211", false, "", "21/12/2023","",true,true,false,true,false,false))
+                        libraryDao.insert(Estate("House", "15000000", "225M²", "5","2","1", "Ce petit texte décrit le bien immobilier","Southampton", "Southampton", "40.884267","-72.3895296", true, "10/11/2023", "21/11/2023","",false,true,false,true,true,false))
+                        libraryDao.insert(Estate("House", "17000000", "225M²", "5","2","1", "Ce petit texte décrit le bien immobilier","Upper East Side", "Upper East Side", "","", false, "21/12/2023", "","",false,true,true,false,false,false))
+                        libraryDao.insert(Estate("House", "20000000", "225M²", "5","2","1", "Ce petit texte décrit le bien immobilier","Hampton Bays", "Hampton Bays", "","", true, "21/12/2023", "22/12/2023","",false,false,false,false,false,false))
+                        libraryDao.insert(Estate("House", "22000000", "225M²", "5","2","1", "Ce petit texte décrit le bien immobilier","Brooklyn", "Brooklyn", "","", false, "21/12/2023", "","",true,true,true,true,true,true))
+                        libraryDao.insert(Estate("House", "35000000", "250M²", "5","2","1", "Ce petit texte décrit le bien immobilier","Montauk", "Montauk", "41.0347223","-71.9442623", false, "21/12/2023", "","",false,true,true,false,false,true))
+                        libraryDao.insert(Estate("House", "35000000", "250M²", "5","2","1", "Ce petit texte décrit le bien immobilier","", "Montauk", "","", false, "21/12/2023", "","",false,false,false,false,false,false))
 
 
                         libraryDao.insertPhoto(EstatePhoto(1L,"https://images.pexels.com/photos/259593/pexels-photo-259593.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "Façade"))
@@ -57,7 +52,7 @@ class DaoModule {
                         libraryDao.insertPhoto(EstatePhoto(2L,"https://images.pexels.com/photos/1571459/pexels-photo-1571459.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Salon"))
                         libraryDao.insertPhoto(EstatePhoto(3L,"https://images.pexels.com/photos/53610/large-home-residential-house-architecture-53610.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "Façade"))
                         libraryDao.insertPhoto(EstatePhoto(3L,"https://images.pexels.com/photos/2251247/pexels-photo-2251247.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Salon"))
-                        libraryDao.insertPhoto(EstatePhoto(4L,"https://images.pexels.com/photos/259588/pexels-photo-259588.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "Façade"))
+                        libraryDao.insertPhoto(EstatePhoto(4L,"https://images.pexels.com/photos/1438832/pexels-photo-1438832.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "Façade"))
                         libraryDao.insertPhoto(EstatePhoto(4L,"https://images.pexels.com/photos/2724749/pexels-photo-2724749.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Cuisine"))
                         libraryDao.insertPhoto(EstatePhoto(5L,"https://images.pexels.com/photos/208736/pexels-photo-208736.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "Façade"))
                         libraryDao.insertPhoto(EstatePhoto(5L,"https://images.pexels.com/photos/1080721/pexels-photo-1080721.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Cuisine"))
@@ -65,15 +60,21 @@ class DaoModule {
                         libraryDao.insertPhoto(EstatePhoto(6L,"https://images.pexels.com/photos/1457841/pexels-photo-1457841.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Salon"))
                         libraryDao.insertPhoto(EstatePhoto(7L,"https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "Façade"))
                         libraryDao.insertPhoto(EstatePhoto(7L,"https://images.pexels.com/photos/1648776/pexels-photo-1648776.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1","Salon"))
-                    }
 
+                    }
                 }
             })
             .build()
+        return database
+    }
+
+    @Provides
+    fun provideLibraryDao(database: EstateDatabase): LibraryDao {
         return database.libraryDao()
     }
     @Provides
     fun provideExecutor(): Executor{
         return Executors.newSingleThreadExecutor()
     }
+
 }

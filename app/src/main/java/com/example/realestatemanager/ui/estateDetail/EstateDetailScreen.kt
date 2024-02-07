@@ -99,6 +99,7 @@ fun EstateDetailsScreen(
                 EstateMediaRow(estateWithPhotos)
                 EstateDescriptionRow(estateWithPhotos)
                 EstateDetailsRow(estateWithPhotos)
+                EstateMap(estateWithPhotos)
 
             }
         }
@@ -116,7 +117,7 @@ fun EstateMediaRow(estateWithPhotos: EstateWithPhotos) {
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            // Assuming estate.photos is a list of photo URLs
+
             LazyRow(
                 modifier = Modifier
             ) {
@@ -127,7 +128,7 @@ fun EstateMediaRow(estateWithPhotos: EstateWithPhotos) {
                             .width(150.dp)
                     ) {
                         AsyncImage(
-                            model = Uri.parse(photo.uri), // Placeholder image
+                            model = Uri.parse(photo.uri),
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
@@ -180,10 +181,9 @@ fun EstateDescriptionRow(estateWithPhotos: EstateWithPhotos) {
 
 @Composable
 fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
-    val api = BuildConfig.MAPS_API_KEY
+
     Column(
         modifier = Modifier
-            .fillMaxWidth()
             .padding(8.dp)
     ) {
         Row(
@@ -297,6 +297,16 @@ fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
                 )
             }
         }
+
+    }
+}
+
+@Composable
+fun EstateMap(estateWithPhotos: EstateWithPhotos){
+
+    val api = BuildConfig.MAPS_API_KEY
+
+    Column {
         Row(modifier = Modifier.padding(vertical = 8.dp)) {
             Spacer(modifier = Modifier.height(16.dp))
             Icon(imageVector = Icons.Default.LocationOn, contentDescription = null)
@@ -328,9 +338,9 @@ fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
                 color = Color.Red
             )
         }
-
-
     }
+
+
 }
 
 @Preview

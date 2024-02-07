@@ -2,6 +2,9 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="EstateContentProviderTest">
+        <State />
+      </entry>
       <entry key="EstateListPreview">
         <State />
       </entry>
@@ -13,18 +16,18 @@
       </entry>
       <entry key="app">
         <State>
-          <targetSelectedWithDropDown>
+          <runningDeviceTargetSelectedWithDropDown>
             <Target>
-              <type value="QUICK_BOOT_TARGET" />
+              <type value="RUNNING_DEVICE_TARGET" />
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\adrie\.android\avd\Nexus_5_API_30.avd" />
+                  <value value="C:\Users\adrie\.android\avd\Pixel_Tablet_API_30.avd" />
                 </Key>
               </deviceKey>
             </Target>
-          </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-02-02T15:23:28.981047Z" />
+          </runningDeviceTargetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-02-07T12:59:25.756821200Z" />
         </State>
       </entry>
       <entry key="search">

@@ -5,17 +5,15 @@ import androidx.lifecycle.viewModelScope
 import com.example.realestatemanager.data.local.repository.EstateRepository
 import com.example.realestatemanager.model.EstateWithPhotos
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
-import java.util.concurrent.Executor
-import java.util.concurrent.Executors
 import javax.inject.Inject
 
 @HiltViewModel
 class EstateListViewModel @Inject constructor(
-    private val estateRepository: EstateRepository,
-    private val executor: Executor = Executors.newSingleThreadExecutor()
+    estateRepository: EstateRepository
 ) : ViewModel() {
 
     val uiState: StateFlow<List<EstateWithPhotos>> = estateRepository.getAllEstateWithPhoto()
@@ -24,12 +22,14 @@ class EstateListViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(),
             initialValue = emptyList()
         )
-    val uiStateLandscape: StateFlow<EstateWithPhotos?> = estateRepository.getEstateWithPhotoById(1L)
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = null
-        )
+
+    private val _estateWithPhoto : MutableStateFlow<EstateWithPhotos> = MutableStateFlow(EstateWithPhotos())
+    val estateWithPhoto : StateFlow<EstateWithPhotos> get() = _estateWithPhoto
+
+    fun setEstateWithPhoto(estateWithPhotos: EstateWithPhotos){
+        _estateWithPhoto.value = estateWithPhotos
+    }
+
 
 
 }

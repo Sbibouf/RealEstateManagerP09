@@ -23,7 +23,6 @@ import com.example.realestatemanager.ui.loan.LoanActivity
 import com.example.realestatemanager.ui.map.MapActivity
 import com.example.realestatemanager.ui.search.SearchActivity
 import com.example.realestatemanager.ui.theme.EstateTheme
-import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -39,7 +38,7 @@ class EstateListActivity : ComponentActivity() {
 
             val windowSizeClass = calculateWindowSizeClass(this)
             val estateList = estateViewModel.uiState.collectAsState().value
-            val estateWithPhoto = estateViewModel.uiStateLandscape.collectAsState().value
+            val estateWithPhoto = estateViewModel.estateWithPhoto.collectAsState().value
 
 
             EstateTheme {
@@ -74,13 +73,20 @@ class EstateListActivity : ComponentActivity() {
 
                         WindowWidthSizeClass.Expanded -> {
                             Log.d("EstateListAndDetail", "Recomposing...")
-                            if (estateWithPhoto != null) {
-                                EstateUiLandscape(
-                                    estateWithPhotosList = estateList,
-                                    estateWithPhotos = estateWithPhoto,
-                                    lat = LatLng(2323.0, 23232.0),
-                                    onEstateClick = {})
-                            }
+
+                            EstateUiLandscape(
+                                estateWithPhotosList = estateList,
+                                estateWithPhotos = estateWithPhoto,
+                                onSearchClick = { handleSearchClick() },
+                                onAddClick = { handleAddClick() },
+                                onDrawerMapClick = { handleDrawerMapClick() },
+                                onDrawerLoanClick = { handleDrawerLoanClick() },
+                                onEstateClick = { clickedEstate ->
+                                    setEstateWithPhoto(clickedEstate)
+                                },
+                                onModifyClick = { handleOnModifyClick(estateWithPhoto) },
+                                modifier = Modifier
+                            )
                         }
 
                         WindowWidthSizeClass.Medium -> {
@@ -100,7 +106,7 @@ class EstateListActivity : ComponentActivity() {
                                     handleDrawerMapClick()
                                 },
                                 onSearchClick = {
-
+                                    handleSearchClick()
                                 },
                                 modifier = Modifier
                             )
@@ -144,6 +150,16 @@ class EstateListActivity : ComponentActivity() {
 
     private fun handleSearchClick() {
         val intent = Intent(this, SearchActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun setEstateWithPhoto(estateWithPhotos: EstateWithPhotos) {
+        estateViewModel.setEstateWithPhoto(estateWithPhotos)
+    }
+
+    private fun handleOnModifyClick(estate: EstateWithPhotos) {
+        val intent = Intent(this, AddEstateActivity::class.java)
+        intent.putExtra("estate", estate)
         startActivity(intent)
     }
 }

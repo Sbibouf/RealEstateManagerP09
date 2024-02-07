@@ -34,6 +34,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/path_provider" />
         </provider>
+        <provider
+
+            android:name=".provider.EstateContentProvider"
+            android:authorities="com.example.realestatemanager.provider"
+            android:exported="true"/>
         <activity
             android:name="com.example.realestatemanager.ui.estateList.EstateListActivity"
             android:exported="true"

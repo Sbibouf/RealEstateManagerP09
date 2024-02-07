@@ -21,9 +21,7 @@ class SearchActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    SearchCriteria(searchCriteria = searchCriteria) {
-
-                    }
+                    SearchCriteria(searchCriteria = searchCriteria, onBackClick = {finish()})
 
                 }
             }

@@ -679,7 +679,7 @@ fun CreateEstate(
                 OutlinedTextField(
                     value = it,
                     onValueChange = {
-                        onUpdateEstate { copy(soldDate = it) }
+                        onUpdateEstate { copy(soldDate = it, soldState = true) }
                     },
                     placeholder = {
                         Text(stringResource(R.string.Date_vente))
@@ -726,9 +726,7 @@ fun CreateEstate(
                 onValueChange = { newTextValue ->
                     onUpdateEstate { copy(agent = newTextValue) }
                 },
-                placeholder = {
-                    Text(stringResource(R.string.Agent))
-                },
+
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth(),

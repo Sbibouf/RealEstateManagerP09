@@ -1,5 +1,6 @@
 package com.example.realestatemanager.data.local.database
 
+import android.content.Context
 import androidx.room.RoomDatabase
 import com.example.realestatemanager.data.local.dao.LibraryDao
 import com.example.realestatemanager.model.Estate
@@ -10,6 +11,5 @@ import com.example.realestatemanager.model.EstatePhoto
 abstract class EstateDatabase : RoomDatabase() {
 
     abstract fun libraryDao() : LibraryDao
-
 
 }

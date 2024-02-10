@@ -16,4 +16,5 @@
     <string name="Erreur_adress">l\'adresse renseigner est incomplète pour afficher la carte </string>
     <string name="Simulateur"> Simulateur de prêt immobilier </string>
     <string name="Rechercher"> Rechercher </string>
+    <string name="Modifier"> Modifier le bien </string>
 </resources>

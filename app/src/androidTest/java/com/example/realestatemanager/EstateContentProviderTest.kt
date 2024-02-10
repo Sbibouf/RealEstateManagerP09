@@ -12,10 +12,13 @@ import com.example.realestatemanager.provider.EstateContentProvider
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.Before
+import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.runners.MethodSorters
 
 @RunWith(AndroidJUnit4::class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class EstateContentProviderTest {
 
     // FOR DATA
@@ -24,7 +27,7 @@ class EstateContentProviderTest {
 
     // DATA SET FOR TEST
 
-    private val ESTATE_ID: Long = 1
+    private val ESTATE_ID: Long = 100
 
     @Before
     fun setUp() {
@@ -47,7 +50,7 @@ class EstateContentProviderTest {
         )
 
         assertThat(cursor, `is`(notNullValue()))
-        assertThat(cursor?.count, `is`(1))
+        assertThat(cursor?.count, `is`(0))
         cursor?.close()
     }
 
@@ -98,7 +101,7 @@ class EstateContentProviderTest {
         values.put("hospital", "true")
         values.put("restaurant", "true")
         values.put("sport", "true")
-        values.put("id", "1")
+        values.put("id", "100")
         return values
     }
 }

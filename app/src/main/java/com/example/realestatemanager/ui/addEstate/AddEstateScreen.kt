@@ -825,7 +825,13 @@ fun CreateEstate(
                 onAddEstateClick(estate, photoList)
             }
         }) {
-            Text(stringResource(R.string.Valider))
+            if (estate.id == 0L){
+                Text(stringResource(R.string.Valider))
+            }
+            else {
+                Text(stringResource(R.string.Modifier))
+            }
+
         }
     }
 }

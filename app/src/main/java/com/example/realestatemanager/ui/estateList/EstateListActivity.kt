@@ -1,11 +1,13 @@
 package com.example.realestatemanager.ui.estateList
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -15,20 +17,47 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.core.content.IntentCompat
 import com.example.realestatemanager.data.local.service.Utils
 import com.example.realestatemanager.model.EstateWithPhotos
+import com.example.realestatemanager.model.SearchCriteria
 import com.example.realestatemanager.ui.addEstate.AddEstateActivity
 import com.example.realestatemanager.ui.estateDetail.EstateDetailActivity
 import com.example.realestatemanager.ui.loan.LoanActivity
 import com.example.realestatemanager.ui.map.MapActivity
 import com.example.realestatemanager.ui.search.SearchActivity
 import com.example.realestatemanager.ui.theme.EstateTheme
+import com.example.realestatemanager.ui.theme.EstateThemeTab
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class EstateListActivity : ComponentActivity() {
 
     private val estateViewModel: EstateListViewModel by viewModels()
+    //private var searchSuccess : Boolean = false
+
+
+    private val searchActivityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+
+                //searchSuccess = true
+                val data: Intent? = result.data
+                val searchData: SearchCriteria? =
+                    data?.let {
+                        IntentCompat.getParcelableExtra(
+                            it,
+                            "search",
+                            SearchCriteria::class.java
+                        )
+                    }
+                if (searchData != null) {
+
+                    estateViewModel.getEstateWithPhotoFromSearch(searchData)
+                }
+            }
+
+        }
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,21 +66,27 @@ class EstateListActivity : ComponentActivity() {
         setContent {
 
             val windowSizeClass = calculateWindowSizeClass(this)
-            val estateList = estateViewModel.uiState.collectAsState().value
-            val estateWithPhoto = estateViewModel.estateWithPhoto.collectAsState().value
+            val vmSearchPerformed = estateViewModel.searchPerformed.collectAsState().value
+            val vmEstateList = estateViewModel.uiState.collectAsState().value
+            val vmEstateSearchList = estateViewModel.estatePhotoList.collectAsState().value
+            val vmEstateWithPhoto = estateViewModel.estateWithPhoto.collectAsState().value
+            val estateWithPhotosList = if (vmSearchPerformed) {
+                vmEstateSearchList
+            } else {
+                vmEstateList
+            }
 
-
-            EstateTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    when (windowSizeClass.widthSizeClass) {
-                        WindowWidthSizeClass.Compact -> {
-                            Log.d("EstateList", "Recomposing...")
+            // A surface container using the 'background' color from the theme
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background
+            ) {
+                when (windowSizeClass.widthSizeClass) {
+                    WindowWidthSizeClass.Compact -> {
+                        Log.d("EstateList", "Recomposing...")
+                        EstateTheme {
                             EstateUiPortrait(
-                                estateWithPhotosList = estateList,
+                                estateWithPhotosList = estateWithPhotosList,
                                 onEstateClick = { clickedEstate ->
                                     handleEstateItemClick(clickedEstate)
                                 },
@@ -67,16 +102,21 @@ class EstateListActivity : ComponentActivity() {
                                 onSearchClick = {
                                     handleSearchClick()
                                 },
+                                onCancelSearchClick = estateViewModel::cancelSearch,
+                                searchPerformed = vmSearchPerformed,
                                 modifier = Modifier
                             )
                         }
 
-                        WindowWidthSizeClass.Expanded -> {
-                            Log.d("EstateListAndDetail", "Recomposing...")
+                    }
 
+                    WindowWidthSizeClass.Expanded -> {
+                        Log.d("EstateListAndDetail", "Recomposing...")
+
+                        EstateTheme {
                             EstateUiLandscape(
-                                estateWithPhotosList = estateList,
-                                estateWithPhotos = estateWithPhoto,
+                                estateWithPhotosList = estateWithPhotosList,
+                                estateWithPhotos = vmEstateWithPhoto,
                                 onSearchClick = { handleSearchClick() },
                                 onAddClick = { handleAddClick() },
                                 onDrawerMapClick = { handleDrawerMapClick() },
@@ -84,15 +124,22 @@ class EstateListActivity : ComponentActivity() {
                                 onEstateClick = { clickedEstate ->
                                     setEstateWithPhoto(clickedEstate)
                                 },
-                                onModifyClick = { handleOnModifyClick(estateWithPhoto) },
-                                modifier = Modifier
+                                onModifyClick = { handleOnModifyClick(vmEstateWithPhoto) },
+                                modifier = Modifier,
+                                imageSize = 150,
+                                imageNameSize = 12,
+                                onCancelSearchClick = estateViewModel::cancelSearch,
+                                searchPerformed = vmSearchPerformed
                             )
                         }
 
-                        WindowWidthSizeClass.Medium -> {
-                            Log.d("EstateListAndDetail", "Recomposing...")
+                    }
+
+                    WindowWidthSizeClass.Medium -> {
+                        Log.d("EstateListAndDetail", "Recomposing...")
+                        EstateThemeTab {
                             EstateUiPortrait(
-                                estateWithPhotosList = estateList,
+                                estateWithPhotosList = estateWithPhotosList,
                                 onEstateClick = { clickedEstate ->
                                     handleEstateItemClick(clickedEstate)
                                 },
@@ -108,13 +155,17 @@ class EstateListActivity : ComponentActivity() {
                                 onSearchClick = {
                                     handleSearchClick()
                                 },
+                                onCancelSearchClick = estateViewModel::cancelSearch,
+                                searchPerformed = vmSearchPerformed,
                                 modifier = Modifier
                             )
                         }
-                    }
 
+                    }
                 }
+
             }
+
         }
     }
 
@@ -150,7 +201,7 @@ class EstateListActivity : ComponentActivity() {
 
     private fun handleSearchClick() {
         val intent = Intent(this, SearchActivity::class.java)
-        startActivity(intent)
+        searchActivityResultLauncher.launch(intent)
     }
 
     private fun setEstateWithPhoto(estateWithPhotos: EstateWithPhotos) {

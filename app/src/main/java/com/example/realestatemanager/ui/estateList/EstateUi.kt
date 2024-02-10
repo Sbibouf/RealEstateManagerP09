@@ -16,9 +16,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -55,6 +57,8 @@ fun EstateUiPortrait(
     onDrawerLoanClick: () -> Unit,
     onDrawerMapClick: () -> Unit,
     onSearchClick: () -> Unit,
+    onCancelSearchClick: () -> Unit,
+    searchPerformed : Boolean,
     modifier: Modifier
 ) {
 
@@ -65,7 +69,10 @@ fun EstateUiPortrait(
         onDrawerLoanClick = onDrawerLoanClick,
         onDrawerMapClick = onDrawerMapClick,
         onSearchClick = onSearchClick,
-        modifier = modifier
+        onCancelSearchClick = onCancelSearchClick,
+        searchPerformed = searchPerformed,
+        modifier = modifier,
+
     )
 }
 
@@ -80,6 +87,10 @@ fun EstateUiLandscape(
     onDrawerMapClick: () -> Unit,
     onSearchClick: () -> Unit,
     onModifyClick: () -> Unit,
+    imageSize : Int,
+    imageNameSize : Int,
+    onCancelSearchClick: () -> Unit,
+    searchPerformed : Boolean,
     modifier: Modifier
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -140,39 +151,63 @@ fun EstateUiLandscape(
                         .horizontalScroll(rememberScrollState())
 
                 ) {
-                    LazyColumn(modifier = Modifier.weight(1f)) {
-                        items(estateWithPhotosList) { estate ->
-                            EstateItem(estate, onEstateClick = onEstateClick)
-                        }
-                    }
-
-                    if (estateWithPhotos != EstateWithPhotos()) {
-                        Column(
-                            modifier = Modifier
-                                .weight(2f)
-                                .verticalScroll(rememberScrollState())
-                        ) {
-                            Spacer(modifier = Modifier.height(8.dp))
-                            EstateMediaRow(estateWithPhotos)
-                            EstateDescriptionRow(estateWithPhotos)
-                            Row(modifier = Modifier.fillMaxWidth()) {
-                                EstateDetailsRow(estateWithPhotos)
-                                EstateMap(estateWithPhotos)
+                    if(estateWithPhotosList.isEmpty() && searchPerformed){
+                        Column(modifier = Modifier.fillMaxSize()) {
+                            Text(text = "Il n'y a aucun bien correspondant à la recherche")
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Button(onClick = { onCancelSearchClick() }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                                Text(text = "Annuler recherche")
                             }
-
-
                         }
-                    } else {
-                        Column(
-                            modifier = Modifier
-                                .weight(2f)
-                                .align(Alignment.CenterVertically),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            NoEstateWithPhoto()
+
+                    }
+                    else {
+                        LazyColumn(modifier = Modifier.weight(1f)) {
+                            if(searchPerformed){
+                                item(1){
+                                    Row {
+                                        IconButton(onClick = { onCancelSearchClick() }) {
+                                            Icon(imageVector = Icons.Default.Clear, contentDescription ="cancel search" )
+                                        }
+                                        Text(text = "Annuler")
+                                    }
+
+                                }
+                            }
+                            items(estateWithPhotosList) { estate ->
+                                EstateItem(estate, onEstateClick = onEstateClick)
+                            }
+                        }
+
+                        if (estateWithPhotos != EstateWithPhotos()) {
+                            Column(
+                                modifier = Modifier
+                                    .weight(2f)
+                                    .verticalScroll(rememberScrollState())
+                            ) {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                EstateMediaRow(estateWithPhotos, imageSize, imageNameSize)
+                                EstateDescriptionRow(estateWithPhotos)
+                                Row(modifier = Modifier.fillMaxWidth()) {
+                                    EstateDetailsRow(estateWithPhotos)
+                                    EstateMap(estateWithPhotos)
+                                }
+
+
+                            }
+                        } else {
+                            Column(
+                                modifier = Modifier
+                                    .weight(2f)
+                                    .align(Alignment.CenterVertically),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                NoEstateWithPhoto()
+                            }
                         }
                     }
+
 
 
                 }

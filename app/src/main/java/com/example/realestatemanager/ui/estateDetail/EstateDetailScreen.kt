@@ -61,6 +61,8 @@ fun EstateDetailsScreen(
     estateWithPhotos: EstateWithPhotos,
     onBackClick: () -> Unit,
     onModifyClick: () -> Unit,
+    imageSize : Int,
+    imageNameSize : Int,
     modifier: Modifier
 ) {
     Scaffold(
@@ -96,7 +98,7 @@ fun EstateDetailsScreen(
                     .verticalScroll(rememberScrollState())
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
-                EstateMediaRow(estateWithPhotos)
+                EstateMediaRow(estateWithPhotos, imageSize, imageNameSize)
                 EstateDescriptionRow(estateWithPhotos)
                 EstateDetailsRow(estateWithPhotos)
                 EstateMap(estateWithPhotos)
@@ -106,9 +108,8 @@ fun EstateDetailsScreen(
     )
 }
 
-@SuppressLint("Recycle")
 @Composable
-fun EstateMediaRow(estateWithPhotos: EstateWithPhotos) {
+fun EstateMediaRow(estateWithPhotos: EstateWithPhotos, imageSize : Int, imageNameSize : Int) {
     val estatePhotos: List<EstatePhoto> = estateWithPhotos.photos ?: emptyList()
     Column(modifier = Modifier.padding(8.dp)) {
 
@@ -125,14 +126,14 @@ fun EstateMediaRow(estateWithPhotos: EstateWithPhotos) {
                     Box(
                         modifier = Modifier
                             .padding(8.dp)
-                            .width(150.dp)
+                            .width(imageSize.dp)
                     ) {
                         AsyncImage(
                             model = Uri.parse(photo.uri),
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
-                                .size(150.dp)
+                                .size(imageSize.dp)
                                 .padding(1.dp)
                                 .clickable { }
                         )
@@ -140,7 +141,7 @@ fun EstateMediaRow(estateWithPhotos: EstateWithPhotos) {
                             Text(
                                 text = it,
                                 color = Color.White,
-                                fontSize = 12.sp,
+                                fontSize = imageNameSize.sp,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 textAlign = TextAlign.Center,
@@ -163,9 +164,10 @@ fun EstateMediaRow(estateWithPhotos: EstateWithPhotos) {
 @Composable
 fun EstateDescriptionRow(estateWithPhotos: EstateWithPhotos) {
 
-    Column() {
+    Column {
 
         Text(text = "Description", modifier = Modifier.padding(horizontal = 8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         estateWithPhotos.estate?.description?.let {
             Text(
                 text = it,
@@ -174,6 +176,7 @@ fun EstateDescriptionRow(estateWithPhotos: EstateWithPhotos) {
                     .padding(horizontal = 8.dp),
                 fontWeight = FontWeight.Bold
             )
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 
@@ -186,65 +189,98 @@ fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
         modifier = Modifier
             .padding(8.dp)
     ) {
-        Row(
-            modifier = Modifier.padding(vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.baseline_diamond_24),
-                contentDescription = null
-            )
-            Text(text = "Prix: ${Utils.formatCurrency(estateWithPhotos.estate?.price)}")
+        Column {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.baseline_diamond_24),
+                    contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(text = "Prix:")
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(text = Utils.formatCurrency(estateWithPhotos.estate?.price),fontWeight = FontWeight.Bold)
+
+
+            }
+             Spacer(modifier = Modifier.height(16.dp))
         }
-        Row(
-            modifier = Modifier.padding(vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
 
-            Icon(
-                painter = painterResource(R.drawable.baseline_aspect_ratio_24),
-                contentDescription = null
-            )
-            Text(text = "Surface: ${estateWithPhotos.estate?.size}")
 
+        Row {
+            Column {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        painter = painterResource(R.drawable.baseline_aspect_ratio_24),
+                        contentDescription = null
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = "Surface:")
+                    Spacer(modifier = Modifier.width(8.dp))
+                    estateWithPhotos.estate?.size?.let { Text(text = it,fontWeight = FontWeight.Bold)}
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(painter = painterResource(R.drawable.baseline_bed_24), contentDescription = null)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = "Chambres:")
+                    Spacer(modifier = Modifier.width(8.dp))
+                    estateWithPhotos.estate?.numberOfBedrooms?.let { Text(text = it,fontWeight = FontWeight.Bold)}
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(imageVector = Icons.Default.DateRange, contentDescription = null)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = "Arrivée:")
+                    Spacer(modifier = Modifier.width(4.dp))
+                    estateWithPhotos.estate?.entryDate?.let { Text(text = it,fontWeight = FontWeight.Bold)}
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+
+            }
             Spacer(modifier = Modifier.width(16.dp))
 
-            Icon(imageVector = Icons.Default.Home, contentDescription = null)
-            Text(text = "Pièces: ${estateWithPhotos.estate?.numberOfRooms}")
+            Column {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(imageVector = Icons.Default.Home, contentDescription = null)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = "Pièces:")
+                    Spacer(modifier = Modifier.width(8.dp))
+                    estateWithPhotos.estate?.numberOfRooms?.let { Text(text = it,fontWeight = FontWeight.Bold)}
+                }
+                Spacer(modifier = Modifier.height(16.dp))
 
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        painter = painterResource(R.drawable.baseline_bathtub_24),
+                        contentDescription = null
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = "Salles de bains:")
+                    Spacer(modifier = Modifier.width(8.dp))
+                    estateWithPhotos.estate?.numberOfBathrooms?.let { Text(text = it,fontWeight = FontWeight.Bold)}
+                }
+                Spacer(modifier = Modifier.height(16.dp))
 
+                Row(verticalAlignment = Alignment.CenterVertically) {
+
+                    Icon(imageVector = Icons.Default.DateRange, contentDescription = null)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = "Vente:")
+                    Spacer(modifier = Modifier.width(4.dp))
+                    estateWithPhotos.estate?.soldDate?.let { Text(text = it,fontWeight = FontWeight.Bold)}
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+
+            }
         }
-        Row(
-            modifier = Modifier.padding(vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
 
 
-            Icon(painter = painterResource(R.drawable.baseline_bed_24), contentDescription = null)
-            Text(text = "Chambres: ${estateWithPhotos.estate?.numberOfBedrooms}")
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Icon(
-                painter = painterResource(R.drawable.baseline_bathtub_24),
-                contentDescription = null
-            )
-            Text(text = "Salles de bains: ${estateWithPhotos.estate?.numberOfBathrooms}")
-
-        }
-
-        Row(
-            modifier = Modifier.padding(vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(imageVector = Icons.Default.DateRange, contentDescription = null)
-            Text(text = "Arrivée: ${estateWithPhotos.estate?.entryDate}")
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Icon(imageVector = Icons.Default.DateRange, contentDescription = null)
-            Text(text = "Vente: ${estateWithPhotos.estate?.soldDate}")
-        }
         Text(text = "Points d'interet à proximité :", modifier = Modifier.padding(vertical = 8.dp))
         Row {
             if (estateWithPhotos.estate?.school == true) {
@@ -349,12 +385,12 @@ fun EstateTest() {
     val estateWithPhotoTest = EstateWithPhotos(
         Estate(
             "House",
-            "$100,000",
+            "100000",
             "300m2",
             "5",
             "3",
             "1",
-            "",
+            "Ce texte décrit le bien immobilier",
             "New York",
             "",
             "",
@@ -379,6 +415,8 @@ fun EstateTest() {
         estateWithPhotos = estateWithPhotoTest,
         onBackClick = {},
         onModifyClick = {},
-        modifier = Modifier
+        modifier = Modifier,
+        imageSize = 150,
+        imageNameSize = 12
     )
 }

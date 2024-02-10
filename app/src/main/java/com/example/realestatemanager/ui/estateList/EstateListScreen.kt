@@ -5,9 +5,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,8 +17,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -159,6 +164,8 @@ fun EstateList(
     onSearchClick: () -> Unit,
     onDrawerLoanClick: () -> Unit,
     onDrawerMapClick: () -> Unit,
+    onCancelSearchClick: () -> Unit,
+    searchPerformed : Boolean,
     modifier: Modifier
 ) {
 
@@ -213,14 +220,38 @@ fun EstateList(
             }, gesturesEnabled = false,
             modifier = Modifier.padding(innerPadding)
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                items(estateList) { estate ->
-                    EstateItem(estate, onEstateClick = onEstateClick)
+            if(estateList.isEmpty() && searchPerformed){
+                Column(modifier = Modifier.fillMaxSize()) {
+                    Text(text = "Il n'y a aucun bien correspondant à la recherche")
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(onClick = { onCancelSearchClick() }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                        Text(text = "Ok")
+                    }
+                }
+
+            }
+            else{
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    if(searchPerformed){
+                        item(1){
+                            Row {
+                                IconButton(onClick = { onCancelSearchClick() }) {
+                                    Icon(imageVector = Icons.Default.Clear, contentDescription ="cancel search" )
+                                }
+                                Text(text = "Annuler")
+                            }
+
+                        }
+                    }
+                    items(estateList) { estate ->
+                        EstateItem(estate, onEstateClick = onEstateClick)
+                    }
                 }
             }
+
         }
     }
 
@@ -309,7 +340,9 @@ fun EstateListPreview() {
             onDrawerLoanClick = {},
             onDrawerMapClick = {},
             onSearchClick = {},
-            modifier = Modifier
+            modifier = Modifier,
+            onCancelSearchClick = {},
+            searchPerformed = false
         )
     }
 

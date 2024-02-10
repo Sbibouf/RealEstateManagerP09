@@ -7,12 +7,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -61,7 +63,7 @@ fun LoanSimulatorScreen(onBackClick: () -> Unit) {
                 },
                 navigationIcon = {
                     IconButton(onClick = { onBackClick() }) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                     }
                 },
 
@@ -75,7 +77,7 @@ fun LoanSimulatorScreen(onBackClick: () -> Unit) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
-                TextField(
+                OutlinedTextField(
                     value = amount,
                     onValueChange = { amount = it.filter { char -> char.isDigit() } },
                     label = { Text("Montant emprunté") },
@@ -85,7 +87,7 @@ fun LoanSimulatorScreen(onBackClick: () -> Unit) {
                     )
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                TextField(
+                OutlinedTextField(
                     value = downPayment,
                     onValueChange = { downPayment = it.filter { char -> char.isDigit() } },
                     label = { Text("Apport") },
@@ -95,7 +97,7 @@ fun LoanSimulatorScreen(onBackClick: () -> Unit) {
                     )
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                TextField(
+                OutlinedTextField(
                     value = interestRate,
                     onValueChange = { interestRate = it.replace(",", ".") },
                     label = { Text("Taux d'interet annuel") },
@@ -105,7 +107,7 @@ fun LoanSimulatorScreen(onBackClick: () -> Unit) {
                     )
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                TextField(
+                OutlinedTextField(
                     value = loanTerm,
                     onValueChange = { loanTerm = it.filter { char -> char.isDigit() } },
                     label = { Text("Durée du prêt") },

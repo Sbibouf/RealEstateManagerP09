@@ -85,7 +85,7 @@ class EstateListActivity : ComponentActivity() {
                     WindowWidthSizeClass.Compact -> {
                         Log.d("EstateList", "Recomposing...")
                         EstateTheme {
-                            EstateUiPortrait(
+                            EstateUiPortraitCompact(
                                 estateWithPhotosList = estateWithPhotosList,
                                 onEstateClick = { clickedEstate ->
                                     handleEstateItemClick(clickedEstate)
@@ -126,8 +126,6 @@ class EstateListActivity : ComponentActivity() {
                                 },
                                 onModifyClick = { handleOnModifyClick(vmEstateWithPhoto) },
                                 modifier = Modifier,
-                                imageSize = 150,
-                                imageNameSize = 12,
                                 onCancelSearchClick = estateViewModel::cancelSearch,
                                 searchPerformed = vmSearchPerformed
                             )
@@ -138,7 +136,7 @@ class EstateListActivity : ComponentActivity() {
                     WindowWidthSizeClass.Medium -> {
                         Log.d("EstateListAndDetail", "Recomposing...")
                         EstateThemeTab {
-                            EstateUiPortrait(
+                            EstateUiPortraitMedium(
                                 estateWithPhotosList = estateWithPhotosList,
                                 onEstateClick = { clickedEstate ->
                                     handleEstateItemClick(clickedEstate)

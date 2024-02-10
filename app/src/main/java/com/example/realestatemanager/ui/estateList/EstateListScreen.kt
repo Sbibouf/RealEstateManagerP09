@@ -59,7 +59,7 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun EstateItem(estateWithPhotos: EstateWithPhotos, onEstateClick: (EstateWithPhotos) -> Unit) {
+fun EstateItem(estateWithPhotos: EstateWithPhotos, onEstateClick: (EstateWithPhotos) -> Unit, imageSize: Int) {
 
     Surface(
         modifier = Modifier
@@ -80,7 +80,7 @@ fun EstateItem(estateWithPhotos: EstateWithPhotos, onEstateClick: (EstateWithPho
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .size(150.dp)
+                        .size(imageSize.dp)
                         .padding(1.dp)
                         .weight(1f)
                 )
@@ -166,6 +166,7 @@ fun EstateList(
     onDrawerMapClick: () -> Unit,
     onCancelSearchClick: () -> Unit,
     searchPerformed : Boolean,
+    imageSize : Int,
     modifier: Modifier
 ) {
 
@@ -241,13 +242,13 @@ fun EstateList(
                                 IconButton(onClick = { onCancelSearchClick() }) {
                                     Icon(imageVector = Icons.Default.Clear, contentDescription ="cancel search" )
                                 }
-                                Text(text = "Annuler")
+                                Text(text = "Annuler", modifier = Modifier.align(Alignment.CenterVertically))
                             }
 
                         }
                     }
                     items(estateList) { estate ->
-                        EstateItem(estate, onEstateClick = onEstateClick)
+                        EstateItem(estate, onEstateClick = onEstateClick, imageSize = imageSize)
                     }
                 }
             }
@@ -300,7 +301,7 @@ fun EstateListPreview() {
                 false,
                 "",
                 "",
-                "", false, false, false, false, false, false
+                "", false, false, false, false, false, false,1L
             ),
             listOf(
                 EstatePhoto(1L, "/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
@@ -322,7 +323,7 @@ fun EstateListPreview() {
                 false,
                 "",
                 "",
-                "", false, false, false, false, false, false
+                "", false, false, false, false, false, false,1L
             ),
             listOf(
                 EstatePhoto(1L, "/storage/emulated/0/Download/estate2_front.jpg", "Façade"),
@@ -342,7 +343,8 @@ fun EstateListPreview() {
             onSearchClick = {},
             modifier = Modifier,
             onCancelSearchClick = {},
-            searchPerformed = false
+            searchPerformed = false,
+            imageSize = 150
         )
     }
 

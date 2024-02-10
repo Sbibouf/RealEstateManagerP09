@@ -36,14 +36,14 @@ class DaoModule {
                     val libraryDao = database.libraryDao()
                     val executor = database.transactionExecutor
                     executor.execute {
-                        libraryDao.insert(Estate("House", "25000000", "225M²", "5","2","1", "Ce petit texte décrit le bien immobilier","City Hall, New York", "Manhattan", "40.713282","-74.006978", false, "21/12/2023", "","",true,true,true,false,false,false))
-                        libraryDao.insert(Estate("Penthouse", "20000000", "225", "5","2","1", "Ce petit texte décrit le bien immobilier","Brookln", "Brooklyn", "40.6526006","-73.9497211", false, "", "21/12/2023","",true,true,false,true,false,false))
-                        libraryDao.insert(Estate("House", "15000000", "225M²", "5","2","1", "Ce petit texte décrit le bien immobilier","Southampton", "Southampton", "40.884267","-72.3895296", true, "10/11/2023", "21/11/2023","",false,true,false,true,true,false))
-                        libraryDao.insert(Estate("House", "17000000", "225M²", "5","2","1", "Ce petit texte décrit le bien immobilier","Upper East Side", "Upper East Side", "","", false, "21/12/2023", "","",false,true,true,false,false,false))
-                        libraryDao.insert(Estate("House", "20000000", "225M²", "5","2","1", "Ce petit texte décrit le bien immobilier","Hampton Bays", "Hampton Bays", "","", true, "21/12/2023", "22/12/2023","",false,false,false,false,false,false))
-                        libraryDao.insert(Estate("House", "22000000", "225M²", "5","2","1", "Ce petit texte décrit le bien immobilier","Brooklyn", "Brooklyn", "","", false, "21/12/2023", "","",true,true,true,true,true,true))
-                        libraryDao.insert(Estate("House", "35000000", "250M²", "5","2","1", "Ce petit texte décrit le bien immobilier","Montauk", "Montauk", "41.0347223","-71.9442623", false, "21/12/2023", "","",false,true,true,false,false,true))
-                        libraryDao.insert(Estate("House", "35000000", "250M²", "5","2","1", "Ce petit texte décrit le bien immobilier","", "Montauk", "","", false, "21/12/2023", "","",false,false,false,false,false,false))
+                        libraryDao.insert(Estate("House", "25000000", "225", "5","2","1", "Ce petit texte décrit le bien immobilier","City Hall, New York", "Manhattan", "40.713282","-74.006978", false, "21/12/2023", "","",true,true,true,false,false,false,1703113200000L))
+                        libraryDao.insert(Estate("Penthouse", "20000000", "225", "5","2","1", "Ce petit texte décrit le bien immobilier","Brookln", "Brooklyn", "40.6526006","-73.9497211", false, "", "21/12/2023","",true,true,false,true,false,false,1703113200000L))
+                        libraryDao.insert(Estate("House", "15000000", "225", "5","2","1", "Ce petit texte décrit le bien immobilier","Southampton", "Southampton", "40.884267","-72.3895296", true, "10/11/2023", "21/11/2023","",false,true,false,true,true,false,1699570800000L))
+                        libraryDao.insert(Estate("House", "17000000", "225", "5","2","1", "Ce petit texte décrit le bien immobilier","Upper East Side", "Upper East Side", "","", false, "10/11/2023", "","",false,true,true,false,false,false,1699570800000L))
+                        libraryDao.insert(Estate("House", "20000000", "225", "5","2","1", "Ce petit texte décrit le bien immobilier","Hampton Bays", "Hampton Bays", "","", true, "21/12/2023", "22/12/2023","",false,false,false,false,false,false,1703113200000L))
+                        libraryDao.insert(Estate("House", "22000000", "225", "5","2","1", "Ce petit texte décrit le bien immobilier","Brooklyn", "Brooklyn", "","", false, "21/12/2023", "","",true,true,true,true,true,true,1703113200000L))
+                        libraryDao.insert(Estate("House", "35000000", "150", "5","2","1", "Ce petit texte décrit le bien immobilier","Montauk", "Montauk", "41.0347223","-71.9442623", false, "21/12/2023", "","",false,true,true,false,false,true,1703113200000L))
+                        libraryDao.insert(Estate("House", "35000000", "250", "5","2","1", "Ce petit texte décrit le bien immobilier","", "Montauk", "","", false, "21/12/2023", "","",false,false,false,false,false,false,1703113200000L))
 
 
                         libraryDao.insertPhoto(EstatePhoto(1L,"https://images.pexels.com/photos/259593/pexels-photo-259593.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "Façade"))

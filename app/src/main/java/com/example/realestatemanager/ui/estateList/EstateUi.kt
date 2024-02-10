@@ -50,7 +50,7 @@ import com.example.realestatemanager.ui.estateDetail.EstateMediaRow
 import kotlinx.coroutines.launch
 
 @Composable
-fun EstateUiPortrait(
+fun EstateUiPortraitCompact(
     estateWithPhotosList: List<EstateWithPhotos>,
     onEstateClick: (EstateWithPhotos) -> Unit,
     onAddClick: () -> Unit,
@@ -71,9 +71,38 @@ fun EstateUiPortrait(
         onSearchClick = onSearchClick,
         onCancelSearchClick = onCancelSearchClick,
         searchPerformed = searchPerformed,
+        imageSize = 150,
         modifier = modifier,
 
     )
+}
+
+@Composable
+fun EstateUiPortraitMedium(
+    estateWithPhotosList: List<EstateWithPhotos>,
+    onEstateClick: (EstateWithPhotos) -> Unit,
+    onAddClick: () -> Unit,
+    onDrawerLoanClick: () -> Unit,
+    onDrawerMapClick: () -> Unit,
+    onSearchClick: () -> Unit,
+    onCancelSearchClick: () -> Unit,
+    searchPerformed : Boolean,
+    modifier: Modifier
+) {
+
+    EstateList(
+        estateList = estateWithPhotosList,
+        onEstateClick = onEstateClick,
+        onAddClick = onAddClick,
+        onDrawerLoanClick = onDrawerLoanClick,
+        onDrawerMapClick = onDrawerMapClick,
+        onSearchClick = onSearchClick,
+        onCancelSearchClick = onCancelSearchClick,
+        searchPerformed = searchPerformed,
+        imageSize = 250,
+        modifier = modifier,
+
+        )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -87,8 +116,6 @@ fun EstateUiLandscape(
     onDrawerMapClick: () -> Unit,
     onSearchClick: () -> Unit,
     onModifyClick: () -> Unit,
-    imageSize : Int,
-    imageNameSize : Int,
     onCancelSearchClick: () -> Unit,
     searchPerformed : Boolean,
     modifier: Modifier
@@ -175,7 +202,7 @@ fun EstateUiLandscape(
                                 }
                             }
                             items(estateWithPhotosList) { estate ->
-                                EstateItem(estate, onEstateClick = onEstateClick)
+                                EstateItem(estate, onEstateClick = onEstateClick, 150)
                             }
                         }
 
@@ -186,7 +213,7 @@ fun EstateUiLandscape(
                                     .verticalScroll(rememberScrollState())
                             ) {
                                 Spacer(modifier = Modifier.height(8.dp))
-                                EstateMediaRow(estateWithPhotos, imageSize, imageNameSize)
+                                EstateMediaRow(estateWithPhotos, 300, 12)
                                 EstateDescriptionRow(estateWithPhotos)
                                 Row(modifier = Modifier.fillMaxWidth()) {
                                     EstateDetailsRow(estateWithPhotos)
@@ -255,7 +282,7 @@ fun Test() {
                 false,
                 false,
                 false,
-                false
+                false,1L
             ),
             listOf(
                 EstatePhoto(1L, "/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
@@ -284,7 +311,7 @@ fun Test() {
                 false,
                 false,
                 false,
-                false
+                false,1L
             ),
             listOf(
                 EstatePhoto(1L, "/storage/emulated/0/Download/estate2_front.jpg", "Façade"),

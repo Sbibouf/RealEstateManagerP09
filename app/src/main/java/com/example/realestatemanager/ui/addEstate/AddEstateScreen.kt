@@ -59,11 +59,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -475,7 +477,6 @@ fun CreateEstate(
                                 .height(100.dp),
                             contentDescription = "Selected image",
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
 
                         OutlinedTextField(
                             value = imageName,
@@ -486,7 +487,11 @@ fun CreateEstate(
                             textStyle = TextStyle(color = Color.Black),
                             colors = OutlinedTextFieldDefaults.colors(
                                 cursorColor = Color.Black
-                            )
+                            ),
+                            keyboardOptions = KeyboardOptions(
+                                imeAction = ImeAction.Done
+                            ),
+                            singleLine = true
                         )
 
                     }
@@ -502,7 +507,9 @@ fun CreateEstate(
                             showDialog = false
                             imageName = ""
 
-                        }
+                        },
+                        modifier = Modifier
+                            .height(36.dp),
                     ) {
                         Text("Enregistrer")
                     }
@@ -511,7 +518,9 @@ fun CreateEstate(
                     Button(
                         onClick = {
                             showDialog = false
-                        }
+                        },
+                        modifier = Modifier
+                            .height(36.dp),
                     ) {
                         Text("Annuler")
                     }
@@ -544,9 +553,9 @@ fun CreateEstate(
                         contentDescription = "Selected image",
                         contentScale = ContentScale.Crop
                     )
-                    photo.name?.let {
-                        Text(
-                            text = it,
+                    if(photo.name==""){
+                        Text(text = "Nom Photo",
+                            fontWeight = FontWeight.Bold,
                             color = Color.White,
                             fontSize = 12.sp,
                             maxLines = 1,
@@ -556,9 +565,26 @@ fun CreateEstate(
                                 .width(100.dp)
                                 .background(Color.Black.copy(alpha = 0.5f))
                                 .padding(4.dp)
-                                .align(Alignment.BottomCenter)
-                        )
+                                .align(Alignment.BottomCenter))
                     }
+                    else{
+                        photo.name?.let {
+                            Text(
+                                text = it,
+                                color = Color.White,
+                                fontSize = 12.sp,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier
+                                    .width(100.dp)
+                                    .background(Color.Black.copy(alpha = 0.5f))
+                                    .padding(4.dp)
+                                    .align(Alignment.BottomCenter)
+                            )
+                        }
+                    }
+
 
                     IconButton(
                         onClick = {
@@ -647,8 +673,9 @@ fun CreateEstate(
             estate.entryDate?.let {
                 OutlinedTextField(
                     value = it,
-                    onValueChange = {
-                        onUpdateEstate { copy(entryDate = it) }
+                    onValueChange = {newValue->
+                        onUpdateEstate { copy(entryDate = newValue) }
+                        //estate.entryDateMilli = convertDateToMillis(newValue)
                     },
                     placeholder = {
                         Text(stringResource(R.string.Date_entrée))
@@ -709,12 +736,12 @@ fun CreateEstate(
 
             if (showDatePicker && dateType == "entryDate") {
                 MyDatePickerDialog(
-                    onDateSelected = { onUpdateEstate { copy(entryDate = it) } },
+                    onDateSelected = { onUpdateEstate { copy(entryDate = it, entryDateMilli = convertDateToMillis(it)) } },
                     onDismiss = { showDatePicker = false })
 
             } else if (showDatePicker && dateType == "soldDate") {
                 MyDatePickerDialog(
-                    onDateSelected = { onUpdateEstate { copy(soldDate = it) } },
+                    onDateSelected = { onUpdateEstate { copy(soldDate = it, soldState = true) } },
                     onDismiss = { showDatePicker = false })
             }
         }
@@ -814,10 +841,10 @@ fun CreateEstate(
         }
         Button(onClick = {
             // If type and price fields are filled then we give back estateId and add it with its photo to database
-            if (estate.type == "" || estate.price == "") {
+            if (estate.type == "" || estate.price == "" || estate.entryDate=="") {
                 Toast.makeText(
                     context,
-                    "Veuillez renseigner un type et un prix",
+                    "Veuillez renseigner un type, un prix et une date d'arrivée",
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
@@ -840,6 +867,12 @@ fun CreateEstate(
 private fun convertMillisToDate(millis: Long): String {
     val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE)
     return formatter.format(Date(millis))
+}
+
+private fun convertDateToMillis(dateString: String): Long {
+    val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE)
+    val date = sdf.parse(dateString)
+    return date?.time ?: 1
 }
 
 private fun getMask(length: Int): MaskVisualTransformation {

@@ -11,7 +11,6 @@ import androidx.room.Update
 import com.example.realestatemanager.model.Estate
 import com.example.realestatemanager.model.EstatePhoto
 import com.example.realestatemanager.model.EstateWithPhotos
-import com.example.realestatemanager.model.SearchCriteria
 import kotlinx.coroutines.flow.Flow
 
 
@@ -22,7 +21,7 @@ interface LibraryDao {
      * Insert new estate
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(estate: Estate) : Long
+    fun insert(estate: Estate): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEstate(estate: Estate)
@@ -78,7 +77,7 @@ interface LibraryDao {
      * @return
      */
     @Query("DELETE FROM Estate WHERE id = :estateId")
-    fun deleteEstate(estateId: Long?) : Int
+    fun deleteEstate(estateId: Long?): Int
 
     @Query("DELETE FROM EstatePhoto WHERE id = :estatePhotoId ")
     suspend fun deleteEstatePhoto(estatePhotoId: Long?)
@@ -88,7 +87,7 @@ interface LibraryDao {
      * Update Estate with new data
      */
     @Update
-    fun updateEstate(estate: Estate) : Int
+    fun updateEstate(estate: Estate): Int
 
     /**
      * Query for the search engine
@@ -96,45 +95,47 @@ interface LibraryDao {
      */
 
     @Transaction
-    @Query ("SELECT * FROM Estate " +
-            "WHERE (CAST(price AS INTEGER) BETWEEN :minPrice AND :maxPrice) " +
-            "AND (CAST(size AS INTEGER) BETWEEN :minSize AND :maxSize) " +
-            "AND (CAST(numberOfRooms AS INTEGER) BETWEEN :minNumberOfRooms AND :maxNumberOfRooms) " +
-            "AND (CAST(numberOfBedrooms AS INTEGER) BETWEEN :minNumberOfBedrooms AND :maxNumberOfBedrooms) " +
-            "AND (CAST(numberOfBathrooms AS INTEGER) BETWEEN :minNumberOfBathrooms AND :maxNumberOfBathrooms) " +
-            "AND type = :type " +
-            "AND soldDate = :soldDate " +
-            "AND entryDate = :entryDate " +
-            "AND soldState = :soldState " +
-            "AND ( (:school = :school AND school = true) OR (:school = false) )" +
-            "AND ( (:shops = :shops AND shops = true) OR (:shops = false) )" +
-            "AND ( (:parc = :parc AND parc = true) OR (:parc = false) ) " +
-            "AND ( (:hospital = :hospital AND hospital = true) OR (:hospital = false) ) " +
-            "AND ( (:restaurant = :restaurant AND restaurant = true) OR (:restaurant = false) ) " +
-            "AND ( (:sport = :sport AND sport = true) OR (:sport = false) )")
-    fun getEstateFromSearchCriteria(minPrice: Int,
-                                    maxPrice: Int,
-                                    minSize: Int,
-                                    maxSize: Int,
-                                    type : String?,
-                                    minNumberOfRooms : Int,
-                                    maxNumberOfRooms : Int,
-                                    minNumberOfBedrooms : Int,
-                                    maxNumberOfBedrooms : Int,
-                                    minNumberOfBathrooms : Int,
-                                    maxNumberOfBathrooms : Int,
-                                    school : Boolean?,
-                                    shops : Boolean?,
-                                    parc : Boolean?,
-                                    hospital : Boolean?,
-                                    restaurant : Boolean?,
-                                    sport : Boolean?,
-                                    entryDate : String?,
-                                    soldDate : String?,
-                                    soldState : Boolean?) : Flow<List<EstateWithPhotos>>
+    @Query(
+        "SELECT * FROM Estate " +
+                "WHERE (CAST(price AS INTEGER) BETWEEN :minPrice AND :maxPrice) " +
+                "AND (CAST(size AS INTEGER) BETWEEN :minSize AND :maxSize) " +
+                "AND (CAST(numberOfRooms AS INTEGER) BETWEEN :minNumberOfRooms AND :maxNumberOfRooms) " +
+                "AND (CAST(numberOfBedrooms AS INTEGER) BETWEEN :minNumberOfBedrooms AND :maxNumberOfBedrooms) " +
+                "AND (CAST(numberOfBathrooms AS INTEGER) BETWEEN :minNumberOfBathrooms AND :maxNumberOfBathrooms) " +
+                "AND (:type = 'Tous les biens immobiliers' OR type = :type) " +
+                "AND soldState != :soldState " +
+                "AND ( (:school = :school AND school = true) OR (:school = false) )" +
+                "AND ( (:shops = :shops AND shops = true) OR (:shops = false) )" +
+                "AND ( (:parc = :parc AND parc = true) OR (:parc = false) ) " +
+                "AND ( (:hospital = :hospital AND hospital = true) OR (:hospital = false) ) " +
+                "AND ( (:restaurant = :restaurant AND restaurant = true) OR (:restaurant = false) ) " +
+                "AND ( (:sport = :sport AND sport = true) OR (:sport = false) )" +
+                "AND entryDateMilli >= :entryDateMilli"
+    )
+    fun getEstateFromSearchCriteria(
+        minPrice: Int,
+        maxPrice: Int,
+        minSize: Int,
+        maxSize: Int,
+        type: String?,
+        minNumberOfRooms: Int,
+        maxNumberOfRooms: Int,
+        minNumberOfBedrooms: Int,
+        maxNumberOfBedrooms: Int,
+        minNumberOfBathrooms: Int,
+        maxNumberOfBathrooms: Int,
+        school: Boolean?,
+        shops: Boolean?,
+        parc: Boolean?,
+        hospital: Boolean?,
+        restaurant: Boolean?,
+        sport: Boolean?,
+        soldState: Boolean?,
+        entryDateMilli: Long?
+    ): Flow<List<EstateWithPhotos>>
 
 
     @Query("SELECT * FROM Estate WHERE Id = :estateId")
-    fun getEstateWithCursor(estateId : Long) : Cursor
+    fun getEstateWithCursor(estateId: Long): Cursor
 
 }

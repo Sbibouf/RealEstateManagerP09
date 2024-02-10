@@ -31,7 +31,8 @@ data class Estate(
     var parc: Boolean? = false,
     var hospital: Boolean? = false,
     var restaurant: Boolean? = false,
-    var sport: Boolean? = false
+    var sport: Boolean? = false,
+    var entryDateMilli : Long? = 0L
 ) : Parcelable {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
@@ -57,7 +58,8 @@ data class Estate(
         parc = parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
         hospital = parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
         restaurant = parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
-        sport = parcel.readValue(Boolean::class.java.classLoader) as? Boolean
+        sport = parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
+        entryDateMilli = parcel.readValue(Long::class.java.classLoader) as? Long
     ) {
         id = parcel.readLong()
     }
@@ -84,6 +86,7 @@ data class Estate(
         parcel.writeValue(hospital)
         parcel.writeValue(restaurant)
         parcel.writeValue(sport)
+        parcel.writeValue(entryDateMilli)
         parcel.writeLong(id)
     }
 
@@ -123,6 +126,7 @@ data class Estate(
             if(values.containsKey("hospital")) estate.hospital = values.getAsBoolean("hospital")
             if(values.containsKey("restaurant")) estate.restaurant = values.getAsBoolean("restaurant")
             if(values.containsKey("sport")) estate.sport = values.getAsBoolean("sport")
+            if(values.containsKey("entryDateMilli")) estate.sport = values.getAsBoolean("entryDateMilli")
             if(values.containsKey("id")) estate.id = values.getAsLong("id")
 
             return estate

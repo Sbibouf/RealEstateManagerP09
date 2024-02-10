@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class SearchCriteria(
-    var type : String? = "Penthouse",
+    var type : String? = "Tous les biens immobiliers",
     var minPrice : Int = 0,
     var maxPrice : Int = 1000000000,
     var minSize : Int = 0,
@@ -22,7 +22,7 @@ data class SearchCriteria(
     var restaurant : Boolean? = false,
     var sport : Boolean? = false,
     var entryDate : String? = "",
-    var soldDate : String? = "",
+    var entryDateMilli : Long? = 0,
     var soldState : Boolean? = false,
 
 ) : Parcelable {
@@ -45,7 +45,7 @@ data class SearchCriteria(
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
         parcel.readString(),
-        parcel.readString(),
+        parcel.readValue(Long::class.java.classLoader) as? Long,
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean
     ) {
     }
@@ -69,7 +69,7 @@ data class SearchCriteria(
         parcel.writeValue(restaurant)
         parcel.writeValue(sport)
         parcel.writeString(entryDate)
-        parcel.writeString(soldDate)
+        parcel.writeValue(entryDateMilli)
         parcel.writeValue(soldState)
     }
 

@@ -218,7 +218,7 @@ fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(text = "Surface:")
                     Spacer(modifier = Modifier.width(8.dp))
-                    estateWithPhotos.estate?.size?.let { Text(text = it,fontWeight = FontWeight.Bold)}
+                    estateWithPhotos.estate?.size?.let { Text(text = it + "M²",fontWeight = FontWeight.Bold)}
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -404,7 +404,7 @@ fun EstateTest() {
             true,
             true,
             true,
-            true
+            true,1L
         ),
         listOf(
             EstatePhoto(1L, "/storage/emulated/0/Download/estate1_front.jpg", "Façade"),

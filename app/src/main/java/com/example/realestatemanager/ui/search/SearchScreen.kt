@@ -110,9 +110,10 @@ fun SearchForm(
 
     var showDatePicker by remember { mutableStateOf(false) }
     var dateType by remember { mutableStateOf("") }
+    var isRadioButtonSelected by remember { mutableStateOf(true) }
 
     var isDropDownMenuExpanded by remember { mutableStateOf(false) }
-    val estateType = listOf("House", "Flat", "Penthouse", "Villa", "Duplex", "Triplex")
+    val estateType = listOf("House", "Flat", "Penthouse", "Villa", "Duplex", "Triplex", "Tous les biens immobiliers")
 
 
     Surface(
@@ -335,7 +336,7 @@ fun SearchForm(
 
             Text(
                 text = "Points d'interets à proximité :",
-                modifier = Modifier.padding(vertical = 16.dp)
+                modifier = Modifier.padding(vertical = 8.dp)
             )
 
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -379,6 +380,7 @@ fun SearchForm(
                     onUpdateSearch { copy(sport = false) }
                 } }) }
             }
+            Spacer(modifier = Modifier.height(16.dp))
             Text(text = "Mise sur le marché depuis : ")
             Row {
                 searchCriteria.entryDate?.let {
@@ -396,41 +398,29 @@ fun SearchForm(
                             unfocusedBorderColor = Color.Black,
                             disabledBorderColor = Color.Black,
                         ),
-                        label = { Text("Date d'entrée") }
+                        label = { Text("Date d'entrée sur le marché") }
                     )
                 }
                 IconButton(onClick = {
                     showDatePicker = true
-                    dateType = "entryDate"
-                }) {
+                }, modifier = Modifier.align(Alignment.CenterVertically)) {
                     Icon(imageVector = Icons.Default.DateRange, contentDescription = null)
                 }
-                searchCriteria.soldDate?.let {
-                    OutlinedTextField(
-                        value = it,
-                        onValueChange = { newValue ->
-                            onUpdateSearch{copy (soldDate = newValue)}
-                        },
-                        modifier = Modifier.weight(1f),
-                        placeholder = { stringResource(R.string.Date_vente) },
-                        enabled = false,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            disabledTextColor = Color.Black,
-                            focusedBorderColor = Color.Black,
-                            unfocusedBorderColor = Color.Black,
-                            disabledBorderColor = Color.Black,
-                        ),
-                        label = { Text("Date de vente") }
-                    )
-                }
-                IconButton(onClick = {
-                    showDatePicker = true
-                    dateType = "soldDate"
-                }) {
-                    Icon(imageVector = Icons.Default.DateRange, contentDescription = null)
-                }
+
             }
             Spacer(modifier = Modifier.height(16.dp))
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(text = "Toujours en vente ?")
+                Spacer(modifier = Modifier.width(16.dp))
+                searchCriteria.soldState?.let { RadioButton(selected = it, onClick = { onUpdateSearch{copy(soldState = true)}
+                isRadioButtonSelected = false}) }
+                Text(text = "oui")
+                Spacer(modifier = Modifier.width(16.dp))
+                RadioButton(selected = isRadioButtonSelected, onClick = { onUpdateSearch{copy(soldState = false)}
+                isRadioButtonSelected = true})
+                Text(text = "non")
+            }
 
             Button(onClick = {
                 onSearchClick(searchCriteria)
@@ -442,21 +432,23 @@ fun SearchForm(
 
 
     }
-    if (showDatePicker && dateType == "entryDate") {
+    if (showDatePicker) {
         MyDatePickerDialog(
-            onDateSelected = { newValue -> onUpdateSearch{copy (entryDate = newValue)} },
+            onDateSelected = { newValue -> onUpdateSearch{copy (entryDate = newValue, entryDateMilli = convertDateToMillis(newValue))} },
             onDismiss = { showDatePicker = false })
 
-    } else if (showDatePicker && dateType == "soldDate") {
-        MyDatePickerDialog(
-            onDateSelected = { newValue -> onUpdateSearch{copy (soldDate = newValue)}},
-            onDismiss = { showDatePicker = false })
     }
 }
 
 private fun convertMillisToDate(millis: Long): String {
     val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE)
     return formatter.format(Date(millis))
+}
+
+private fun convertDateToMillis(dateString: String): Long {
+    val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE)
+    val date = sdf.parse(dateString)
+    return date?.time ?: 1
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

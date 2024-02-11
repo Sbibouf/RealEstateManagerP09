@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -190,9 +191,7 @@ fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
             .padding(8.dp)
     ) {
         Column {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     painter = painterResource(R.drawable.baseline_diamond_24),
                     contentDescription = null
@@ -357,7 +356,7 @@ fun EstateMap(estateWithPhotos: EstateWithPhotos){
                     .height(300.dp)
             ) {
                 AsyncImage(
-                    model = "https://maps.googleapis.com/maps/api/staticmap?zoom=16&size=400x300&scale=2&maptype=roadmap\\&markers=size:mid%7Ccolor:red%7C " + estateWithPhotos.estate?.latitude + "," + estateWithPhotos.estate?.longitude + "&center=" + estateWithPhotos.estate?.latitude + "," + estateWithPhotos.estate?.longitude + "&key=" + api,
+                    model = "https://maps.googleapis.com/maps/api/staticmap?zoom=15&size=300x300&scale=2&maptype=roadmap\\&markers=size:mid%7Ccolor:red%7C " + estateWithPhotos.estate?.latitude + "," + estateWithPhotos.estate?.longitude + "&center=" + estateWithPhotos.estate?.latitude + "," + estateWithPhotos.estate?.longitude + "&key=" + api,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -392,7 +391,6 @@ fun EstateTest() {
             "1",
             "Ce texte décrit le bien immobilier",
             "New York",
-            "",
             "",
             "",
             false,

@@ -44,9 +44,9 @@ public class Utils {
      *
      * @return
      */
-    public static String getTodayDate() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.FRANCE);
-        return dateFormat.format(new Date());
+    public static String getTodayDate(Date date) {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
+        return dateFormat.format(date);
     }
 
     /**

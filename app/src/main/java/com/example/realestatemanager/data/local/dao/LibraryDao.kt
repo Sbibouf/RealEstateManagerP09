@@ -1,7 +1,6 @@
 package com.example.realestatemanager.data.local.dao
 
 import android.database.Cursor
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -18,11 +17,14 @@ import kotlinx.coroutines.flow.Flow
 interface LibraryDao {
 
     /**
-     * Insert new estate
+     * Insert new estate use for prepopulate
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(estate: Estate): Long
 
+    /**
+     * Insert Estate or update it if it already exists in database
+     */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEstate(estate: Estate)
 
@@ -32,55 +34,47 @@ interface LibraryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun getInsertedEstateId(estate: Estate): Long
 
+    @Query("SELECT * FROM EstatePhoto WHERE uri = :uri")
+    fun getPhotoByUri(uri: String): EstatePhoto?
+
 
     /**
-     * Insert a new estatePhoto
+     * Insert a new estatePhoto or update it if it already exists
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPhoto(photo: EstatePhoto)
 
+    fun insertOrUpdatePhoto(photo: EstatePhoto) {
+        val existingPhoto = photo.uri?.let { getPhotoByUri(it) }
+        if (existingPhoto != null) {
+
+            photo.id = existingPhoto.id
+            insertPhoto(photo)
+        } else {
+
+            insertPhoto(photo)
+        }
+    }
+
     /**
-     * Add photo to estate and return all EstateWithPhoto
+     * Get all the Estate with their photos from database
      */
     @Transaction
     @Query("SELECT * FROM estate")
     fun getAllEstateWithPhoto(): Flow<List<EstateWithPhotos>>
 
+
     /**
-     * Add photo to estate and return EstateWithPhoto
+     * Delete an Estate Photo from database by its id
      */
-    @Transaction
-    @Query("SELECT * FROM estate WHERE id = :id")
-    fun getEstateWithPhotoById(id: Long): Flow<EstateWithPhotos>
-
+    @Query("DELETE FROM EstatePhoto WHERE id = :estatePhotoId ")
+    suspend fun deleteEstatePhoto(estatePhotoId: Long?)
 
     /**
-     * Select Estate by its Id
-     */
-
-    @Query("SELECT * FROM Estate WHERE id = :estateId")
-    fun getEstatebyId(estateId: Long?): LiveData<Estate>
-
-
-    /**
-     * Get all Estates from base
-     * @return
-     */
-    @Query("SELECT * FROM Estate")
-    fun getAllEstate(): Flow<List<Estate>>
-
-
-    /**
-     * Delete Estate from base
-     *
-     * @param EstateId
-     * @return
+     * Delete Estate from database, use for test
      */
     @Query("DELETE FROM Estate WHERE id = :estateId")
     fun deleteEstate(estateId: Long?): Int
-
-    @Query("DELETE FROM EstatePhoto WHERE id = :estatePhotoId ")
-    suspend fun deleteEstatePhoto(estatePhotoId: Long?)
 
 
     /**

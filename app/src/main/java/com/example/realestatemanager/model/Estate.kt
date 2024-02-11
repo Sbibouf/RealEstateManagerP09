@@ -19,7 +19,6 @@ data class Estate(
     var numberOfBathrooms: String? = "",
     var description: String? = "",
     var address: String? = "",
-    var city: String? = "",
     var latitude: String? = "",
     var longitude: String? = "",
     var soldState: Boolean? = false,
@@ -46,7 +45,6 @@ data class Estate(
         numberOfBathrooms = parcel.readString(),
         description = parcel.readString(),
         address = parcel.readString(),
-        city = parcel.readString(),
         latitude = parcel.readString(),
         longitude = parcel.readString(),
         soldState = parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
@@ -73,7 +71,6 @@ data class Estate(
         parcel.writeString(numberOfBathrooms)
         parcel.writeString(description)
         parcel.writeString(address)
-        parcel.writeString(city)
         parcel.writeString(latitude)
         parcel.writeString(longitude)
         parcel.writeValue(soldState)
@@ -113,7 +110,6 @@ data class Estate(
             if(values.containsKey("numberOfBathrooms")) estate.numberOfBathrooms = values.getAsString("numberOfBathrooms")
             if(values.containsKey("description")) estate.description = values.getAsString("description")
             if(values.containsKey("address")) estate.address = values.getAsString("address")
-            if(values.containsKey("city")) estate.city = values.getAsString("city")
             if(values.containsKey("latitude")) estate.latitude = values.getAsString("latitude")
             if(values.containsKey("longitude")) estate.longitude = values.getAsString("longitude")
             if(values.containsKey("soldState")) estate.soldState = values.getAsBoolean("soldState")

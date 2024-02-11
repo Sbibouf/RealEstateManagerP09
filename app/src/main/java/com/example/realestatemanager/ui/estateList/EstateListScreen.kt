@@ -3,6 +3,7 @@ package com.example.realestatemanager.ui.estateList
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -111,7 +112,7 @@ fun EstateItem(estateWithPhotos: EstateWithPhotos, onEstateClick: (EstateWithPho
                 }
 
                 //City
-                estateWithPhotos.estate?.city?.let {
+                estateWithPhotos.estate?.address?.let {
                     Text(
                         text = it
                     )
@@ -222,7 +223,7 @@ fun EstateList(
             modifier = Modifier.padding(innerPadding)
         ) {
             if(estateList.isEmpty() && searchPerformed){
-                Column(modifier = Modifier.fillMaxSize()) {
+                Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
                     Text(text = "Il n'y a aucun bien correspondant à la recherche")
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(onClick = { onCancelSearchClick() }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
@@ -296,7 +297,6 @@ fun EstateListPreview() {
                 "1",
                 "",
                 "New York",
-                "",
                 "", "",
                 false,
                 "",
@@ -318,7 +318,6 @@ fun EstateListPreview() {
                 "1",
                 "",
                 "New York",
-                "",
                 "", "",
                 false,
                 "",

@@ -59,8 +59,8 @@ class EstateDetailActivity : ComponentActivity() {
                                     handleOnModifyClick(estate)
                                     finish()
                                 }, modifier = Modifier,
-                                    imageSize = 300,
-                                    imageNameSize = 20)
+                                    imageSize = 200,
+                                    imageNameSize = 18)
                             }
 
                         }

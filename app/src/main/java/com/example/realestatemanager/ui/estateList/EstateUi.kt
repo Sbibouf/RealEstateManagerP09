@@ -58,8 +58,7 @@ fun EstateUiPortraitCompact(
     onDrawerMapClick: () -> Unit,
     onSearchClick: () -> Unit,
     onCancelSearchClick: () -> Unit,
-    searchPerformed : Boolean,
-    modifier: Modifier
+    searchPerformed: Boolean,
 ) {
 
     EstateList(
@@ -72,9 +71,8 @@ fun EstateUiPortraitCompact(
         onCancelSearchClick = onCancelSearchClick,
         searchPerformed = searchPerformed,
         imageSize = 150,
-        modifier = modifier,
 
-    )
+        )
 }
 
 @Composable
@@ -86,8 +84,7 @@ fun EstateUiPortraitMedium(
     onDrawerMapClick: () -> Unit,
     onSearchClick: () -> Unit,
     onCancelSearchClick: () -> Unit,
-    searchPerformed : Boolean,
-    modifier: Modifier
+    searchPerformed: Boolean,
 ) {
 
     EstateList(
@@ -100,7 +97,6 @@ fun EstateUiPortraitMedium(
         onCancelSearchClick = onCancelSearchClick,
         searchPerformed = searchPerformed,
         imageSize = 250,
-        modifier = modifier,
 
         )
 }
@@ -117,7 +113,7 @@ fun EstateUiLandscape(
     onSearchClick: () -> Unit,
     onModifyClick: () -> Unit,
     onCancelSearchClick: () -> Unit,
-    searchPerformed : Boolean,
+    searchPerformed: Boolean,
     modifier: Modifier
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -178,23 +174,28 @@ fun EstateUiLandscape(
                         .horizontalScroll(rememberScrollState())
 
                 ) {
-                    if(estateWithPhotosList.isEmpty() && searchPerformed){
+                    if (estateWithPhotosList.isEmpty() && searchPerformed) {
                         Column(modifier = Modifier.fillMaxSize()) {
                             Text(text = "Il n'y a aucun bien correspondant à la recherche")
                             Spacer(modifier = Modifier.height(16.dp))
-                            Button(onClick = { onCancelSearchClick() }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                            Button(
+                                onClick = { onCancelSearchClick() },
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            ) {
                                 Text(text = "Annuler recherche")
                             }
                         }
 
-                    }
-                    else {
+                    } else {
                         LazyColumn(modifier = Modifier.weight(1f)) {
-                            if(searchPerformed){
-                                item(1){
+                            if (searchPerformed) {
+                                item(1) {
                                     Row {
                                         IconButton(onClick = { onCancelSearchClick() }) {
-                                            Icon(imageVector = Icons.Default.Clear, contentDescription ="cancel search" )
+                                            Icon(
+                                                imageVector = Icons.Default.Clear,
+                                                contentDescription = "cancel search"
+                                            )
                                         }
                                         Text(text = "Annuler")
                                     }
@@ -236,7 +237,6 @@ fun EstateUiLandscape(
                     }
 
 
-
                 }
             }
         })
@@ -246,7 +246,7 @@ fun EstateUiLandscape(
 @Composable
 fun NoEstateWithPhoto() {
 
-    Column{
+    Column {
         Text(text = "Veuillez selectionner un bien immobilier", fontSize = 30.sp)
     }
 }
@@ -281,7 +281,7 @@ fun Test() {
                 false,
                 false,
                 false,
-                false,1L
+                false, 1L
             ),
             listOf(
                 EstatePhoto(1L, "/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
@@ -309,7 +309,7 @@ fun Test() {
                 false,
                 false,
                 false,
-                false,1L
+                false, 1L
             ),
             listOf(
                 EstatePhoto(1L, "/storage/emulated/0/Download/estate2_front.jpg", "Façade"),

@@ -24,6 +24,7 @@ data class SearchCriteria(
     var entryDate : String? = "",
     var entryDateMilli : Long? = 0,
     var soldState : Boolean? = false,
+    var photoCount : Int = 0
 
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
@@ -46,7 +47,8 @@ data class SearchCriteria(
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
         parcel.readString(),
         parcel.readValue(Long::class.java.classLoader) as? Long,
-        parcel.readValue(Boolean::class.java.classLoader) as? Boolean
+        parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
+        parcel.readInt()
     ) {
     }
 
@@ -71,6 +73,7 @@ data class SearchCriteria(
         parcel.writeString(entryDate)
         parcel.writeValue(entryDateMilli)
         parcel.writeValue(soldState)
+        parcel.writeInt(photoCount)
     }
 
     override fun describeContents(): Int {

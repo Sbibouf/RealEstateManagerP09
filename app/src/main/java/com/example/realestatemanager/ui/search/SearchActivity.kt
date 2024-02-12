@@ -11,7 +11,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import com.example.realestatemanager.model.SearchCriteria
 import com.example.realestatemanager.ui.theme.EstateDetailTheme
 import dagger.hilt.android.AndroidEntryPoint
 

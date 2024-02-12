@@ -31,7 +31,7 @@ data class Estate(
     var hospital: Boolean? = false,
     var restaurant: Boolean? = false,
     var sport: Boolean? = false,
-    var entryDateMilli : Long? = 0L
+    var entryDateMilli: Long? = 0L
 ) : Parcelable {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
@@ -100,36 +100,40 @@ data class Estate(
             return arrayOfNulls(size)
         }
 
-        fun fromContentValues(values : ContentValues) : Estate{
+        fun fromContentValues(values: ContentValues): Estate {
             val estate = Estate()
-            if(values.containsKey("type")) estate.type = values.getAsString("type")
-            if(values.containsKey("price")) estate.price = values.getAsString("price")
-            if(values.containsKey("size")) estate.size = values.getAsString("size")
-            if(values.containsKey("numberOfRooms")) estate.numberOfRooms = values.getAsString("numberOfRooms")
-            if(values.containsKey("numberOfBedrooms")) estate.numberOfBedrooms = values.getAsString("numberOfBedrooms")
-            if(values.containsKey("numberOfBathrooms")) estate.numberOfBathrooms = values.getAsString("numberOfBathrooms")
-            if(values.containsKey("description")) estate.description = values.getAsString("description")
-            if(values.containsKey("address")) estate.address = values.getAsString("address")
-            if(values.containsKey("latitude")) estate.latitude = values.getAsString("latitude")
-            if(values.containsKey("longitude")) estate.longitude = values.getAsString("longitude")
-            if(values.containsKey("soldState")) estate.soldState = values.getAsBoolean("soldState")
-            if(values.containsKey("entryDate")) estate.entryDate = values.getAsString("entryDate")
-            if(values.containsKey("soldDate")) estate.soldDate = values.getAsString("soldDate")
-            if(values.containsKey("agent")) estate.agent = values.getAsString("agent")
-            if(values.containsKey("school")) estate.school = values.getAsBoolean("school")
-            if(values.containsKey("shops")) estate.shops = values.getAsBoolean("shops")
-            if(values.containsKey("parc")) estate.parc = values.getAsBoolean("parc")
-            if(values.containsKey("hospital")) estate.hospital = values.getAsBoolean("hospital")
-            if(values.containsKey("restaurant")) estate.restaurant = values.getAsBoolean("restaurant")
-            if(values.containsKey("sport")) estate.sport = values.getAsBoolean("sport")
-            if(values.containsKey("entryDateMilli")) estate.sport = values.getAsBoolean("entryDateMilli")
-            if(values.containsKey("id")) estate.id = values.getAsLong("id")
+            if (values.containsKey("type")) estate.type = values.getAsString("type")
+            if (values.containsKey("price")) estate.price = values.getAsString("price")
+            if (values.containsKey("size")) estate.size = values.getAsString("size")
+            if (values.containsKey("numberOfRooms")) estate.numberOfRooms =
+                values.getAsString("numberOfRooms")
+            if (values.containsKey("numberOfBedrooms")) estate.numberOfBedrooms =
+                values.getAsString("numberOfBedrooms")
+            if (values.containsKey("numberOfBathrooms")) estate.numberOfBathrooms =
+                values.getAsString("numberOfBathrooms")
+            if (values.containsKey("description")) estate.description =
+                values.getAsString("description")
+            if (values.containsKey("address")) estate.address = values.getAsString("address")
+            if (values.containsKey("latitude")) estate.latitude = values.getAsString("latitude")
+            if (values.containsKey("longitude")) estate.longitude = values.getAsString("longitude")
+            if (values.containsKey("soldState")) estate.soldState = values.getAsBoolean("soldState")
+            if (values.containsKey("entryDate")) estate.entryDate = values.getAsString("entryDate")
+            if (values.containsKey("soldDate")) estate.soldDate = values.getAsString("soldDate")
+            if (values.containsKey("agent")) estate.agent = values.getAsString("agent")
+            if (values.containsKey("school")) estate.school = values.getAsBoolean("school")
+            if (values.containsKey("shops")) estate.shops = values.getAsBoolean("shops")
+            if (values.containsKey("parc")) estate.parc = values.getAsBoolean("parc")
+            if (values.containsKey("hospital")) estate.hospital = values.getAsBoolean("hospital")
+            if (values.containsKey("restaurant")) estate.restaurant =
+                values.getAsBoolean("restaurant")
+            if (values.containsKey("sport")) estate.sport = values.getAsBoolean("sport")
+            if (values.containsKey("entryDateMilli")) estate.sport =
+                values.getAsBoolean("entryDateMilli")
+            if (values.containsKey("id")) estate.id = values.getAsLong("id")
 
             return estate
         }
     }
-
-
 
 
 }

@@ -19,13 +19,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -60,7 +59,11 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun EstateItem(estateWithPhotos: EstateWithPhotos, onEstateClick: (EstateWithPhotos) -> Unit, imageSize: Int) {
+fun EstateItem(
+    estateWithPhotos: EstateWithPhotos,
+    onEstateClick: (EstateWithPhotos) -> Unit,
+    imageSize: Int
+) {
 
     Surface(
         modifier = Modifier
@@ -149,7 +152,7 @@ fun EstateItem(estateWithPhotos: EstateWithPhotos, onEstateClick: (EstateWithPho
             }
 
         }
-        Divider()
+        HorizontalDivider()
 
 
     }
@@ -166,9 +169,8 @@ fun EstateList(
     onDrawerLoanClick: () -> Unit,
     onDrawerMapClick: () -> Unit,
     onCancelSearchClick: () -> Unit,
-    searchPerformed : Boolean,
-    imageSize : Int,
-    modifier: Modifier
+    searchPerformed: Boolean,
+    imageSize: Int
 ) {
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -222,28 +224,39 @@ fun EstateList(
             }, gesturesEnabled = false,
             modifier = Modifier.padding(innerPadding)
         ) {
-            if(estateList.isEmpty() && searchPerformed){
-                Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
+            if (estateList.isEmpty() && searchPerformed) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center
+                ) {
                     Text(text = "Il n'y a aucun bien correspondant à la recherche")
                     Spacer(modifier = Modifier.height(16.dp))
-                    Button(onClick = { onCancelSearchClick() }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                    Button(
+                        onClick = { onCancelSearchClick() },
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    ) {
                         Text(text = "Ok")
                     }
                 }
 
-            }
-            else{
+            } else {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    if(searchPerformed){
-                        item(1){
+                    if (searchPerformed) {
+                        item(1) {
                             Row {
                                 IconButton(onClick = { onCancelSearchClick() }) {
-                                    Icon(imageVector = Icons.Default.Clear, contentDescription ="cancel search" )
+                                    Icon(
+                                        imageVector = Icons.Default.Clear,
+                                        contentDescription = "cancel search"
+                                    )
                                 }
-                                Text(text = "Annuler", modifier = Modifier.align(Alignment.CenterVertically))
+                                Text(
+                                    text = "Annuler",
+                                    modifier = Modifier.align(Alignment.CenterVertically)
+                                )
                             }
 
                         }
@@ -301,7 +314,7 @@ fun EstateListPreview() {
                 false,
                 "",
                 "",
-                "", false, false, false, false, false, false,1L
+                "", false, false, false, false, false, false, 1L
             ),
             listOf(
                 EstatePhoto(1L, "/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
@@ -322,7 +335,7 @@ fun EstateListPreview() {
                 false,
                 "",
                 "",
-                "", false, false, false, false, false, false,1L
+                "", false, false, false, false, false, false, 1L
             ),
             listOf(
                 EstatePhoto(1L, "/storage/emulated/0/Download/estate2_front.jpg", "Façade"),
@@ -340,7 +353,6 @@ fun EstateListPreview() {
             onDrawerLoanClick = {},
             onDrawerMapClick = {},
             onSearchClick = {},
-            modifier = Modifier,
             onCancelSearchClick = {},
             searchPerformed = false,
             imageSize = 150

@@ -6,7 +6,6 @@ import com.example.realestatemanager.data.local.repository.EstateRepository
 import com.example.realestatemanager.model.EstateWithPhotos
 import com.example.realestatemanager.model.SearchCriteria
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -28,12 +27,6 @@ class EstateListViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    val uiStateFromSearch: StateFlow<List<EstateWithPhotos>> =
-        estateRepository.getEstateFromSearchCriteria(searchCriteria = SearchCriteria()).stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = emptyList()
-        )
 
     private val _estateWithPhotoList : MutableStateFlow<List<EstateWithPhotos>> = MutableStateFlow(
         emptyList()

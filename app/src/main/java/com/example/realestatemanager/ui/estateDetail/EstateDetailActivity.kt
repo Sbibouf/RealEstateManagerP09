@@ -37,17 +37,22 @@ class EstateDetailActivity : ComponentActivity() {
                             color = MaterialTheme.colorScheme.background
                         ) {
                             if (estate != null) {
-                                EstateDetailsScreen(estate, onBackClick = { finish() }, onModifyClick = {
-                                    handleOnModifyClick(estate)
-                                    finish()
-                                }, modifier = Modifier,
+                                EstateDetailsScreen(
+                                    estate,
+                                    onBackClick = { finish() },
+                                    onModifyClick = {
+                                        handleOnModifyClick(estate)
+                                        finish()
+                                    },
                                     imageSize = 150,
-                                    imageNameSize = 12)
+                                    imageNameSize = 12
+                                )
                             }
 
                         }
                     }
                 }
+
                 WindowWidthSizeClass.Medium -> {
                     EstateDetailThemeTab {
                         Surface(
@@ -55,17 +60,22 @@ class EstateDetailActivity : ComponentActivity() {
                             color = MaterialTheme.colorScheme.background
                         ) {
                             if (estate != null) {
-                                EstateDetailsScreen(estate, onBackClick = { finish() }, onModifyClick = {
-                                    handleOnModifyClick(estate)
-                                    finish()
-                                }, modifier = Modifier,
+                                EstateDetailsScreen(
+                                    estate,
+                                    onBackClick = { finish() },
+                                    onModifyClick = {
+                                        handleOnModifyClick(estate)
+                                        finish()
+                                    },
                                     imageSize = 200,
-                                    imageNameSize = 18)
+                                    imageNameSize = 18
+                                )
                             }
 
                         }
                     }
                 }
+
                 WindowWidthSizeClass.Expanded -> {
                     EstateDetailThemeTab {
                         Surface(
@@ -73,12 +83,16 @@ class EstateDetailActivity : ComponentActivity() {
                             color = MaterialTheme.colorScheme.background
                         ) {
                             if (estate != null) {
-                                EstateDetailsScreen(estate, onBackClick = { finish() }, onModifyClick = {
-                                    handleOnModifyClick(estate)
-                                    finish()
-                                }, modifier = Modifier,
+                                EstateDetailsScreen(
+                                    estate,
+                                    onBackClick = { finish() },
+                                    onModifyClick = {
+                                        handleOnModifyClick(estate)
+                                        finish()
+                                    },
                                     imageSize = 300,
-                                    imageNameSize = 20)
+                                    imageNameSize = 20
+                                )
                             }
 
                         }

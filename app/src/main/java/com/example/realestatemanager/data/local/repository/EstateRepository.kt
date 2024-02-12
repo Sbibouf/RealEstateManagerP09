@@ -24,7 +24,7 @@ class EstateRepository @Inject constructor(private val libraryDao: LibraryDao) {
 
     fun getAllEstateWithPhoto(): Flow<List<EstateWithPhotos>> = libraryDao.getAllEstateWithPhoto()
 
-    fun getEstateFromSearchCriteria(searchCriteria: SearchCriteria) : Flow<List<EstateWithPhotos>> = libraryDao.getEstateFromSearchCriteria(searchCriteria.minPrice, searchCriteria.maxPrice, searchCriteria.minSize, searchCriteria.maxSize, searchCriteria.type, searchCriteria.minNumberOfRooms, searchCriteria.maxNumberOfRooms, searchCriteria.minNumberOfBedrooms, searchCriteria.maxNumberOfBedrooms, searchCriteria.minNumberOfBathrooms, searchCriteria.maxNumberOfBathrooms, searchCriteria.school, searchCriteria.shops, searchCriteria.parc, searchCriteria.hospital, searchCriteria.restaurant, searchCriteria.sport, searchCriteria.soldState, searchCriteria.entryDateMilli )
+    fun getEstateFromSearchCriteria(searchCriteria: SearchCriteria) : Flow<List<EstateWithPhotos>> = libraryDao.getEstateFromSearchCriteria(searchCriteria.minPrice, searchCriteria.maxPrice, searchCriteria.minSize, searchCriteria.maxSize, searchCriteria.type, searchCriteria.minNumberOfRooms, searchCriteria.maxNumberOfRooms, searchCriteria.minNumberOfBedrooms, searchCriteria.maxNumberOfBedrooms, searchCriteria.minNumberOfBathrooms, searchCriteria.maxNumberOfBathrooms, searchCriteria.school, searchCriteria.shops, searchCriteria.parc, searchCriteria.hospital, searchCriteria.restaurant, searchCriteria.sport, searchCriteria.soldState, searchCriteria.entryDateMilli, searchCriteria.photoCount )
 
 
 }

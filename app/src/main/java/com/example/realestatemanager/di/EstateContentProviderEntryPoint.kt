@@ -5,6 +5,9 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
+//********************************************
+// For ContentProvider Test
+//********************************************
 @EntryPoint
 @InstallIn(SingletonComponent::class)
 interface EstateContentProviderEntryPoint {

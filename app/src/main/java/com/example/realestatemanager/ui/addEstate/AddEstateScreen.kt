@@ -59,7 +59,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -553,8 +552,9 @@ fun CreateEstate(
                         contentDescription = "Selected image",
                         contentScale = ContentScale.Crop
                     )
-                    if(photo.name==""){
-                        Text(text = "Nom Photo",
+                    if (photo.name == "") {
+                        Text(
+                            text = "Nom Photo",
                             fontWeight = FontWeight.Bold,
                             color = Color.White,
                             fontSize = 12.sp,
@@ -565,9 +565,9 @@ fun CreateEstate(
                                 .width(100.dp)
                                 .background(Color.Black.copy(alpha = 0.5f))
                                 .padding(4.dp)
-                                .align(Alignment.BottomCenter))
-                    }
-                    else{
+                                .align(Alignment.BottomCenter)
+                        )
+                    } else {
                         photo.name?.let {
                             Text(
                                 text = it,
@@ -673,7 +673,7 @@ fun CreateEstate(
             estate.entryDate?.let {
                 OutlinedTextField(
                     value = it,
-                    onValueChange = {newValue->
+                    onValueChange = { newValue ->
                         onUpdateEstate { copy(entryDate = newValue) }
                         //estate.entryDateMilli = convertDateToMillis(newValue)
                     },
@@ -736,7 +736,14 @@ fun CreateEstate(
 
             if (showDatePicker && dateType == "entryDate") {
                 MyDatePickerDialog(
-                    onDateSelected = { onUpdateEstate { copy(entryDate = it, entryDateMilli = convertDateToMillis(it)) } },
+                    onDateSelected = {
+                        onUpdateEstate {
+                            copy(
+                                entryDate = it,
+                                entryDateMilli = convertDateToMillis(it)
+                            )
+                        }
+                    },
                     onDismiss = { showDatePicker = false })
 
             } else if (showDatePicker && dateType == "soldDate") {
@@ -841,7 +848,7 @@ fun CreateEstate(
         }
         Button(onClick = {
             // If type and price fields are filled then we give back estateId and add it with its photo to database
-            if (estate.type == "" || estate.price == "" || estate.entryDate=="") {
+            if (estate.type == "" || estate.price == "" || estate.entryDate == "") {
                 Toast.makeText(
                     context,
                     "Veuillez renseigner un type, un prix et une date d'arrivée",
@@ -852,10 +859,9 @@ fun CreateEstate(
                 onAddEstateClick(estate, photoList)
             }
         }) {
-            if (estate.id == 0L){
+            if (estate.id == 0L) {
                 Text(stringResource(R.string.Valider))
-            }
-            else {
+            } else {
                 Text(stringResource(R.string.Modifier))
             }
 

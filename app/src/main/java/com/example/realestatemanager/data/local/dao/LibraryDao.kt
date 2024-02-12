@@ -90,21 +90,24 @@ interface LibraryDao {
 
     @Transaction
     @Query(
-        "SELECT * FROM Estate " +
-                "WHERE (CAST(price AS INTEGER) BETWEEN :minPrice AND :maxPrice) " +
-                "AND (CAST(size AS INTEGER) BETWEEN :minSize AND :maxSize) " +
-                "AND (CAST(numberOfRooms AS INTEGER) BETWEEN :minNumberOfRooms AND :maxNumberOfRooms) " +
-                "AND (CAST(numberOfBedrooms AS INTEGER) BETWEEN :minNumberOfBedrooms AND :maxNumberOfBedrooms) " +
-                "AND (CAST(numberOfBathrooms AS INTEGER) BETWEEN :minNumberOfBathrooms AND :maxNumberOfBathrooms) " +
-                "AND (:type = 'Tous les biens immobiliers' OR type = :type) " +
-                "AND soldState != :soldState " +
-                "AND ( (:school = :school AND school = true) OR (:school = false) )" +
-                "AND ( (:shops = :shops AND shops = true) OR (:shops = false) )" +
-                "AND ( (:parc = :parc AND parc = true) OR (:parc = false) ) " +
-                "AND ( (:hospital = :hospital AND hospital = true) OR (:hospital = false) ) " +
-                "AND ( (:restaurant = :restaurant AND restaurant = true) OR (:restaurant = false) ) " +
-                "AND ( (:sport = :sport AND sport = true) OR (:sport = false) )" +
-                "AND entryDateMilli >= :entryDateMilli"
+        "SELECT Estate.*, COUNT(EstatePhoto.id) AS photoCount FROM Estate " +
+                "LEFT JOIN EstatePhoto ON Estate.id = EstatePhoto.estateId " +
+                "WHERE (CAST(Estate.price AS INTEGER) BETWEEN :minPrice AND :maxPrice) " +
+                "AND (CAST(Estate.size AS INTEGER) BETWEEN :minSize AND :maxSize) " +
+                "AND (CAST(Estate.numberOfRooms AS INTEGER) BETWEEN :minNumberOfRooms AND :maxNumberOfRooms) " +
+                "AND (CAST(Estate.numberOfBedrooms AS INTEGER) BETWEEN :minNumberOfBedrooms AND :maxNumberOfBedrooms) " +
+                "AND (CAST(Estate.numberOfBathrooms AS INTEGER) BETWEEN :minNumberOfBathrooms AND :maxNumberOfBathrooms) " +
+                "AND (:type = 'Tous les biens immobiliers' OR Estate.type = :type) " +
+                "AND Estate.soldState != :soldState " +
+                "AND ( (:school = :school AND Estate.school = true) OR (:school = false) )" +
+                "AND ( (:shops = :shops AND Estate.shops = true) OR (:shops = false) )" +
+                "AND ( (:parc = :parc AND Estate.parc = true) OR (:parc = false) ) " +
+                "AND ( (:hospital = :hospital AND Estate.hospital = true) OR (:hospital = false) ) " +
+                "AND ( (:restaurant = :restaurant AND Estate.restaurant = true) OR (:restaurant = false) ) " +
+                "AND ( (:sport = :sport AND Estate.sport = true) OR (:sport = false) )" +
+                "AND Estate.entryDateMilli >= :entryDateMilli " +
+                "GROUP BY Estate.id " +
+                "HAVING photoCount >= :photoCount"
     )
     fun getEstateFromSearchCriteria(
         minPrice: Int,
@@ -125,7 +128,8 @@ interface LibraryDao {
         restaurant: Boolean?,
         sport: Boolean?,
         soldState: Boolean?,
-        entryDateMilli: Long?
+        entryDateMilli: Long?,
+        photoCount : Int
     ): Flow<List<EstateWithPhotos>>
 
 

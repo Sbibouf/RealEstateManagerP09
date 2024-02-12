@@ -104,7 +104,6 @@ class EstateListActivity : ComponentActivity() {
                                 },
                                 onCancelSearchClick = estateViewModel::cancelSearch,
                                 searchPerformed = vmSearchPerformed,
-                                modifier = Modifier
                             )
                         }
 
@@ -155,7 +154,6 @@ class EstateListActivity : ComponentActivity() {
                                 },
                                 onCancelSearchClick = estateViewModel::cancelSearch,
                                 searchPerformed = vmSearchPerformed,
-                                modifier = Modifier
                             )
                         }
 

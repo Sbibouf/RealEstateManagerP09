@@ -15,7 +15,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
-
+//****************************************
+// Module DAO provides instance of libraryDao and EstateDatabase
+//****************************************
 @Module
 @InstallIn(SingletonComponent::class)
 class DaoModule {

@@ -20,7 +20,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DatePickerFormatter
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,7 +29,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Surface
@@ -61,7 +59,12 @@ import kotlin.reflect.KFunction1
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchCriteria(searchCriteria: SearchCriteria, onBackClick: () -> Unit, onSearchClick : (SearchCriteria)->Unit, onUpdateSearch : KFunction1<SearchCriteria.() -> SearchCriteria, Unit>) {
+fun SearchCriteria(
+    searchCriteria: SearchCriteria,
+    onBackClick: () -> Unit,
+    onSearchClick: (SearchCriteria) -> Unit,
+    onUpdateSearch: KFunction1<SearchCriteria.() -> SearchCriteria, Unit>
+) {
 
     Scaffold(
         topBar = {
@@ -96,7 +99,11 @@ fun SearchCriteria(searchCriteria: SearchCriteria, onBackClick: () -> Unit, onSe
                     .padding(it)
             ) {
 
-                SearchForm(searchCriteria = searchCriteria, onSearchClick = onSearchClick, onUpdateSearch =onUpdateSearch)
+                SearchForm(
+                    searchCriteria = searchCriteria,
+                    onSearchClick = onSearchClick,
+                    onUpdateSearch = onUpdateSearch
+                )
             }
 
         })
@@ -105,16 +112,23 @@ fun SearchCriteria(searchCriteria: SearchCriteria, onBackClick: () -> Unit, onSe
 @Composable
 fun SearchForm(
     searchCriteria: SearchCriteria,
-    onSearchClick: (SearchCriteria)->Unit,
+    onSearchClick: (SearchCriteria) -> Unit,
     onUpdateSearch: KFunction1<SearchCriteria.() -> SearchCriteria, Unit>
 ) {
 
     var showDatePicker by remember { mutableStateOf(false) }
-    var dateType by remember { mutableStateOf("") }
     var isRadioButtonSelected by remember { mutableStateOf(true) }
 
     var isDropDownMenuExpanded by remember { mutableStateOf(false) }
-    val estateType = listOf("House", "Flat", "Penthouse", "Villa", "Duplex", "Triplex", "Tous les biens immobiliers")
+    val estateType = listOf(
+        "House",
+        "Flat",
+        "Penthouse",
+        "Villa",
+        "Duplex",
+        "Triplex",
+        "Tous les biens immobiliers"
+    )
 
 
     Surface(
@@ -132,7 +146,7 @@ fun SearchForm(
             searchCriteria.type?.let {
                 OutlinedTextField(
                     value = it,
-                    onValueChange = { newValue -> onUpdateSearch{copy (type = newValue)} },
+                    onValueChange = { newValue -> onUpdateSearch { copy(type = newValue) } },
                     placeholder = {
                         Text(stringResource(R.string.Nom_du_bien_immobilier))
                     },
@@ -172,7 +186,10 @@ fun SearchForm(
                 OutlinedTextField(
                     value = searchCriteria.minPrice.toString(),
                     onValueChange = { newValue ->
-                        onUpdateSearch{copy (minPrice = newValue.filter { char -> char.isDigit() }.takeIf { it.isNotEmpty() }?.toIntOrNull() ?: 0)}
+                        onUpdateSearch {
+                            copy(minPrice = newValue.filter { char -> char.isDigit() }
+                                .takeIf { it.isNotEmpty() }?.toIntOrNull() ?: 0)
+                        }
                     },
                     modifier = Modifier.weight(1f),
                     keyboardOptions = KeyboardOptions(
@@ -186,7 +203,10 @@ fun SearchForm(
                 OutlinedTextField(
                     value = searchCriteria.maxPrice.toString(),
                     onValueChange = { newValue ->
-                        onUpdateSearch{copy (maxPrice = newValue.filter { char -> char.isDigit() }.takeIf { it.isNotEmpty() }?.toIntOrNull() ?: 0)}
+                        onUpdateSearch {
+                            copy(maxPrice = newValue.filter { char -> char.isDigit() }
+                                .takeIf { it.isNotEmpty() }?.toIntOrNull() ?: 0)
+                        }
                     },
                     modifier = Modifier.weight(1f),
                     keyboardOptions = KeyboardOptions(
@@ -201,7 +221,10 @@ fun SearchForm(
                 OutlinedTextField(
                     value = searchCriteria.minSize.toString(),
                     onValueChange = { newValue ->
-                        onUpdateSearch{copy (minSize = newValue.filter { char -> char.isDigit() }.takeIf { it.isNotEmpty() }?.toIntOrNull() ?: 0)}
+                        onUpdateSearch {
+                            copy(minSize = newValue.filter { char -> char.isDigit() }
+                                .takeIf { it.isNotEmpty() }?.toIntOrNull() ?: 0)
+                        }
                     },
                     modifier = Modifier.weight(1f),
                     keyboardOptions = KeyboardOptions(
@@ -215,7 +238,10 @@ fun SearchForm(
                 OutlinedTextField(
                     value = searchCriteria.maxSize.toString(),
                     onValueChange = { newValue ->
-                        onUpdateSearch{copy (maxSize = newValue.filter { char -> char.isDigit() }.takeIf { it.isNotEmpty() }?.toIntOrNull() ?: 0)}
+                        onUpdateSearch {
+                            copy(maxSize = newValue.filter { char -> char.isDigit() }
+                                .takeIf { it.isNotEmpty() }?.toIntOrNull() ?: 0)
+                        }
                     },
                     modifier = Modifier.weight(1f),
                     keyboardOptions = KeyboardOptions(
@@ -230,7 +256,12 @@ fun SearchForm(
             Row {
                 OutlinedTextField(
                     value = searchCriteria.minNumberOfRooms.toString(),
-                    onValueChange = { newValue -> onUpdateSearch { copy(minNumberOfRooms = newValue.filter { char -> char.isDigit() }.takeIf { it.isNotEmpty() }?.toIntOrNull() ?: 0) } },
+                    onValueChange = { newValue ->
+                        onUpdateSearch {
+                            copy(minNumberOfRooms = newValue.filter { char -> char.isDigit() }
+                                .takeIf { it.isNotEmpty() }?.toIntOrNull() ?: 0)
+                        }
+                    },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Done
@@ -245,7 +276,12 @@ fun SearchForm(
                 Spacer(modifier = Modifier.width(4.dp))
                 OutlinedTextField(
                     value = searchCriteria.maxNumberOfRooms.toString(),
-                    onValueChange = { newValue -> onUpdateSearch { copy(maxNumberOfRooms = newValue.filter { char -> char.isDigit() }.takeIf { it.isNotEmpty() }?.toIntOrNull() ?: 0) } },
+                    onValueChange = { newValue ->
+                        onUpdateSearch {
+                            copy(maxNumberOfRooms = newValue.filter { char -> char.isDigit() }
+                                .takeIf { it.isNotEmpty() }?.toIntOrNull() ?: 0)
+                        }
+                    },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Done
@@ -264,7 +300,10 @@ fun SearchForm(
                 OutlinedTextField(
                     value = searchCriteria.minNumberOfBedrooms.toString(),
                     onValueChange = { newValue ->
-                        onUpdateSearch { copy(minNumberOfBedrooms = newValue.filter { char -> char.isDigit() }.takeIf { it.isNotEmpty() }?.toIntOrNull() ?: 0) }
+                        onUpdateSearch {
+                            copy(minNumberOfBedrooms = newValue.filter { char -> char.isDigit() }
+                                .takeIf { it.isNotEmpty() }?.toIntOrNull() ?: 0)
+                        }
                     },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -281,7 +320,10 @@ fun SearchForm(
                 OutlinedTextField(
                     value = searchCriteria.maxNumberOfBedrooms.toString(),
                     onValueChange = { newValue ->
-                        onUpdateSearch { copy(maxNumberOfBedrooms = newValue.filter { char -> char.isDigit() }.takeIf { it.isNotEmpty() }?.toIntOrNull() ?: 0) }
+                        onUpdateSearch {
+                            copy(maxNumberOfBedrooms = newValue.filter { char -> char.isDigit() }
+                                .takeIf { it.isNotEmpty() }?.toIntOrNull() ?: 0)
+                        }
                     },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -300,7 +342,10 @@ fun SearchForm(
                 OutlinedTextField(
                     value = searchCriteria.minNumberOfBathrooms.toString(),
                     onValueChange = { newValue ->
-                        onUpdateSearch { copy(minNumberOfBathrooms = newValue.filter { char -> char.isDigit() }.takeIf { it.isNotEmpty() }?.toIntOrNull() ?: 0) }
+                        onUpdateSearch {
+                            copy(minNumberOfBathrooms = newValue.filter { char -> char.isDigit() }
+                                .takeIf { it.isNotEmpty() }?.toIntOrNull() ?: 0)
+                        }
                     },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -319,7 +364,10 @@ fun SearchForm(
                 OutlinedTextField(
                     value = searchCriteria.maxNumberOfBathrooms.toString(),
                     onValueChange = { newValue ->
-                        onUpdateSearch { copy(maxNumberOfBathrooms = newValue.filter { char -> char.isDigit() }.takeIf { it.isNotEmpty() }?.toIntOrNull() ?: 0) }
+                        onUpdateSearch {
+                            copy(maxNumberOfBathrooms = newValue.filter { char -> char.isDigit() }
+                                .takeIf { it.isNotEmpty() }?.toIntOrNull() ?: 0)
+                        }
                     },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -334,6 +382,22 @@ fun SearchForm(
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
+            OutlinedTextField(
+                value = searchCriteria.photoCount.toString(),
+                onValueChange = { newValue ->
+                    onUpdateSearch {
+                        copy(photoCount = newValue.filter { char -> char.isDigit() }
+                            .takeIf { it.isNotEmpty() }?.toIntOrNull() ?: 0)
+                    }
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ), modifier = Modifier
+                    .width(144.dp)
+                    .height(64.dp),
+                label = { Text("Nombre minimum de photos") })
+            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 text = "Points d'interets à proximité :",
@@ -343,43 +407,67 @@ fun SearchForm(
             Row(verticalAlignment = Alignment.CenterVertically) {
 
                 Text(text = "Ecole")
-                searchCriteria.school?.let { RadioButton(selected = it, onClick = { if (searchCriteria.school == false) {
-                    onUpdateSearch { copy(school = true) }
-                } else {
-                    onUpdateSearch { copy(school = false) }
-                } }) }
+                searchCriteria.school?.let {
+                    RadioButton(selected = it, onClick = {
+                        if (searchCriteria.school == false) {
+                            onUpdateSearch { copy(school = true) }
+                        } else {
+                            onUpdateSearch { copy(school = false) }
+                        }
+                    })
+                }
                 Text(text = "Commerce")
-                searchCriteria.shops?.let { RadioButton(selected = it, onClick = { if (searchCriteria.shops == false) {
-                    onUpdateSearch { copy(shops = true) }
-                } else {
-                    onUpdateSearch { copy(shops = false) }
-                } }) }
+                searchCriteria.shops?.let {
+                    RadioButton(selected = it, onClick = {
+                        if (searchCriteria.shops == false) {
+                            onUpdateSearch { copy(shops = true) }
+                        } else {
+                            onUpdateSearch { copy(shops = false) }
+                        }
+                    })
+                }
                 Text(text = "Parc")
-                searchCriteria.parc?.let { RadioButton(selected = it, onClick = { if (searchCriteria.parc == false) {
-                    onUpdateSearch { copy(parc = true) }
-                } else {
-                    onUpdateSearch { copy(parc = false) }
-                } }) }
+                searchCriteria.parc?.let {
+                    RadioButton(selected = it, onClick = {
+                        if (searchCriteria.parc == false) {
+                            onUpdateSearch { copy(parc = true) }
+                        } else {
+                            onUpdateSearch { copy(parc = false) }
+                        }
+                    })
+                }
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(text = "Hopital")
-                searchCriteria.hospital?.let { RadioButton(selected = it, onClick = { if (searchCriteria.hospital == false) {
-                    onUpdateSearch { copy(hospital = true) }
-                } else {
-                    onUpdateSearch { copy(hospital = false) }
-                } }) }
+                searchCriteria.hospital?.let {
+                    RadioButton(selected = it, onClick = {
+                        if (searchCriteria.hospital == false) {
+                            onUpdateSearch { copy(hospital = true) }
+                        } else {
+                            onUpdateSearch { copy(hospital = false) }
+                        }
+                    })
+                }
                 Text(text = "Restaurant")
-                searchCriteria.restaurant?.let { RadioButton(selected = it, onClick = { if (searchCriteria.restaurant == false) {
-                    onUpdateSearch { copy(restaurant = true) }
-                } else {
-                    onUpdateSearch { copy(restaurant = false) }
-                } }) }
+                searchCriteria.restaurant?.let {
+                    RadioButton(selected = it, onClick = {
+                        if (searchCriteria.restaurant == false) {
+                            onUpdateSearch { copy(restaurant = true) }
+                        } else {
+                            onUpdateSearch { copy(restaurant = false) }
+                        }
+                    })
+                }
                 Text(text = "Sport")
-                searchCriteria.sport?.let { RadioButton(selected = it, onClick = { if (searchCriteria.sport == false) {
-                    onUpdateSearch { copy(sport = true) }
-                } else {
-                    onUpdateSearch { copy(sport = false) }
-                } }) }
+                searchCriteria.sport?.let {
+                    RadioButton(selected = it, onClick = {
+                        if (searchCriteria.sport == false) {
+                            onUpdateSearch { copy(sport = true) }
+                        } else {
+                            onUpdateSearch { copy(sport = false) }
+                        }
+                    })
+                }
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = "Mise sur le marché depuis : ")
@@ -388,7 +476,7 @@ fun SearchForm(
                     OutlinedTextField(
                         value = it,
                         onValueChange = { newValue ->
-                            onUpdateSearch{copy (entryDate = newValue)}
+                            onUpdateSearch { copy(entryDate = newValue) }
                         },
                         modifier = Modifier.weight(1f),
                         placeholder = { stringResource(R.string.Date_entrée) },
@@ -414,12 +502,18 @@ fun SearchForm(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(text = "Toujours en vente ?")
                 Spacer(modifier = Modifier.width(16.dp))
-                searchCriteria.soldState?.let { RadioButton(selected = it, onClick = { onUpdateSearch{copy(soldState = true)}
-                isRadioButtonSelected = false}) }
+                searchCriteria.soldState?.let {
+                    RadioButton(selected = it, onClick = {
+                        onUpdateSearch { copy(soldState = true) }
+                        isRadioButtonSelected = false
+                    })
+                }
                 Text(text = "oui")
                 Spacer(modifier = Modifier.width(16.dp))
-                RadioButton(selected = isRadioButtonSelected, onClick = { onUpdateSearch{copy(soldState = false)}
-                isRadioButtonSelected = true})
+                RadioButton(selected = isRadioButtonSelected, onClick = {
+                    onUpdateSearch { copy(soldState = false) }
+                    isRadioButtonSelected = true
+                })
                 Text(text = "non")
             }
 
@@ -435,7 +529,14 @@ fun SearchForm(
     }
     if (showDatePicker) {
         MyDatePickerDialog(
-            onDateSelected = { newValue -> onUpdateSearch{copy (entryDate = newValue, entryDateMilli = convertDateToMillis(newValue))} },
+            onDateSelected = { newValue ->
+                onUpdateSearch {
+                    copy(
+                        entryDate = newValue,
+                        entryDateMilli = convertDateToMillis(newValue)
+                    )
+                }
+            },
             onDismiss = { showDatePicker = false })
 
     }
@@ -497,8 +598,8 @@ fun MyDatePickerDialog(
 @Preview
 @Composable
 fun Search() {
-    val searchCriteria = SearchCriteria()
-    //SearchCriteria(searchCriteria = searchCriteria, onSearchClick = {}, onBackClick = {}, onUpdateSearch = {})
+    //val searchCriteria = SearchCriteria()
+    //SearchCriteria(searchCriteria = searchCriteria, onBackClick = {}, onSearchClick = {}, onUpdateSearch = {})
 
 
 }

@@ -6,6 +6,9 @@ import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import kotlin.math.absoluteValue
 
+//***************************
+// Add a visual transformation to price number of add Estate form
+//***************************
 class MaskVisualTransformation(private val mask: String) : VisualTransformation {
 
     private val specialSymbolsIndices = mask.indices.filter { mask[it] != '#' }

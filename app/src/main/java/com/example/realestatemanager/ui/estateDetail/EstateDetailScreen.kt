@@ -1,11 +1,9 @@
 package com.example.realestatemanager.ui.estateDetail
 
-import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -62,9 +59,8 @@ fun EstateDetailsScreen(
     estateWithPhotos: EstateWithPhotos,
     onBackClick: () -> Unit,
     onModifyClick: () -> Unit,
-    imageSize : Int,
-    imageNameSize : Int,
-    modifier: Modifier
+    imageSize: Int,
+    imageNameSize: Int,
 ) {
     Scaffold(
         topBar = {
@@ -110,7 +106,7 @@ fun EstateDetailsScreen(
 }
 
 @Composable
-fun EstateMediaRow(estateWithPhotos: EstateWithPhotos, imageSize : Int, imageNameSize : Int) {
+fun EstateMediaRow(estateWithPhotos: EstateWithPhotos, imageSize: Int, imageNameSize: Int) {
     val estatePhotos: List<EstatePhoto> = estateWithPhotos.photos ?: emptyList()
     Column(modifier = Modifier.padding(8.dp)) {
 
@@ -199,11 +195,14 @@ fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(text = "Prix:")
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = Utils.formatCurrency(estateWithPhotos.estate?.price),fontWeight = FontWeight.Bold)
+                Text(
+                    text = Utils.formatCurrency(estateWithPhotos.estate?.price),
+                    fontWeight = FontWeight.Bold
+                )
 
 
             }
-             Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
         }
 
 
@@ -217,17 +216,30 @@ fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(text = "Surface:")
                     Spacer(modifier = Modifier.width(8.dp))
-                    estateWithPhotos.estate?.size?.let { Text(text = it + "M²",fontWeight = FontWeight.Bold)}
+                    estateWithPhotos.estate?.size?.let {
+                        Text(
+                            text = it + "M²",
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(painter = painterResource(R.drawable.baseline_bed_24), contentDescription = null)
+                    Icon(
+                        painter = painterResource(R.drawable.baseline_bed_24),
+                        contentDescription = null
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(text = "Chambres:")
                     Spacer(modifier = Modifier.width(8.dp))
-                    estateWithPhotos.estate?.numberOfBedrooms?.let { Text(text = it,fontWeight = FontWeight.Bold)}
+                    estateWithPhotos.estate?.numberOfBedrooms?.let {
+                        Text(
+                            text = it,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -237,7 +249,12 @@ fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(text = "Arrivée:")
                     Spacer(modifier = Modifier.width(4.dp))
-                    estateWithPhotos.estate?.entryDate?.let { Text(text = it,fontWeight = FontWeight.Bold)}
+                    estateWithPhotos.estate?.entryDate?.let {
+                        Text(
+                            text = it,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -250,7 +267,12 @@ fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(text = "Pièces:")
                     Spacer(modifier = Modifier.width(8.dp))
-                    estateWithPhotos.estate?.numberOfRooms?.let { Text(text = it,fontWeight = FontWeight.Bold)}
+                    estateWithPhotos.estate?.numberOfRooms?.let {
+                        Text(
+                            text = it,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -262,7 +284,12 @@ fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(text = "Salles de bains:")
                     Spacer(modifier = Modifier.width(8.dp))
-                    estateWithPhotos.estate?.numberOfBathrooms?.let { Text(text = it,fontWeight = FontWeight.Bold)}
+                    estateWithPhotos.estate?.numberOfBathrooms?.let {
+                        Text(
+                            text = it,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -272,7 +299,12 @@ fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(text = "Vente:")
                     Spacer(modifier = Modifier.width(4.dp))
-                    estateWithPhotos.estate?.soldDate?.let { Text(text = it,fontWeight = FontWeight.Bold)}
+                    estateWithPhotos.estate?.soldDate?.let {
+                        Text(
+                            text = it,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -337,7 +369,7 @@ fun EstateDetailsRow(estateWithPhotos: EstateWithPhotos) {
 }
 
 @Composable
-fun EstateMap(estateWithPhotos: EstateWithPhotos){
+fun EstateMap(estateWithPhotos: EstateWithPhotos) {
 
     val api = BuildConfig.MAPS_API_KEY
 
@@ -356,7 +388,7 @@ fun EstateMap(estateWithPhotos: EstateWithPhotos){
                     .height(300.dp)
             ) {
                 AsyncImage(
-                    model = "https://maps.googleapis.com/maps/api/staticmap?zoom=15&size=300x300&scale=2&maptype=roadmap\\&markers=size:mid%7Ccolor:red%7C " + estateWithPhotos.estate?.latitude + "," + estateWithPhotos.estate?.longitude + "&center=" + estateWithPhotos.estate?.latitude + "," + estateWithPhotos.estate?.longitude + "&key=" + api,
+                    model = "https://maps.googleapis.com/maps/api/staticmap?zoom=15&size=300x300&scale=2&maptype=roadmap\\&markers=size:mid%7Ccolor:red%7C " + estateWithPhotos.estate.latitude + "," + estateWithPhotos.estate.longitude + "&center=" + estateWithPhotos.estate.latitude + "," + estateWithPhotos.estate.longitude + "&key=" + api,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -402,7 +434,7 @@ fun EstateTest() {
             true,
             true,
             true,
-            true,1L
+            true, 1L
         ),
         listOf(
             EstatePhoto(1L, "/storage/emulated/0/Download/estate1_front.jpg", "Façade"),
@@ -413,7 +445,6 @@ fun EstateTest() {
         estateWithPhotos = estateWithPhotoTest,
         onBackClick = {},
         onModifyClick = {},
-        modifier = Modifier,
         imageSize = 150,
         imageNameSize = 12
     )

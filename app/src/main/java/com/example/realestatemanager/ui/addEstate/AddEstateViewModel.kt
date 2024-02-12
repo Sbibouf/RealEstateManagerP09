@@ -52,11 +52,18 @@ class AddEstateViewModel @Inject constructor(
         _photoList.value = estateWithPhotos.photos as MutableList<EstatePhoto>
     }
 
+    //***********************************************
+    // Update Estate by making a copy of it in AddEstate form
+    //***********************************************
 
     fun updateEstate(transform: Estate.() -> Estate) {
         _estate.value = transform.invoke(_estate.value)
     }
 
+
+    //************************************************
+    //Method that perform the Geocoding from address
+    //************************************************
     private fun geocodeAddressInBackground(address: String?): LatLng? {
         val apiKey = BuildConfig.MAPS_API_KEY
 
@@ -90,12 +97,20 @@ class AddEstateViewModel @Inject constructor(
         return null
     }
 
+
+    //*****************************************
+    // Do the Geocoding in a coroutine scope
+    //*****************************************
+
     private suspend fun geocodeAddressSuspended(address: String?): LatLng? {
         return withContext(Dispatchers.IO) {
             geocodeAddressInBackground(address)
         }
     }
 
+    //**************************************************
+    // Get the address, check if there is a network connection, perform geocoding and insert Estate accordingly
+    //**************************************************
     suspend fun geocodeAndInserts(estate: Estate, photos: List<EstatePhoto>) {
 
         if (Utils.isInternetAvailable(application)) {
@@ -120,6 +135,9 @@ class AddEstateViewModel @Inject constructor(
         }
     }
 
+    //****************************************
+    // Add Latitude and Longitude information into Estate and insert it into database
+    //****************************************
     private suspend fun insertEstateWithLatitudeAndLongitude(
         location: LatLng,
         estate: Estate,
@@ -132,6 +150,10 @@ class AddEstateViewModel @Inject constructor(
         insertEstateAndPhotos(estate, photos)
     }
 
+
+    //*******************************************
+    // Add photo to list if its not already in
+    //*******************************************
     fun addPhoto(newPhoto: EstatePhoto) {
         val containsUri = _photoList.value.any { it.uri == newPhoto.uri }
         if (!containsUri) {
@@ -143,6 +165,10 @@ class AddEstateViewModel @Inject constructor(
 
     }
 
+    //******************************************
+    // Delete photo from list and from database
+    //******************************************
+
     fun deletePhoto(photo: EstatePhoto) {
         _photoList.value = _photoList.value.toMutableList().apply { remove(photo) }
         viewModelScope.launch {
@@ -150,6 +176,9 @@ class AddEstateViewModel @Inject constructor(
         }
     }
 
+    //****************************************
+    //Replace old photo by new one with new name in list
+    //*****************************************
     fun replaceOldPhotoByNewPhoto(uri: Uri, newPhoto: EstatePhoto) {
         val mutableList = _photoList.value.toMutableList()
         val index = mutableList.indexOfFirst { it.uri == uri.toString() }
@@ -160,10 +189,13 @@ class AddEstateViewModel @Inject constructor(
         }
     }
 
-    suspend fun insertEstateAndPhotos(estate: Estate, photos: List<EstatePhoto>) {
+    //********************************************
+    // Check if estate exist then get its id and add it to list and insert into database
+    //********************************************
+
+    private suspend fun insertEstateAndPhotos(estate: Estate, photos: List<EstatePhoto>) {
 
         try {
-            //If estate doesn't exist we get its id before adding photos
             if (estate.id == 0L) {
                 val estateId = estateRepository.getInsertedEstateId(estate)
                 Log.d("InsertEstate", "Inserted Estate ID: $estateId")

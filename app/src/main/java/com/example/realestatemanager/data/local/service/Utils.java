@@ -56,10 +56,6 @@ public class Utils {
      * @param context
      * @return
      */
-//    public static Boolean isInternetAvailable(Context context){
-//        WifiManager wifi = (WifiManager)context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-//        return wifi.isWifiEnabled();
-//    }
     public static boolean isInternetAvailable(Context context) {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -70,23 +66,16 @@ public class Utils {
     }
 
     public static String formatCurrency(String value) {
-        // Convertir la chaîne en un nombre
         long numericValue = 0;
         try {
             numericValue = Long.parseLong(value);
         } catch (NumberFormatException e) {
             //exception
         }
-
-        // Créer un formateur de devise avec le style approprié
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
-
-        // Utiliser le format "$#,###" pour exclure les décimales
         String pattern = ((java.text.DecimalFormat) currencyFormat).toPattern().replace(".00", "");
         NumberFormat customFormat = NumberFormat.getNumberInstance(Locale.US);
         ((java.text.DecimalFormat) customFormat).applyPattern(pattern);
-
-        // Formater la valeur et la renvoyer
         return customFormat.format(numericValue);
     }
 

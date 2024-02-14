@@ -148,7 +148,7 @@ fun SearchForm(
                     value = it,
                     onValueChange = { newValue -> onUpdateSearch { copy(type = newValue) } },
                     placeholder = {
-                        Text(stringResource(R.string.Nom_du_bien_immobilier))
+                        Text(stringResource(R.string.Estate_type))
                     },
                     enabled = false,
                     trailingIcon = {
@@ -479,7 +479,7 @@ fun SearchForm(
                             onUpdateSearch { copy(entryDate = newValue) }
                         },
                         modifier = Modifier.weight(1f),
-                        placeholder = { stringResource(R.string.Date_entrée) },
+                        placeholder = { stringResource(R.string.Entry_Date) },
                         enabled = false,
                         colors = OutlinedTextFieldDefaults.colors(
                             disabledTextColor = Color.Black,
@@ -521,7 +521,7 @@ fun SearchForm(
                 onSearchClick(searchCriteria)
 
             }) {
-                Text(stringResource(R.string.Rechercher))
+                Text(stringResource(R.string.Search))
             }
         }
 

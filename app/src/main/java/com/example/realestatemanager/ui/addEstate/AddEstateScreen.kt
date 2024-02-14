@@ -287,7 +287,7 @@ fun CreateEstate(
                         )
                     },
                     placeholder = {
-                        Text(stringResource(R.string.Nom_du_bien_immobilier))
+                        Text(stringResource(R.string.Estate_type))
                     },
                     modifier = Modifier
                         .weight(1f)
@@ -300,7 +300,7 @@ fun CreateEstate(
                         unfocusedBorderColor = Color.Black,
                         disabledBorderColor = Color.Black,
                     ),
-                    label = { Text(stringResource(R.string.Nom_du_bien_immobilier)) }
+                    label = { Text(stringResource(R.string.Estate_type)) }
 
                 )
             }
@@ -323,9 +323,9 @@ fun CreateEstate(
                         onUpdateEstate { copy(size = newTextValue) }
                     },
                     placeholder = {
-                        Text(stringResource(R.string.Superficie))
+                        Text(stringResource(R.string.Size))
                     },
-                    label = { Text(stringResource(R.string.Superficie)) },
+                    label = { Text(stringResource(R.string.Size)) },
                     modifier = Modifier
                         .weight(1f)
                         .padding(1.dp),
@@ -678,7 +678,7 @@ fun CreateEstate(
                         //estate.entryDateMilli = convertDateToMillis(newValue)
                     },
                     placeholder = {
-                        Text(stringResource(R.string.Date_entrée))
+                        Text(stringResource(R.string.Entry_Date))
                     },
                     modifier = Modifier
                         .weight(1f)
@@ -690,7 +690,7 @@ fun CreateEstate(
                         unfocusedBorderColor = Color.Black,
                         disabledBorderColor = Color.Black,
                     ),
-                    label = { Text(stringResource(R.string.Date_entrée)) }
+                    label = { Text(stringResource(R.string.Entry_Date)) }
                 )
             }
             IconButton(
@@ -709,7 +709,7 @@ fun CreateEstate(
                         onUpdateEstate { copy(soldDate = it, soldState = true) }
                     },
                     placeholder = {
-                        Text(stringResource(R.string.Date_vente))
+                        Text(stringResource(R.string.Sold_Date))
                     },
                     modifier = Modifier
                         .weight(1f)
@@ -721,7 +721,7 @@ fun CreateEstate(
                         unfocusedBorderColor = Color.Black,
                         disabledBorderColor = Color.Black,
                     ),
-                    label = { Text(stringResource(R.string.Date_vente)) }
+                    label = { Text(stringResource(R.string.Sold_Date)) }
                 )
             }
             IconButton(
@@ -860,9 +860,9 @@ fun CreateEstate(
             }
         }) {
             if (estate.id == 0L) {
-                Text(stringResource(R.string.Valider))
+                Text(stringResource(R.string.Validate))
             } else {
-                Text(stringResource(R.string.Modifier))
+                Text(stringResource(R.string.Modify))
             }
 
         }

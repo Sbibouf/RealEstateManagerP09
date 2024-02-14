@@ -398,7 +398,7 @@ fun EstateMap(estateWithPhotos: EstateWithPhotos) {
             }
         } else {
             Text(
-                text = stringResource(id = R.string.Erreur_adress),
+                text = stringResource(id = R.string.Address_error),
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth(),

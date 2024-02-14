@@ -119,14 +119,14 @@ class AddEstateViewModel @Inject constructor(
                 insertEstateWithLatitudeAndLongitude(location, estate, photos)
                 Toast.makeText(
                     application,
-                    "Le bien a été géolocalisé et ajouté à liste",
+                    "Le bien a été géolocalisé et ajouté/modifié",
                     Toast.LENGTH_LONG
                 ).show()
             } else {
                 insertEstateAndPhotos(estate, photos)
                 Toast.makeText(
                     application,
-                    "Le bien à été ajouté mais l'adresse renseignée ne permet pas de récupérer sa localisation",
+                    "Le bien à été ajouté/modifié mais l'adresse renseignée ne permet pas de récupérer sa localisation",
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -134,7 +134,7 @@ class AddEstateViewModel @Inject constructor(
             insertEstateAndPhotos(estate, photos)
             Toast.makeText(
                 application,
-                "Le bien à été ajouté mais une connexion internet est requise pour récupérer sa localisation",
+                "Le bien à été ajouté/modifié mais une connexion internet est requise pour récupérer sa localisation",
                 Toast.LENGTH_LONG
             ).show()
         }
